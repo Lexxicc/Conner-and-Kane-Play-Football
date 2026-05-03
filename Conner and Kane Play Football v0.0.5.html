@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Conner and Kane Play Football v0.0.4</title>
+  <title>Conner and Kane Play Football v0.0.5</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&family=Righteous&family=Barlow:wght@400;600&display=swap');
 
     :root {
-      --color-bg-dark:  #0a0304;
-      --color-panel:    #1a0808;
+      --color-bg-dark:  #173d1a;
+      --color-panel:    #0d2610;
       --color-primary:  #e63946;
       --color-accent:   #60a5fa;
-      --color-glow:     #fff8f8;
-      --color-shadow:   #040101;
+      --color-glow:     #f0fff2;
+      --color-shadow:   #071009;
     }
 
     /* ── FRONT MENU ── */
@@ -85,12 +85,12 @@
     }
 
     #slots-area {
-      flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 5px; padding: 6px; overflow: hidden;
+      flex: 1; min-height: 0; max-height: 46vh; display: flex; flex-direction: column; gap: 5px; padding: 6px; overflow: hidden;
     }
     .slots-row { display: flex; gap: 5px; flex: 1; min-height: 0; }
 
     .slot-card {
-      flex: 1; background: var(--color-panel); border: 2px solid #2a0808; border-radius: 4px;
+      flex: 1; background: var(--color-panel); border: 2px solid #1c4020; border-radius: 4px;
       display: flex; flex-direction: column; padding: 5px 7px; cursor: pointer;
       transition: border-color 0.12s; min-width: 0; overflow: hidden;
       -webkit-tap-highlight-color: transparent; user-select: none;
@@ -118,18 +118,18 @@
     .chain-connector { flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
     .chain-pill {
       font-family: 'VT323', monospace; font-size: 0.75rem; padding: 3px 6px; border-radius: 12px;
-      background: #2a0808; border: 1px solid #3a1010; color: var(--color-primary); opacity: 0.6;
+      background: #1c4020; border: 1px solid #2a5530; color: var(--color-primary); opacity: 0.6;
       white-space: nowrap; letter-spacing: 0.04em; text-align: center; min-width: 44px;
     }
     .chain-pill.recv { background: rgba(96,165,250,0.12); border-color: var(--color-accent); color: var(--color-accent); opacity: 1; }
     .chain-pill.miss { background: rgba(230,57,70,0.15); border-color: var(--color-primary); color: var(--color-primary); opacity: 1; }
 
     #pool-area {
-      flex-shrink: 0; border-top: 2px solid var(--color-primary); padding: 5px 6px 5px; background: var(--color-panel);
+      flex-shrink: 0; border-top: 2px solid var(--color-primary); padding: 10px 8px 8px; background: var(--color-panel);
     }
     #pool-label {
-      font-family: 'VT323', monospace; font-size: 0.65rem; text-transform: uppercase;
-      letter-spacing: 0.3em; color: var(--color-primary); opacity: 0.5; margin-bottom: 4px;
+      font-family: 'VT323', monospace; font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.3em; color: var(--color-primary); opacity: 0.5; margin-bottom: 6px;
     }
     #pool-scroll {
       display: flex; gap: 6px; overflow-x: auto; padding-bottom: 3px;
@@ -139,20 +139,20 @@
     #pool-scroll::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 2px; }
 
     .player-card {
-      flex-shrink: 0; width: 86px; background: var(--color-bg-dark); border: 2px solid #2a0808;
-      border-radius: 4px; padding: 5px 5px 4px; cursor: pointer; user-select: none;
+      flex-shrink: 0; width: 114px; background: var(--color-bg-dark); border: 2px solid #1c4020;
+      border-radius: 4px; padding: 7px 7px 6px; cursor: pointer; user-select: none;
       -webkit-tap-highlight-color: transparent; transition: border-color 0.1s, background 0.1s;
     }
     .player-card.selected { border-color: #fbbf24; background: rgba(251,191,36,0.07); }
     .player-card.used { opacity: 0.28; pointer-events: none; }
     .player-name {
-      font-family: 'VT323', monospace; font-size: 0.85rem; color: var(--color-glow);
+      font-family: 'VT323', monospace; font-size: 1rem; color: var(--color-glow);
       text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      margin-bottom: 3px; letter-spacing: 0.03em;
+      margin-bottom: 5px; letter-spacing: 0.03em;
     }
-    .player-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 2px; font-family: 'VT323', monospace; font-size: 0.68rem; }
-    .stat-item { display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
-    .stat-abbr { color: var(--color-primary); opacity: 0.55; font-size: 0.58rem; }
+    .player-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px 3px; font-family: 'VT323', monospace; font-size: 0.8rem; }
+    .stat-item { display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
+    .stat-abbr { color: var(--color-primary); opacity: 0.6; font-size: 0.65rem; }
     .stat-val { color: var(--color-glow); }
 
     /* ── END SCREEN ── */
@@ -179,8 +179,8 @@
       <div class="text-center pt-4 pb-3 px-4" style="border-bottom:4px solid var(--color-shadow);">
         <div style="display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
           <img src="CFK-artwork-inspiration.jpeg" alt=""
-               style="max-height:180px;max-width:75%;border-radius:4px;border:3px solid var(--color-primary);
-                      box-shadow:0 0 12px rgba(230,57,70,0.4);">
+               style="max-height:240px;max-width:88%;border-radius:6px;border:3px solid var(--color-primary);
+                      box-shadow:0 0 20px rgba(230,57,70,0.5),0 0 6px rgba(0,0,0,0.6);">
         </div>
         <h1 style="font-family:'Righteous',sans-serif;font-size:clamp(1.8rem,8vw,3.5rem);
                     color:var(--color-glow);text-shadow:3px 3px 0 var(--color-shadow),0 0 20px rgba(230,57,70,0.50);
@@ -203,7 +203,7 @@
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px;opacity:0.6;">
         <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,#fff);"></div>
-        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.4</span>
+        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.5</span>
         <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,#fff);"></div>
       </div>
     </div>
@@ -386,7 +386,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.4</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.5</p>
 
   </div><!-- /game-shell -->
 
@@ -457,6 +457,7 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.5', date:'2026-05', notes:['Pitch green UI — bg, cards, and borders reskinned to footy pitch.', 'Player cards enlarged for mobile readability.', 'Artwork splash bigger on front page with both faces.'] },
       { v:'v0.0.4', date:'2026-05', notes:['First send of full framework — pool, 5 positions, cross-chain mechanic.'] },
       { v:'v0.0.3', date:'2026-05', notes:['Draft framework — squad pool, 5 positions, cross-chain mechanic.', 'England colour scheme + artwork.'] },
       { v:'v0.0.2', date:'2026-05', notes:['First Telegram build.'] },
@@ -474,7 +475,7 @@
       el.innerHTML = sorted.map((s,i) => {
         const d = new Date(s.date).toLocaleDateString();
         const badge = s.isChallenge ? `<span style="color:#fbbf24;font-size:0.7rem;margin-left:4px">[C]</span>` : '';
-        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--color-shadow);font-size:0.875rem">
+        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #1c4020;font-size:0.875rem">
           <span style="color:var(--color-primary);width:24px;text-align:right">${i+1}.</span>
           <span style="flex:1;color:#fff">${escHtml(String(s.score))}${badge}</span>
           <span style="color:var(--color-primary);opacity:0.5;font-size:0.75rem">${escHtml(d)}</span>
@@ -774,7 +775,7 @@
             ? `<span style="color:var(--color-accent);font-size:0.7rem;margin-left:4px">RECV</span>`
             : `<span style="color:var(--color-primary);font-size:0.7rem;margin-left:4px">MISSED</span>`;
         }
-        return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #2a0808;font-family:'VT323',monospace;">
+        return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #1c4020;font-family:'VT323',monospace;">
           <span style="color:var(--color-primary);font-size:0.72rem;width:82px;flex-shrink:0;text-transform:uppercase">${escHtml(cfg.label)}</span>
           <span style="flex:1;color:var(--color-glow);font-size:0.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${player ? escHtml(player.name) : '<span style="opacity:0.35">—</span>'}</span>
           <span style="color:var(--color-accent);font-size:1.05rem;flex-shrink:0;text-align:right">${Math.round(sc[id])}${chainTag}</span>
