@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Socka v0.0.3</title>
+  <title>Socka v0.0.4</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&family=Righteous&family=Barlow:wght@400;600&display=swap');
@@ -25,7 +25,7 @@
                   0 0 28px 4px rgba(230,57,70,0.28),
                   0 0 70px rgba(230,57,70,0.12),
                   inset 0 0 40px rgba(0,0,0,0.45);
-      width: 640px; max-width: 92vw; max-height: 92dvh;
+      width: 640px; max-width: 92vw; height: 92dvh; max-height: 92dvh;
       overflow-y: auto; scrollbar-width: none;
     }
     .menu-scroll::-webkit-scrollbar { display: none; }
@@ -84,76 +84,83 @@
       font-family: 'VT323', monospace; font-size: 1.4rem; color: var(--color-accent); letter-spacing: 0.05em;
     }
 
-    #slots-area {
-      flex: 1; min-height: 0; max-height: 42vh; display: flex; flex-direction: column; gap: 4px; padding: 5px 6px; overflow: hidden;
+    /* ── PITCH ── */
+    #pitch-container {
+      flex: 1; min-height: 0; display: flex; align-items: center;
+      justify-content: center; background: #2a7d30; overflow: hidden;
     }
-    .slots-row { display: flex; gap: 4px; flex: 1; min-height: 0; }
+    #pitch-svg { height: 100%; width: auto; max-width: 100%; display: block; }
 
-    .slot-card {
-      flex: 1; background: var(--color-panel); border: 2px solid #3a8040; border-radius: 16px;
-      display: flex; flex-direction: column; justify-content: center; padding: 4px 10px; cursor: pointer;
-      transition: border-color 0.12s; min-width: 0; overflow: hidden;
-      -webkit-tap-highlight-color: transparent; user-select: none;
+    /* ── PICKER ── */
+    #picker-panel {
+      flex-shrink: 0; background: var(--color-panel);
+      border-top: 2px solid var(--color-primary);
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.2s ease;
     }
-    .slot-card.filled { border-color: var(--color-primary); }
-    .slot-card.drop-target { border-color: var(--color-accent) !important; }
-    .slot-name {
-      font-family: 'VT323', monospace; font-size: 0.62rem; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--color-primary); opacity: 0.75;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; margin-bottom: 1px;
+    #picker-panel:not(.closed) { max-height: 210px; }
+    #picker-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 10px; border-bottom: 1px solid #3a8040;
     }
-    .slot-player {
-      font-family: 'VT323', monospace; font-size: 0.9rem; color: var(--color-glow);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;
+    #picker-label { font-family: 'VT323', monospace; font-size: 1rem; color: var(--color-glow); }
+    #picker-close-btn {
+      font-family: 'VT323', monospace; font-size: 1.1rem; color: var(--color-primary);
+      background: transparent; border: none; cursor: pointer; padding: 2px 6px;
     }
-    .slot-stats {
-      font-family: 'VT323', monospace; font-size: 0.58rem; color: var(--color-primary); opacity: 0.55;
-      white-space: nowrap; flex-shrink: 0; margin-top: 1px;
+    #picker-cards-row {
+      display: flex; gap: 7px; padding: 8px 10px; overflow-x: auto;
+      scrollbar-width: none;
     }
-    .slot-score {
-      font-family: 'VT323', monospace; font-size: 0.9rem; color: var(--color-accent);
-      text-align: right; flex-shrink: 0; line-height: 1;
-    }
+    #picker-cards-row::-webkit-scrollbar { display: none; }
 
-    .chain-connector { flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0 2px; }
-    .chain-pill {
-      font-family: 'VT323', monospace; font-size: 0.75rem; padding: 3px 6px; border-radius: 12px;
-      background: #3a8040; border: 1px solid #4a9a55; color: var(--color-primary); opacity: 0.6;
-      white-space: nowrap; letter-spacing: 0.04em; text-align: center; min-width: 44px;
+    /* ── PHASE AREA ── */
+    #phase-area {
+      flex-shrink: 0; display: flex; align-items: center;
+      justify-content: space-between; padding: 6px 12px;
+      background: var(--color-panel); border-top: 2px solid var(--color-primary);
+      min-height: 44px;
     }
-    .chain-pill.recv { background: rgba(96,165,250,0.12); border-color: var(--color-accent); color: var(--color-accent); opacity: 1; }
-    .chain-pill.miss { background: rgba(230,57,70,0.15); border-color: var(--color-primary); color: var(--color-primary); opacity: 1; }
+    #phase-hint {
+      font-family: 'VT323', monospace; font-size: 0.88rem;
+      color: var(--color-primary); opacity: 0.7; flex: 1;
+    }
+    #confirm-btn {
+      font-family: 'VT323', monospace; font-size: 1.1rem; text-transform: uppercase;
+      padding: 6px 16px; background: var(--color-primary); color: #fff;
+      border: none; cursor: pointer; letter-spacing: 0.08em; display: none;
+    }
+    #confirm-btn.visible { display: block; }
 
-    #pool-area {
-      flex-shrink: 0; border-top: 2px solid var(--color-primary); padding: 10px 8px 8px; background: var(--color-panel);
+    /* ── COLLECTOR CARDS ── */
+    .collector-card {
+      flex: 1; min-width: 88px; max-width: 120px;
+      background: linear-gradient(170deg,#1c5228,#0c2a10);
+      border: 2px solid #3a7040; border-radius: 8px;
+      padding: 8px 5px 7px; cursor: pointer;
+      transition: border-color 0.1s, transform 0.08s;
+      -webkit-tap-highlight-color: transparent;
     }
-    #pool-label {
-      font-family: 'VT323', monospace; font-size: 0.7rem; text-transform: uppercase;
-      letter-spacing: 0.3em; color: var(--color-primary); opacity: 0.5; margin-bottom: 6px;
+    .collector-card:active { transform: scale(0.96); border-color: var(--color-primary); }
+    .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .card-pos-badge {
+      font-family: 'VT323', monospace; font-size: 0.68rem; padding: 1px 5px;
+      border-radius: 3px; color: #fff; text-transform: uppercase;
     }
-    #pool-scroll {
-      display: flex; gap: 6px; overflow-x: auto; padding-bottom: 3px;
-      scrollbar-width: thin; scrollbar-color: var(--color-primary) transparent;
+    .pos-gk  { background: #92400e; }
+    .pos-def { background: #1e3a8a; }
+    .pos-mid { background: #14532d; }
+    .pos-fwd { background: #7f1d1d; }
+    .card-rating { font-family: 'VT323', monospace; font-size: 1.15rem; color: #fbbf24; }
+    .card-name {
+      font-family: 'VT323', monospace; font-size: 0.88rem; color: var(--color-glow);
+      text-align: center; margin-bottom: 5px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    #pool-scroll::-webkit-scrollbar { height: 3px; }
-    #pool-scroll::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 2px; }
-
-    .player-card {
-      flex-shrink: 0; width: 114px; background: var(--color-bg-dark); border: 2px solid #3a8040;
-      border-radius: 4px; padding: 7px 7px 6px; cursor: pointer; user-select: none;
-      -webkit-tap-highlight-color: transparent; transition: border-color 0.1s, background 0.1s;
-    }
-    .player-card.selected { border-color: #fbbf24; background: rgba(251,191,36,0.07); }
-    .player-card.used { opacity: 0.28; pointer-events: none; }
-    .player-name {
-      font-family: 'VT323', monospace; font-size: 1rem; color: var(--color-glow);
-      text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      margin-bottom: 5px; letter-spacing: 0.03em;
-    }
-    .player-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px 3px; font-family: 'VT323', monospace; font-size: 0.8rem; }
-    .stat-item { display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
-    .stat-abbr { color: var(--color-primary); opacity: 0.6; font-size: 0.65rem; }
-    .stat-val { color: var(--color-glow); }
+    .card-stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 1px; }
+    .cs-item { display: flex; flex-direction: column; align-items: center; }
+    .cs-abbr { font-family: 'VT323', monospace; font-size: 0.6rem; color: var(--color-primary); opacity: 0.65; }
+    .cs-val  { font-family: 'VT323', monospace; font-size: 0.78rem; color: var(--color-glow); }
 
     /* ── END SCREEN ── */
     #end-overlay {
@@ -184,30 +191,69 @@
               <clipPath id="ck-shield">
                 <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z"/>
               </clipPath>
-              <linearGradient id="ck-btm" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#0a2e0e" stop-opacity="0"/>
-                <stop offset="50%" stop-color="#0a2e0e" stop-opacity="0.82"/>
-                <stop offset="100%" stop-color="#0a2e0e" stop-opacity="0.96"/>
+              <linearGradient id="face-btm" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#0a2e0e" stop-opacity="0"/>
+                <stop offset="55%"  stop-color="#0a2e0e" stop-opacity="0.75"/>
+                <stop offset="100%" stop-color="#0a2e0e" stop-opacity="0.97"/>
               </linearGradient>
             </defs>
+            <!-- Shield fill -->
             <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z" fill="#1d5e24"/>
-            <image href="CFK-artwork-inspiration.jpeg" x="8" y="22" width="264" height="264"
-                   clip-path="url(#ck-shield)" preserveAspectRatio="xMidYMin slice"/>
-            <path d="M8,195 L8,230 C8,230 74,330 140,330 C206,330 272,230 272,230 L272,195 Z"
-                  fill="url(#ck-btm)" clip-path="url(#ck-shield)"/>
+
+            <!-- FACE 1 (Conner) cx=85 -->
+            <rect x="55" y="207" width="60" height="40" rx="6" fill="#f0f0f0" clip-path="url(#ck-shield)"/>
+            <rect x="82" y="207" width="6"  height="40" fill="#c1121f" clip-path="url(#ck-shield)"/>
+            <rect x="55" y="222" width="60" height="6"  fill="#c1121f" clip-path="url(#ck-shield)"/>
+            <rect x="80" y="196" width="10" height="14" rx="3" fill="#c8783e" clip-path="url(#ck-shield)"/>
+            <ellipse cx="85" cy="162" rx="34" ry="40" fill="#c8783e" clip-path="url(#ck-shield)"/>
+            <ellipse cx="51" cy="165" rx="6" ry="8" fill="#b86830" clip-path="url(#ck-shield)"/>
+            <ellipse cx="119" cy="165" rx="6" ry="8" fill="#b86830" clip-path="url(#ck-shield)"/>
+            <path d="M51,155 Q56,105 85,97 Q114,105 119,155 Q112,128 85,126 Q58,128 51,155 Z" fill="#180800" clip-path="url(#ck-shield)"/>
+            <path d="M66,143 Q74,138 82,141" fill="none" stroke="#180800" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M88,141 Q96,138 104,143" fill="none" stroke="#180800" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <ellipse cx="74" cy="153" rx="7" ry="8" fill="#fff" clip-path="url(#ck-shield)"/>
+            <ellipse cx="96" cy="153" rx="7" ry="8" fill="#fff" clip-path="url(#ck-shield)"/>
+            <circle cx="75" cy="154" r="4.5" fill="#1a1000" clip-path="url(#ck-shield)"/>
+            <circle cx="97" cy="154" r="4.5" fill="#1a1000" clip-path="url(#ck-shield)"/>
+            <circle cx="76.5" cy="152" r="1.5" fill="rgba(255,255,255,0.7)" clip-path="url(#ck-shield)"/>
+            <circle cx="98.5" cy="152" r="1.5" fill="rgba(255,255,255,0.7)" clip-path="url(#ck-shield)"/>
+            <path d="M83,160 Q85,168 87,160" fill="none" stroke="#a05828" stroke-width="1.5" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M74,177 Q85,185 96,177" fill="none" stroke="#8a3820" stroke-width="2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+
+            <!-- FACE 2 (Kane) cx=195 -->
+            <rect x="165" y="207" width="60" height="40" rx="6" fill="#f0f0f0" clip-path="url(#ck-shield)"/>
+            <rect x="192" y="207" width="6"  height="40" fill="#c1121f" clip-path="url(#ck-shield)"/>
+            <rect x="165" y="222" width="60" height="6"  fill="#c1121f" clip-path="url(#ck-shield)"/>
+            <rect x="190" y="196" width="10" height="14" rx="3" fill="#dda060" clip-path="url(#ck-shield)"/>
+            <ellipse cx="195" cy="162" rx="34" ry="40" fill="#dda060" clip-path="url(#ck-shield)"/>
+            <ellipse cx="161" cy="165" rx="6" ry="8" fill="#cc9050" clip-path="url(#ck-shield)"/>
+            <ellipse cx="229" cy="165" rx="6" ry="8" fill="#cc9050" clip-path="url(#ck-shield)"/>
+            <path d="M161,155 Q166,105 195,97 Q224,105 229,155 Q222,128 195,126 Q168,128 161,155 Z" fill="#8a5010" clip-path="url(#ck-shield)"/>
+            <path d="M176,143 Q184,138 192,141" fill="none" stroke="#7a4010" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M198,141 Q206,138 214,143" fill="none" stroke="#7a4010" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <ellipse cx="184" cy="153" rx="7" ry="8" fill="#fff" clip-path="url(#ck-shield)"/>
+            <ellipse cx="206" cy="153" rx="7" ry="8" fill="#fff" clip-path="url(#ck-shield)"/>
+            <circle cx="185" cy="154" r="4.5" fill="#2a1a00" clip-path="url(#ck-shield)"/>
+            <circle cx="207" cy="154" r="4.5" fill="#2a1a00" clip-path="url(#ck-shield)"/>
+            <circle cx="186.5" cy="152" r="1.5" fill="rgba(255,255,255,0.7)" clip-path="url(#ck-shield)"/>
+            <circle cx="208.5" cy="152" r="1.5" fill="rgba(255,255,255,0.7)" clip-path="url(#ck-shield)"/>
+            <path d="M193,160 Q195,168 197,160" fill="none" stroke="#b07830" stroke-width="1.5" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M184,177 Q195,185 206,177" fill="none" stroke="#9a6028" stroke-width="2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+
+            <!-- Bottom gradient -->
+            <path d="M8,190 C8,190 8,330 140,330 C272,330 272,190 272,190 Z" fill="url(#face-btm)" clip-path="url(#ck-shield)"/>
+
+            <!-- Red banner top -->
             <path d="M8,22 Q140,3 272,22 L272,62 Q140,45 8,62 Z" fill="#c1121f"/>
-            <text x="140" y="47" text-anchor="middle" font-family="Righteous,sans-serif"
-                  font-size="12.5" fill="white" letter-spacing="2.5">TACTICON STUDIOS</text>
-            <text x="140" y="258" text-anchor="middle" font-family="Righteous,sans-serif"
-                  font-size="21" fill="#f0fff2" paint-order="stroke" stroke="#0a2e0e"
-                  stroke-width="3" stroke-linejoin="round" letter-spacing="0.5">CONNER &amp; KANE</text>
-            <text x="140" y="282" text-anchor="middle" font-family="VT323,monospace"
-                  font-size="19" fill="#e63946" paint-order="stroke" stroke="#0a2e0e"
-                  stroke-width="2" stroke-linejoin="round" letter-spacing="4">SOCKA</text>
-            <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z"
-                  fill="none" stroke="#e63946" stroke-width="5"/>
-            <path d="M140,316 C68,283 22,222 22,142 L22,33 Q140,17 258,33 L258,142 C258,222 212,283 140,316 Z"
-                  fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.55"/>
+            <text x="140" y="47" text-anchor="middle" font-family="Righteous,sans-serif" font-size="12.5" fill="white" letter-spacing="2.5">TACTICON STUDIOS</text>
+
+            <!-- Name + title -->
+            <text x="140" y="258" text-anchor="middle" font-family="Righteous,sans-serif" font-size="21" fill="#f0fff2" paint-order="stroke" stroke="#0a2e0e" stroke-width="3" stroke-linejoin="round" letter-spacing="0.5">CONNER &amp; KANE</text>
+            <text x="140" y="282" text-anchor="middle" font-family="VT323,monospace" font-size="19" fill="#e63946" paint-order="stroke" stroke="#0a2e0e" stroke-width="2" stroke-linejoin="round" letter-spacing="4">SOCKA</text>
+
+            <!-- Shield outlines -->
+            <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z" fill="none" stroke="#e63946" stroke-width="5"/>
+            <path d="M140,316 C68,283 22,222 22,142 L22,33 Q140,17 258,33 L258,142 C258,222 212,283 140,316 Z" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.55"/>
           </svg>
         </div>
         <div class="flex items-center justify-center gap-3" style="margin-top:2px;">
@@ -226,7 +272,7 @@
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px;opacity:0.6;">
         <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,#fff);"></div>
-        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.3</span>
+        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.4</span>
         <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,#fff);"></div>
       </div>
     </div>
@@ -272,18 +318,18 @@
         <h2>How to Play</h2>
       </div>
       <div class="p-5 space-y-3" style="font-family:'VT323',monospace;color:#d1d5db;font-size:1rem;line-height:1.5;">
-        <p>Pick players from your squad pool and assign them to positions.</p>
-        <p>Tap a player card to select it. Tap an empty slot to assign. Tap a filled slot to remove.</p>
+        <p>Tap a position on the pitch to open the player picker. Choose one of three cards from your squad pool.</p>
+        <p>Fill all five positions, then tap KICK OFF to play out the sequence.</p>
         <p style="color:var(--color-glow);margin-top:8px">POSITIONS</p>
+        <p>• Cross-In Left — Left foot + accuracy</p>
+        <p>• Through Ball Run <span style="color:var(--color-accent)">[chain]</span> — Speed + control. Only scores if the cross is received.</p>
         <p>• Pen Box Edge Left — Left foot + accuracy</p>
-        <p>• Long Shot Right — Power + right foot</p>
         <p>• Straight Shot — Accuracy + power</p>
-        <p>• Cross-In Left <span style="color:var(--color-accent)">[chain]</span> — Left foot + accuracy</p>
-        <p>• Through Ball Run <span style="color:var(--color-accent)">[chain]</span> — Speed + control</p>
+        <p>• Long Shot Right — Power + right foot</p>
         <p style="color:var(--color-glow);margin-top:8px">CROSS CHAIN</p>
-        <p>Cross-In Left fires first. If the ball is received, the Through Ball Run scores. If not, it scores zero. Reception depends on the crosser's quality and the runner's control. The outcome is shown live once both slots are filled.</p>
+        <p>Cross-In Left fires first. Reception depends on the crosser's quality and the runner's control. If the ball isn't received, Through Ball Run scores zero.</p>
         <p style="color:var(--color-glow);margin-top:8px">CHALLENGE</p>
-        <p>Share your challenge code after the game. Opponents face the exact same squad pool and cross chain outcome. Three minutes on the clock — timer starts on your first move.</p>
+        <p>Share your challenge code after the game. Opponents face the exact same squad pool. Three minutes on the clock — timer starts on your first tap.</p>
       </div>
       <div class="subpanel-footer"></div>
     </div>
@@ -344,72 +390,71 @@
   <!-- ═══ GAME SHELL ═══ -->
   <div class="game-shell w-full">
 
-    <!-- Header: timer + score -->
+    <!-- Header -->
     <div id="game-header">
       <div id="timer-display">3:00</div>
-      <div id="score-display">0 pts</div>
+      <div id="score-display">0 / 500</div>
     </div>
 
-    <!-- Slots -->
-    <div id="slots-area">
+    <!-- Pitch -->
+    <div id="pitch-container">
+      <svg id="pitch-svg" viewBox="0 0 280 390" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <rect width="280" height="390" fill="#2a7d30"/>
+        <rect x="10" y="15" width="260" height="365" fill="#2e8b35"/>
+        <rect x="10" y="15"  width="260" height="36" fill="#2a7d30" opacity="0.4"/>
+        <rect x="10" y="87"  width="260" height="36" fill="#2a7d30" opacity="0.4"/>
+        <rect x="10" y="159" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
+        <rect x="10" y="231" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
+        <rect x="10" y="303" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
+        <!-- Pitch boundary -->
+        <rect x="10" y="15" width="260" height="365" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <!-- Halfway line -->
+        <line x1="10" y1="380" x2="270" y2="380" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <circle cx="140" cy="380" r="2" fill="rgba(255,255,255,0.7)"/>
+        <path d="M 74,380 A 66,66 0 0,0 206,380" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <!-- 6-yard box -->
+        <rect x="117" y="15" width="46" height="28" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <!-- Penalty area -->
+        <rect x="77" y="15" width="126" height="86" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <circle cx="140" cy="76" r="2" fill="rgba(255,255,255,0.7)"/>
+        <path d="M 79,101 A 66,66 0 0,1 201,101" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <!-- Goal -->
+        <rect x="109" y="3" width="62" height="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
+        <text x="140" y="12" text-anchor="middle" font-family="VT323,monospace" font-size="8" fill="rgba(255,255,255,0.6)" letter-spacing="1">GOAL</text>
+        <text x="140" y="390" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.45)" letter-spacing="1">KICK OFF</text>
+        <!-- Football -->
+        <g id="football-group" transform="translate(140,375)" opacity="0" style="pointer-events:none">
+          <ellipse cx="0" cy="7" rx="8" ry="3" fill="rgba(0,0,0,0.25)"/>
+          <circle cx="0" cy="0" r="7" fill="#fff" stroke="#222" stroke-width="0.5"/>
+          <polygon points="0,-4.5 2.1,1.4 -2.1,1.4" fill="#111" opacity="0.85"/>
+          <polygon points="3.9,2.8 0.8,4.8 -1.8,3.2" fill="#111" opacity="0.85" transform="rotate(72)"/>
+          <polygon points="3.9,2.8 0.8,4.8 -1.8,3.2" fill="#111" opacity="0.85" transform="rotate(144)"/>
+          <polygon points="3.9,2.8 0.8,4.8 -1.8,3.2" fill="#111" opacity="0.85" transform="rotate(216)"/>
+          <polygon points="3.9,2.8 0.8,4.8 -1.8,3.2" fill="#111" opacity="0.85" transform="rotate(288)"/>
+          <circle cx="-2" cy="-2.5" r="1.5" fill="rgba(255,255,255,0.55)"/>
+        </g>
+        <g id="positions-layer"></g>
+        <g id="score-pops-layer"></g>
+      </svg>
+    </div>
 
-      <!-- Row 1: Penalty Box Edge Left | Long Shot Right -->
-      <div class="slots-row">
-        <div class="slot-card" id="slot-penaltyEdgeLeft" onclick="tapSlot('penaltyEdgeLeft')">
-          <div class="slot-name">Pen Edge L</div>
-          <div class="slot-player"><span style="opacity:0.3;font-size:0.75rem">— empty —</span></div>
-          <div class="slot-stats"></div>
-          <div class="slot-score"></div>
-        </div>
-        <div class="slot-card" id="slot-longShotRight" onclick="tapSlot('longShotRight')">
-          <div class="slot-name">Long Shot R</div>
-          <div class="slot-player"><span style="opacity:0.3;font-size:0.75rem">— empty —</span></div>
-          <div class="slot-stats"></div>
-          <div class="slot-score"></div>
-        </div>
+    <!-- Picker panel -->
+    <div id="picker-panel" class="closed">
+      <div id="picker-header">
+        <span id="picker-label">Pick: <strong id="picker-pos-name">—</strong></span>
+        <button id="picker-close-btn" onclick="closePicker()">✕</button>
       </div>
+      <div id="picker-cards-row"></div>
+    </div>
 
-      <!-- Row 2: Straight Shot -->
-      <div class="slots-row">
-        <div class="slot-card" id="slot-straightShot" onclick="tapSlot('straightShot')">
-          <div class="slot-name">Straight Shot</div>
-          <div class="slot-player"><span style="opacity:0.3;font-size:0.75rem">— empty —</span></div>
-          <div class="slot-stats"></div>
-          <div class="slot-score"></div>
-        </div>
-      </div>
-
-      <!-- Row 3: Cross Chain -->
-      <div class="slots-row" style="align-items:stretch;">
-        <div class="slot-card" id="slot-crossInLeft" onclick="tapSlot('crossInLeft')">
-          <div class="slot-name">Cross-In L</div>
-          <div class="slot-player"><span style="opacity:0.3;font-size:0.75rem">— empty —</span></div>
-          <div class="slot-stats"></div>
-          <div class="slot-score"></div>
-        </div>
-        <div class="chain-connector">
-          <div class="chain-pill" id="chain-pill">→</div>
-        </div>
-        <div class="slot-card" id="slot-throughBallRun" onclick="tapSlot('throughBallRun')">
-          <div class="slot-name">Thru Ball Run</div>
-          <div class="slot-player"><span style="opacity:0.3;font-size:0.75rem">— empty —</span></div>
-          <div class="slot-stats"></div>
-          <div class="slot-score"></div>
-        </div>
-      </div>
-
-    </div><!-- /slots-area -->
-
-    <!-- Pool -->
-    <div id="pool-area">
-      <div id="pool-label">Squad Pool</div>
-      <div id="pool-scroll">
-        <p style="color:var(--color-primary);opacity:0.4;font-family:'VT323',monospace;font-size:0.85rem;padding:4px 0">Players loading...</p>
-      </div>
+    <!-- Phase area -->
+    <div id="phase-area">
+      <span id="phase-hint">Tap a position to pick a player</span>
+      <button id="confirm-btn" onclick="confirmTeam()">KICK OFF ▶</button>
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.3</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.4</p>
 
   </div><!-- /game-shell -->
 
@@ -480,6 +525,14 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.4', date:'2026-05', notes:[
+        'New logo — two drawn cartoon faces in the shield.',
+        'Half-pitch gameplay — tap positions on the pitch to assign players.',
+        'Three players offered per position — pick your best option.',
+        'Collector-card player design.',
+        'Full play-out animation — watch your team kick off position by position.',
+        'Mobile viewport height fix.',
+      ]},
       { v:'v0.0.3', date:'2026-05', notes:['Version bump.'] },
       { v:'v0.0.2', date:'2026-05', notes:['Football crest badge logo on front page.', 'Grass green pitch UI — brighter background, pill-shaped position slots.', '52-player database — 16 random cards dealt per game.', 'Full squad-building mechanic with cross-chain scoring.'] },
       { v:'v0.0.1', date:'2026-05', notes:['Initial release.'] },
@@ -559,19 +612,6 @@
       o.start(ac.currentTime + delay);
       o.stop(ac.currentTime + delay + attack + sustain + release + 0.01);
     }
-    function _noise(vol, dur, delay=0) {
-      if (!sfxEnabled) return;
-      const ac = _getAC();
-      const buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
-      const d = buf.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-      const src = ac.createBufferSource(), g = ac.createGain();
-      src.buffer = buf;
-      g.gain.setValueAtTime(vol, ac.currentTime + delay);
-      g.gain.linearRampToValueAtTime(0, ac.currentTime + delay + dur);
-      src.connect(g); g.connect(_masterGain);
-      src.start(ac.currentTime + delay);
-    }
     function updateVolume(val) {
       document.getElementById('vol-val').innerText = val + '%';
       _pendingVolume = val / 100;
@@ -616,6 +656,19 @@
     let selectedIdx = null;
     let crossReceivedRoll = 0;
     let gameActive = false;
+    let gamePhase = 'selection'; // 'selection' | 'playOut' | 'done'
+    let activePosId = null;
+    let currentPickerOffers = [];
+    let footballX = 140, footballY = 375;
+
+    const POS_COORDS = {
+      penaltyEdgeLeft: { cx: 80,  cy: 102, label: 'PEN L'  },
+      longShotRight:   { cx: 222, cy: 175, label: 'LONG R'  },
+      straightShot:    { cx: 140, cy: 130, label: 'SHOT'    },
+      crossInLeft:     { cx: 28,  cy: 130, label: 'CROSS'   },
+      throughBallRun:  { cx: 188, cy: 52,  label: 'RUN'     },
+    };
+    const PLAY_ORDER = ['crossInLeft','throughBallRun','penaltyEdgeLeft','straightShot','longShotRight'];
 
     const SLOT_CONFIG = {
       penaltyEdgeLeft: { label:'Pen Edge L',    primary:'leftFoot',  secondary:'accuracy'  },
@@ -628,12 +681,10 @@
 
     // ─── PLAYER DATABASE ────────────────────────────────────────────────────────
     const ALL_PLAYERS = [
-      // GK
       { name:'P. Robinson',  pos:'GK',  rightFoot:55, leftFoot:52, power:62, accuracy:58, speed:55, control:70 },
       { name:'D. James',     pos:'GK',  rightFoot:52, leftFoot:50, power:60, accuracy:55, speed:58, control:72 },
       { name:'Van der Sar',  pos:'GK',  rightFoot:60, leftFoot:58, power:65, accuracy:62, speed:55, control:80 },
       { name:'P. Cech',      pos:'GK',  rightFoot:58, leftFoot:55, power:62, accuracy:65, speed:57, control:82 },
-      // DEF
       { name:'A. Cole',      pos:'DEF', rightFoot:65, leftFoot:82, power:72, accuracy:68, speed:82, control:78 },
       { name:'G. Neville',   pos:'DEF', rightFoot:72, leftFoot:55, power:62, accuracy:65, speed:72, control:76 },
       { name:'Rio Ferdinand',pos:'DEF', rightFoot:68, leftFoot:62, power:70, accuracy:65, speed:72, control:82 },
@@ -646,7 +697,6 @@
       { name:'G. Johnson',   pos:'DEF', rightFoot:75, leftFoot:60, power:68, accuracy:68, speed:78, control:72 },
       { name:'W. Brown',     pos:'DEF', rightFoot:68, leftFoot:60, power:72, accuracy:60, speed:70, control:70 },
       { name:'S. Distin',    pos:'DEF', rightFoot:65, leftFoot:68, power:76, accuracy:62, speed:70, control:72 },
-      // MID
       { name:'S. Gerrard',   pos:'MID', rightFoot:88, leftFoot:70, power:85, accuracy:82, speed:78, control:76 },
       { name:'F. Lampard',   pos:'MID', rightFoot:87, leftFoot:65, power:84, accuracy:83, speed:70, control:74 },
       { name:'P. Scholes',   pos:'MID', rightFoot:87, leftFoot:68, power:78, accuracy:88, speed:62, control:86 },
@@ -667,7 +717,6 @@
       { name:'C. Ronaldo',   pos:'MID', rightFoot:88, leftFoot:88, power:88, accuracy:86, speed:93, control:90 },
       { name:'Bergkamp',     pos:'MID', rightFoot:87, leftFoot:76, power:65, accuracy:92, speed:65, control:95 },
       { name:'Van Persie',   pos:'MID', rightFoot:72, leftFoot:92, power:80, accuracy:88, speed:72, control:84 },
-      // FWD
       { name:'W. Rooney',    pos:'FWD', rightFoot:86, leftFoot:75, power:86, accuracy:84, speed:78, control:82 },
       { name:'M. Owen',      pos:'FWD', rightFoot:88, leftFoot:65, power:72, accuracy:88, speed:90, control:74 },
       { name:'T. Henry',     pos:'FWD', rightFoot:68, leftFoot:92, power:78, accuracy:92, speed:93, control:92 },
@@ -707,11 +756,9 @@
       ['penaltyEdgeLeft','longShotRight','straightShot'].forEach(id => {
         sc[id] = slots[id] ? slotRawScore(id, slots[id]) : 0;
       });
-
       const crosser = slots.crossInLeft;
       const runner  = slots.throughBallRun;
       sc.crossInLeft = crosser ? slotRawScore('crossInLeft', crosser) : 0;
-
       if (runner && crosser) {
         const crossQuality    = (crosser.leftFoot + crosser.accuracy) / (2 * 99);
         const receptionChance = crossQuality * (runner.control / 99);
@@ -723,7 +770,6 @@
         sc.crossReceived  = false;
         sc.throughBallRun = 0;
       }
-
       sc.total = Math.round(
         sc.penaltyEdgeLeft + sc.longShotRight + sc.straightShot +
         sc.crossInLeft + sc.throughBallRun
@@ -731,119 +777,201 @@
       return sc;
     }
 
-    // ─── RENDER ─────────────────────────────────────────────────────────────────
-    function renderGame() {
-      const sc = calcScores();
-      document.getElementById('score-display').innerText = `${sc.total} / 500`;
-
-      SLOT_IDS.forEach(slotId => {
-        const cfg    = SLOT_CONFIG[slotId];
-        const player = slots[slotId];
-        const card   = document.getElementById(`slot-${slotId}`);
-
-        card.classList.toggle('filled',      !!player);
-        card.classList.toggle('drop-target', selectedIdx !== null && !player);
-
-        if (slotId === 'throughBallRun') {
-          if (slots.crossInLeft && slots.throughBallRun) {
-            card.style.borderColor = sc.crossReceived ? 'var(--color-accent)' : 'var(--color-primary)';
-          } else {
-            card.style.borderColor = '';
-          }
-        }
-
-        const playerEl = card.querySelector('.slot-player');
-        playerEl.innerHTML = player
-          ? escHtml(player.name)
-          : `<span style="opacity:0.3;font-size:0.75rem;font-family:'VT323',monospace">— empty —</span>`;
-
-        const statsEl = card.querySelector('.slot-stats');
-        if (player) {
-          const a1 = STAT_ABBR[cfg.primary],   v1 = player[cfg.primary];
-          const a2 = STAT_ABBR[cfg.secondary], v2 = player[cfg.secondary];
-          statsEl.innerText = `${a1}:${v1} ${a2}:${v2}`;
-        } else {
-          statsEl.innerText = '';
-        }
-
-        card.querySelector('.slot-score').innerText = player ? Math.round(sc[slotId]) : '';
-      });
-
-      // Chain pill
-      const pill = document.getElementById('chain-pill');
-      if (slots.crossInLeft && slots.throughBallRun) {
-        pill.className = `chain-pill ${sc.crossReceived ? 'recv' : 'miss'}`;
-        pill.innerText = sc.crossReceived ? '✓ RECV' : '✗ MISS';
-      } else {
-        pill.className = 'chain-pill';
-        pill.innerText = '→';
-      }
-
-      renderPool();
+    // ─── PITCH RENDER ───────────────────────────────────────────────────────────
+    function shortenName(fullName) {
+      const parts = fullName.trim().split(/\s+/);
+      return parts[parts.length - 1].toUpperCase();
     }
 
-    function renderPool() {
-      const scroll = document.getElementById('pool-scroll');
-      if (!pool.length) {
-        scroll.innerHTML = `<p style="color:var(--color-primary);opacity:0.4;font-family:'VT323',monospace;font-size:0.85rem;padding:4px 0">Players loading...</p>`;
-        return;
+    function renderPitch() {
+      const layer = document.getElementById('positions-layer');
+      if (!layer) return;
+      let html = '';
+      SLOT_IDS.forEach(slotId => {
+        const pos = POS_COORDS[slotId];
+        const player = slots[slotId];
+        const isActive = activePosId === slotId;
+        const isFilled = !!player;
+        const cx = pos.cx, cy = pos.cy, r = 22;
+        const fillColor = isFilled ? '#c1121f' : '#1d5e24';
+        const strokeColor = isActive ? '#fbbf24' : (isFilled ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)');
+        const strokeW = isActive ? 2.5 : 1.5;
+        const topLabel = isFilled ? shortenName(player.name) : pos.label;
+        const botLabel = isFilled ? SLOT_CONFIG[slotId].label.toUpperCase() : '';
+        const clickable = gamePhase === 'selection';
+        html += `<g ${clickable ? `onclick="tapPosition('${slotId}')"` : ''} style="${clickable ? 'cursor:pointer;' : ''}">`;
+        html += `<circle cx="${cx}" cy="${cy}" r="${r+4}" fill="rgba(0,0,0,0.18)"/>`;
+        html += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${strokeW}"/>`;
+        html += `<text x="${cx}" y="${cy - (botLabel ? 4 : 0)}" text-anchor="middle" font-family="VT323,monospace" font-size="9.5" fill="#fff" style="pointer-events:none">${escHtml(topLabel)}</text>`;
+        if (botLabel) {
+          html += `<text x="${cx}" y="${cy + 8}" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.6)" style="pointer-events:none">${escHtml(botLabel)}</text>`;
+        }
+        html += `</g>`;
+      });
+      layer.innerHTML = html;
+      updateScoreDisplay();
+    }
+
+    function updateScoreDisplay() {
+      const hint   = document.getElementById('phase-hint');
+      const btn    = document.getElementById('confirm-btn');
+      const scorEl = document.getElementById('score-display');
+      if (!hint || !btn || !scorEl) return;
+      const allFilled = SLOT_IDS.every(id => !!slots[id]);
+      const sc = calcScores();
+      if (gamePhase === 'selection') {
+        const filled = SLOT_IDS.filter(id => !!slots[id]).length;
+        hint.innerText = allFilled ? 'All positions filled — ready to kick off!' : `${filled} / 5 positions filled`;
+        btn.classList.toggle('visible', allFilled);
+        scorEl.innerText = `${sc.total} / 500`;
+      } else if (gamePhase === 'playOut') {
+        hint.innerText = 'Playing out...';
+        btn.classList.remove('visible');
+      } else {
+        hint.innerText = '';
+        btn.classList.remove('visible');
       }
-      scroll.innerHTML = pool.map((p, i) => {
-        const isSel  = selectedIdx === i;
-        const isUsed = !!p._slotId;
-        return `<div class="player-card${isSel?' selected':''}${isUsed?' used':''}" onclick="tapPlayer(${i})">
-          <div class="player-name">${escHtml(p.name)}</div>
-          <div class="player-stats">
-            <div class="stat-item"><span class="stat-abbr">RF</span><span class="stat-val">${p.rightFoot}</span></div>
-            <div class="stat-item"><span class="stat-abbr">LF</span><span class="stat-val">${p.leftFoot}</span></div>
-            <div class="stat-item"><span class="stat-abbr">PW</span><span class="stat-val">${p.power}</span></div>
-            <div class="stat-item"><span class="stat-abbr">AC</span><span class="stat-val">${p.accuracy}</span></div>
-            <div class="stat-item"><span class="stat-abbr">SP</span><span class="stat-val">${p.speed}</span></div>
-            <div class="stat-item"><span class="stat-abbr">CT</span><span class="stat-val">${p.control}</span></div>
-          </div>
-        </div>`;
-      }).join('');
     }
 
     // ─── INTERACTION ────────────────────────────────────────────────────────────
-    function tapPlayer(idx) {
-      if (!gameActive) return;
-      const p = pool[idx];
-      if (p._slotId) return;
-      if (selectedIdx === idx) {
-        selectedIdx = null;
-      } else {
-        selectedIdx = idx;
-        SFX.select();
-        if (!timerStarted) startTimer();
-      }
-      renderGame();
+    function tapPosition(slotId) {
+      if (gamePhase !== 'selection') return;
+      if (!timerStarted) startTimer();
+      if (activePosId === slotId) { closePicker(); return; }
+      openPicker(slotId);
     }
 
-    function tapSlot(slotId) {
-      if (!gameActive) return;
-      if (selectedIdx !== null) {
-        if (!timerStarted) startTimer();
-        const incoming = pool[selectedIdx];
-        const prev = pool.find(p => p._slotId === slotId);
-        if (prev) prev._slotId = null;
-        incoming._slotId = slotId;
-        slots[slotId] = incoming;
-        selectedIdx = null;
-        SFX.assign();
-      } else {
-        if (slots[slotId]) {
-          slots[slotId]._slotId = null;
-          slots[slotId] = null;
-          SFX.remove();
-        }
+    function openPicker(slotId) {
+      activePosId = slotId;
+      if (slots[slotId]) {
+        slots[slotId]._slotId = null;
+        slots[slotId] = null;
       }
-      renderGame();
+      const available = pool.filter(p => !p._slotId);
+      for (let i = available.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [available[i], available[j]] = [available[j], available[i]];
+      }
+      currentPickerOffers = available.slice(0, 3);
+      const cfg = SLOT_CONFIG[slotId];
+      document.getElementById('picker-pos-name').innerText = cfg.label;
+      const row = document.getElementById('picker-cards-row');
+      row.innerHTML = currentPickerOffers.map((p, i) => {
+        const overall = Math.round((p.rightFoot + p.leftFoot + p.power + p.accuracy + p.speed + p.control) / 6);
+        return `<div class="collector-card" onclick="pickPlayer(${i})">
+          <div class="card-top">
+            <span class="card-pos-badge pos-${escHtml(p.pos.toLowerCase())}">${escHtml(p.pos)}</span>
+            <span class="card-rating">${overall}</span>
+          </div>
+          <div class="card-name">${escHtml(p.name)}</div>
+          <div class="card-stats-grid">
+            <div class="cs-item"><span class="cs-abbr">RF</span><span class="cs-val">${p.rightFoot}</span></div>
+            <div class="cs-item"><span class="cs-abbr">LF</span><span class="cs-val">${p.leftFoot}</span></div>
+            <div class="cs-item"><span class="cs-abbr">PW</span><span class="cs-val">${p.power}</span></div>
+            <div class="cs-item"><span class="cs-abbr">AC</span><span class="cs-val">${p.accuracy}</span></div>
+            <div class="cs-item"><span class="cs-abbr">SP</span><span class="cs-val">${p.speed}</span></div>
+            <div class="cs-item"><span class="cs-abbr">CT</span><span class="cs-val">${p.control}</span></div>
+          </div>
+        </div>`;
+      }).join('');
+      document.getElementById('picker-panel').classList.remove('closed');
+      renderPitch();
+    }
+
+    function pickPlayer(idx) {
+      const p = currentPickerOffers[idx];
+      if (!p) return;
+      p._slotId = activePosId;
+      slots[activePosId] = p;
+      SFX.assign();
+      closePicker();
+      renderPitch();
+    }
+
+    function closePicker() {
+      activePosId = null;
+      document.getElementById('picker-panel').classList.add('closed');
+      renderPitch();
+    }
+
+    function confirmTeam() {
+      if (gamePhase !== 'selection') return;
+      if (!SLOT_IDS.every(id => !!slots[id])) return;
+      gamePhase = 'playOut';
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+      closePicker();
+      playOut();
+    }
+
+    // ─── PLAY OUT ANIMATION ──────────────────────────────────────────────────────
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function animateFootball(toX, toY, dur) {
+      return new Promise(resolve => {
+        const startX = footballX, startY = footballY;
+        const start = performance.now();
+        const fbEl = document.getElementById('football-group');
+        function frame(now) {
+          let t = Math.min((now - start) / dur, 1);
+          t = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+          const x = startX + (toX - startX) * t;
+          const y = startY + (toY - startY) * t;
+          fbEl.setAttribute('transform', `translate(${x.toFixed(1)},${y.toFixed(1)})`);
+          if (t < 1) requestAnimationFrame(frame);
+          else { footballX = toX; footballY = toY; resolve(); }
+        }
+        requestAnimationFrame(frame);
+      });
+    }
+
+    function showScorePop(x, y, score, isMiss) {
+      const layer = document.getElementById('score-pops-layer');
+      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x', x);
+      txt.setAttribute('y', y - 22);
+      txt.setAttribute('text-anchor','middle');
+      txt.setAttribute('font-family','VT323,monospace');
+      txt.setAttribute('font-size','14');
+      txt.setAttribute('fill', isMiss ? '#e63946' : '#60a5fa');
+      txt.setAttribute('paint-order','stroke');
+      txt.setAttribute('stroke','#0a2e0e');
+      txt.setAttribute('stroke-width','2');
+      txt.textContent = isMiss ? '✗ MISS' : `+${Math.round(score)}`;
+      txt.style.opacity = '0';
+      txt.style.transition = 'opacity 0.3s ease';
+      layer.appendChild(txt);
+      requestAnimationFrame(() => requestAnimationFrame(() => { txt.style.opacity = '1'; }));
+    }
+
+    async function playOut() {
+      const fbEl = document.getElementById('football-group');
+      fbEl.style.opacity = '1';
+      footballX = 140; footballY = 375;
+      fbEl.setAttribute('transform','translate(140,375)');
+      await delay(400);
+      const sc = calcScores();
+      for (const slotId of PLAY_ORDER) {
+        const pos = POS_COORDS[slotId];
+        await animateFootball(pos.cx, pos.cy, 750);
+        await delay(300);
+        const isMiss = (slotId === 'throughBallRun' && !sc.crossReceived);
+        showScorePop(pos.cx, pos.cy, sc[slotId], isMiss);
+        SFX.assign();
+        await delay(700);
+      }
+      await delay(300);
+      gamePhase = 'done';
+      gameActive = false;
+      document.getElementById('score-display').innerText = `${sc.total} / 500`;
+      saveGame(sc.total, isChallengeMode, true);
+      await delay(600);
+      showEndScreen(sc);
     }
 
     // ─── END GAME ───────────────────────────────────────────────────────────────
     function endGame() {
       if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+      if (gamePhase === 'playOut') return;
       gameActive = false;
       const sc = calcScores();
       saveGame(sc.total, isChallengeMode, true);
@@ -907,13 +1035,17 @@
       timerSeconds = TIMER_SECONDS;
       timerStarted = false;
       gameActive = false;
+      gamePhase = 'selection';
+      activePosId = null;
+      currentPickerOffers = [];
+      footballX = 140; footballY = 375;
       selectedIdx = null;
       SLOT_IDS.forEach(k => slots[k] = null);
       pool = [];
       crossReceivedRoll = 0;
       document.getElementById('timer-display').innerText = '3:00';
       document.getElementById('timer-display').classList.remove('warn');
-      renderGame();
+      renderPitch();
     }
 
     function startGame(fromChallenge=false) {
@@ -927,13 +1059,22 @@
       timerSeconds = TIMER_SECONDS;
       timerStarted = false;
       gameActive = true;
+      gamePhase = 'selection';
+      activePosId = null;
+      currentPickerOffers = [];
+      footballX = 140; footballY = 375;
       selectedIdx = null;
       SLOT_IDS.forEach(k => slots[k] = null);
       pool = generatePlayers(rng).map(p => ({ ...p, _slotId: null }));
       crossReceivedRoll = rng();
       document.getElementById('timer-display').innerText = '3:00';
       document.getElementById('timer-display').classList.remove('warn');
-      renderGame();
+      const fbEl = document.getElementById('football-group');
+      if (fbEl) { fbEl.setAttribute('transform','translate(140,375)'); fbEl.style.opacity = '0'; }
+      const scLayer = document.getElementById('score-pops-layer');
+      if (scLayer) scLayer.innerHTML = '';
+      document.getElementById('picker-panel').classList.add('closed');
+      renderPitch();
     }
 
     window.onload = initGame;
