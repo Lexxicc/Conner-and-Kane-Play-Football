@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Conner and Kane Play Football v0.0.6</title>
+  <title>Conner and Kane Play Football v0.0.2</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&family=Righteous&family=Barlow:wght@400;600&display=swap');
@@ -176,20 +176,43 @@
 
     <!-- MAIN -->
     <div id="start-main" class="menu-scroll relative z-10">
-      <div class="text-center pt-4 pb-3 px-4" style="border-bottom:4px solid var(--color-shadow);">
-        <div style="display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
-          <img src="CFK-artwork-inspiration.jpeg" alt=""
-               style="max-height:240px;max-width:88%;border-radius:6px;border:3px solid var(--color-primary);
-                      box-shadow:0 0 20px rgba(230,57,70,0.5),0 0 6px rgba(0,0,0,0.6);">
+      <div class="text-center pt-3 pb-2 px-4" style="border-bottom:4px solid var(--color-shadow);">
+        <div style="display:flex;align-items:center;justify-content:center;margin-bottom:6px;">
+          <svg viewBox="0 0 280 340" xmlns="http://www.w3.org/2000/svg"
+               style="width:min(72vw,252px);height:auto;filter:drop-shadow(0 0 18px rgba(230,57,70,0.55));">
+            <defs>
+              <clipPath id="ck-shield">
+                <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z"/>
+              </clipPath>
+              <linearGradient id="ck-btm" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0a2e0e" stop-opacity="0"/>
+                <stop offset="50%" stop-color="#0a2e0e" stop-opacity="0.82"/>
+                <stop offset="100%" stop-color="#0a2e0e" stop-opacity="0.96"/>
+              </linearGradient>
+            </defs>
+            <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z" fill="#1d5e24"/>
+            <image href="CFK-artwork-inspiration.jpeg" x="8" y="22" width="264" height="264"
+                   clip-path="url(#ck-shield)" preserveAspectRatio="xMidYMin slice"/>
+            <path d="M8,195 L8,230 C8,230 74,330 140,330 C206,330 272,230 272,230 L272,195 Z"
+                  fill="url(#ck-btm)" clip-path="url(#ck-shield)"/>
+            <path d="M8,22 Q140,3 272,22 L272,62 Q140,45 8,62 Z" fill="#c1121f"/>
+            <text x="140" y="47" text-anchor="middle" font-family="Righteous,sans-serif"
+                  font-size="12.5" fill="white" letter-spacing="2.5">TACTICON STUDIOS</text>
+            <text x="140" y="258" text-anchor="middle" font-family="Righteous,sans-serif"
+                  font-size="21" fill="#f0fff2" paint-order="stroke" stroke="#0a2e0e"
+                  stroke-width="3" stroke-linejoin="round" letter-spacing="0.5">CONNER &amp; KANE</text>
+            <text x="140" y="282" text-anchor="middle" font-family="VT323,monospace"
+                  font-size="19" fill="#e63946" paint-order="stroke" stroke="#0a2e0e"
+                  stroke-width="2" stroke-linejoin="round" letter-spacing="4">PLAY FOOTBALL</text>
+            <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z"
+                  fill="none" stroke="#e63946" stroke-width="5"/>
+            <path d="M140,316 C68,283 22,222 22,142 L22,33 Q140,17 258,33 L258,142 C258,222 212,283 140,316 Z"
+                  fill="none" stroke="#fbbf24" stroke-width="1.5" opacity="0.55"/>
+          </svg>
         </div>
-        <h1 style="font-family:'Righteous',sans-serif;font-size:clamp(1.8rem,8vw,3.5rem);
-                    color:var(--color-glow);text-shadow:3px 3px 0 var(--color-shadow),0 0 20px rgba(230,57,70,0.50);
-                    text-transform:uppercase;letter-spacing:0.10em;line-height:1.1;">
-          Conner &amp; Kane<br>Play Football
-        </h1>
-        <div class="flex items-center justify-center gap-3 mt-2">
+        <div class="flex items-center justify-center gap-3" style="margin-top:2px;">
           <div class="flex-grow h-px" style="background:linear-gradient(to right,transparent,var(--color-primary))"></div>
-          <span style="font-size:1rem;color:var(--color-primary);text-transform:uppercase;letter-spacing:0.4em;font-family:'VT323',monospace;">KICK. SCORE. WIN.</span>
+          <span style="font-size:0.9rem;color:var(--color-primary);text-transform:uppercase;letter-spacing:0.4em;font-family:'VT323',monospace;">KICK. SCORE. WIN.</span>
           <div class="flex-grow h-px" style="background:linear-gradient(to left,transparent,var(--color-primary))"></div>
         </div>
       </div>
@@ -203,7 +226,7 @@
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px;opacity:0.6;">
         <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,#fff);"></div>
-        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.6</span>
+        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.2</span>
         <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,#fff);"></div>
       </div>
     </div>
@@ -386,7 +409,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.6</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.2</p>
 
   </div><!-- /game-shell -->
 
@@ -457,11 +480,7 @@
     }
 
     const PATCH_NOTES = [
-      { v:'v0.0.6', date:'2026-05', notes:['Brighter grass green pitch.', 'Position slots smaller with rounded pill shape.', '52-player database live — 16 random cards dealt per game.'] },
-      { v:'v0.0.5', date:'2026-05', notes:['Pitch green UI — bg, cards, and borders reskinned to footy pitch.', 'Player cards enlarged for mobile readability.', 'Artwork splash bigger on front page with both faces.'] },
-      { v:'v0.0.4', date:'2026-05', notes:['First send of full framework — pool, 5 positions, cross-chain mechanic.'] },
-      { v:'v0.0.3', date:'2026-05', notes:['Draft framework — squad pool, 5 positions, cross-chain mechanic.', 'England colour scheme + artwork.'] },
-      { v:'v0.0.2', date:'2026-05', notes:['First Telegram build.'] },
+      { v:'v0.0.2', date:'2026-05', notes:['Football crest badge logo on front page.', 'Grass green pitch UI — brighter background, pill-shaped position slots.', '52-player database — 16 random cards dealt per game.', 'Full squad-building mechanic with cross-chain scoring.'] },
       { v:'v0.0.1', date:'2026-05', notes:['Initial release.'] },
     ];
 
