@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Conner and Kane Play Football v0.0.3</title>
+  <title>Socka v0.0.3</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&family=Righteous&family=Barlow:wght@400;600&display=swap');
@@ -203,7 +203,7 @@
                   stroke-width="3" stroke-linejoin="round" letter-spacing="0.5">CONNER &amp; KANE</text>
             <text x="140" y="282" text-anchor="middle" font-family="VT323,monospace"
                   font-size="19" fill="#e63946" paint-order="stroke" stroke="#0a2e0e"
-                  stroke-width="2" stroke-linejoin="round" letter-spacing="4">PLAY FOOTBALL</text>
+                  stroke-width="2" stroke-linejoin="round" letter-spacing="4">SOCKA</text>
             <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z"
                   fill="none" stroke="#e63946" stroke-width="5"/>
             <path d="M140,316 C68,283 22,222 22,142 L22,33 Q140,17 258,33 L258,142 C258,222 212,283 140,316 Z"
@@ -420,10 +420,10 @@
 
   <script>
     // ─── WIPE GUARD ────────────────────────────────────────────────────────────
-    (function(){ var k='CKF_wipe_v1'; if(localStorage.getItem(k)!=='1'){ localStorage.removeItem('CKF_stats'); localStorage.setItem(k,'1'); } })();
+    (function(){ var k='SCA_wipe_v1'; if(localStorage.getItem(k)!=='1'){ localStorage.removeItem('SCA_stats'); localStorage.setItem(k,'1'); } })();
 
     // ─── STATS ─────────────────────────────────────────────────────────────────
-    const STATS_KEY = 'CKF_stats';
+    const STATS_KEY = 'SCA_stats';
     function loadStats() {
       return JSON.parse(localStorage.getItem(STATS_KEY) || '{"highScore":0,"gamesPlayed":0,"totalScore":0,"history":[]}');
     }
@@ -467,7 +467,7 @@
     }
     function copyShareText(score) {
       if (!challengeSeed) challengeSeed = generateSeed();
-      const text = `I scored ${score}/500 on Conner and Kane Play Football! Challenge code: ${challengeSeed} — can you beat it?`;
+      const text = `I scored ${score}/500 on Socka! Challenge code: ${challengeSeed} — can you beat it?`;
       navigator.clipboard.writeText(text).then(() => {
         const btn = document.getElementById('share-btn');
         if (btn) { btn.innerText = 'Copied!'; setTimeout(() => btn.innerText = 'Share Score', 2000); }
