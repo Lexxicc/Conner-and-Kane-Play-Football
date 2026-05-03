@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Conner and Kane Play Football v0.0.5</title>
+  <title>Conner and Kane Play Football v0.0.6</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&family=Righteous&family=Barlow:wght@400;600&display=swap');
 
     :root {
-      --color-bg-dark:  #173d1a;
-      --color-panel:    #0d2610;
+      --color-bg-dark:  #2e8b35;
+      --color-panel:    #1d5e24;
       --color-primary:  #e63946;
       --color-accent:   #60a5fa;
       --color-glow:     #f0fff2;
-      --color-shadow:   #071009;
+      --color-shadow:   #0e3312;
     }
 
     /* ── FRONT MENU ── */
@@ -85,40 +85,40 @@
     }
 
     #slots-area {
-      flex: 1; min-height: 0; max-height: 46vh; display: flex; flex-direction: column; gap: 5px; padding: 6px; overflow: hidden;
+      flex: 1; min-height: 0; max-height: 42vh; display: flex; flex-direction: column; gap: 4px; padding: 5px 6px; overflow: hidden;
     }
-    .slots-row { display: flex; gap: 5px; flex: 1; min-height: 0; }
+    .slots-row { display: flex; gap: 4px; flex: 1; min-height: 0; }
 
     .slot-card {
-      flex: 1; background: var(--color-panel); border: 2px solid #1c4020; border-radius: 4px;
-      display: flex; flex-direction: column; padding: 5px 7px; cursor: pointer;
+      flex: 1; background: var(--color-panel); border: 2px solid #3a8040; border-radius: 16px;
+      display: flex; flex-direction: column; justify-content: center; padding: 4px 10px; cursor: pointer;
       transition: border-color 0.12s; min-width: 0; overflow: hidden;
       -webkit-tap-highlight-color: transparent; user-select: none;
     }
     .slot-card.filled { border-color: var(--color-primary); }
     .slot-card.drop-target { border-color: var(--color-accent) !important; }
     .slot-name {
-      font-family: 'VT323', monospace; font-size: 0.7rem; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--color-primary); opacity: 0.7;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; margin-bottom: 2px;
+      font-family: 'VT323', monospace; font-size: 0.62rem; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--color-primary); opacity: 0.75;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; margin-bottom: 1px;
     }
     .slot-player {
-      font-family: 'VT323', monospace; font-size: 1rem; color: var(--color-glow);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; display: flex; align-items: center;
+      font-family: 'VT323', monospace; font-size: 0.9rem; color: var(--color-glow);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;
     }
     .slot-stats {
-      font-family: 'VT323', monospace; font-size: 0.65rem; color: var(--color-primary); opacity: 0.55;
+      font-family: 'VT323', monospace; font-size: 0.58rem; color: var(--color-primary); opacity: 0.55;
       white-space: nowrap; flex-shrink: 0; margin-top: 1px;
     }
     .slot-score {
-      font-family: 'VT323', monospace; font-size: 1.1rem; color: var(--color-accent);
+      font-family: 'VT323', monospace; font-size: 0.9rem; color: var(--color-accent);
       text-align: right; flex-shrink: 0; line-height: 1;
     }
 
-    .chain-connector { flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
+    .chain-connector { flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0 2px; }
     .chain-pill {
       font-family: 'VT323', monospace; font-size: 0.75rem; padding: 3px 6px; border-radius: 12px;
-      background: #1c4020; border: 1px solid #2a5530; color: var(--color-primary); opacity: 0.6;
+      background: #3a8040; border: 1px solid #4a9a55; color: var(--color-primary); opacity: 0.6;
       white-space: nowrap; letter-spacing: 0.04em; text-align: center; min-width: 44px;
     }
     .chain-pill.recv { background: rgba(96,165,250,0.12); border-color: var(--color-accent); color: var(--color-accent); opacity: 1; }
@@ -139,7 +139,7 @@
     #pool-scroll::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 2px; }
 
     .player-card {
-      flex-shrink: 0; width: 114px; background: var(--color-bg-dark); border: 2px solid #1c4020;
+      flex-shrink: 0; width: 114px; background: var(--color-bg-dark); border: 2px solid #3a8040;
       border-radius: 4px; padding: 7px 7px 6px; cursor: pointer; user-select: none;
       -webkit-tap-highlight-color: transparent; transition: border-color 0.1s, background 0.1s;
     }
@@ -203,7 +203,7 @@
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px;opacity:0.6;">
         <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,#fff);"></div>
-        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.5</span>
+        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.6</span>
         <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,#fff);"></div>
       </div>
     </div>
@@ -386,7 +386,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.5</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.6</p>
 
   </div><!-- /game-shell -->
 
@@ -457,6 +457,7 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.6', date:'2026-05', notes:['Brighter grass green pitch.', 'Position slots smaller with rounded pill shape.', '52-player database live — 16 random cards dealt per game.'] },
       { v:'v0.0.5', date:'2026-05', notes:['Pitch green UI — bg, cards, and borders reskinned to footy pitch.', 'Player cards enlarged for mobile readability.', 'Artwork splash bigger on front page with both faces.'] },
       { v:'v0.0.4', date:'2026-05', notes:['First send of full framework — pool, 5 positions, cross-chain mechanic.'] },
       { v:'v0.0.3', date:'2026-05', notes:['Draft framework — squad pool, 5 positions, cross-chain mechanic.', 'England colour scheme + artwork.'] },
@@ -475,7 +476,7 @@
       el.innerHTML = sorted.map((s,i) => {
         const d = new Date(s.date).toLocaleDateString();
         const badge = s.isChallenge ? `<span style="color:#fbbf24;font-size:0.7rem;margin-left:4px">[C]</span>` : '';
-        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #1c4020;font-size:0.875rem">
+        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #3a8040;font-size:0.875rem">
           <span style="color:var(--color-primary);width:24px;text-align:right">${i+1}.</span>
           <span style="flex:1;color:#fff">${escHtml(String(s.score))}${badge}</span>
           <span style="color:var(--color-primary);opacity:0.5;font-size:0.75rem">${escHtml(d)}</span>
@@ -605,10 +606,74 @@
     };
     const STAT_ABBR = { rightFoot:'RF', leftFoot:'LF', power:'PW', accuracy:'AC', speed:'SP', control:'CT' };
 
-    // ─── GENERATE PLAYERS (stub) ─────────────────────────────────────────────────
+    // ─── PLAYER DATABASE ────────────────────────────────────────────────────────
+    const ALL_PLAYERS = [
+      // GK
+      { name:'P. Robinson',  pos:'GK',  rightFoot:55, leftFoot:52, power:62, accuracy:58, speed:55, control:70 },
+      { name:'D. James',     pos:'GK',  rightFoot:52, leftFoot:50, power:60, accuracy:55, speed:58, control:72 },
+      { name:'Van der Sar',  pos:'GK',  rightFoot:60, leftFoot:58, power:65, accuracy:62, speed:55, control:80 },
+      { name:'P. Cech',      pos:'GK',  rightFoot:58, leftFoot:55, power:62, accuracy:65, speed:57, control:82 },
+      // DEF
+      { name:'A. Cole',      pos:'DEF', rightFoot:65, leftFoot:82, power:72, accuracy:68, speed:82, control:78 },
+      { name:'G. Neville',   pos:'DEF', rightFoot:72, leftFoot:55, power:62, accuracy:65, speed:72, control:76 },
+      { name:'Rio Ferdinand',pos:'DEF', rightFoot:68, leftFoot:62, power:70, accuracy:65, speed:72, control:82 },
+      { name:'J. Terry',     pos:'DEF', rightFoot:72, leftFoot:65, power:80, accuracy:68, speed:65, control:76 },
+      { name:'S. Campbell',  pos:'DEF', rightFoot:70, leftFoot:64, power:82, accuracy:65, speed:68, control:74 },
+      { name:'Carragher',    pos:'DEF', rightFoot:68, leftFoot:62, power:72, accuracy:62, speed:65, control:78 },
+      { name:'W. Gallas',    pos:'DEF', rightFoot:66, leftFoot:72, power:74, accuracy:65, speed:72, control:74 },
+      { name:'L. King',      pos:'DEF', rightFoot:70, leftFoot:63, power:76, accuracy:64, speed:74, control:78 },
+      { name:'M. Richards',  pos:'DEF', rightFoot:70, leftFoot:60, power:74, accuracy:62, speed:80, control:68 },
+      { name:'G. Johnson',   pos:'DEF', rightFoot:75, leftFoot:60, power:68, accuracy:68, speed:78, control:72 },
+      { name:'W. Brown',     pos:'DEF', rightFoot:68, leftFoot:60, power:72, accuracy:60, speed:70, control:70 },
+      { name:'S. Distin',    pos:'DEF', rightFoot:65, leftFoot:68, power:76, accuracy:62, speed:70, control:72 },
+      // MID
+      { name:'S. Gerrard',   pos:'MID', rightFoot:88, leftFoot:70, power:85, accuracy:82, speed:78, control:76 },
+      { name:'F. Lampard',   pos:'MID', rightFoot:87, leftFoot:65, power:84, accuracy:83, speed:70, control:74 },
+      { name:'P. Scholes',   pos:'MID', rightFoot:87, leftFoot:68, power:78, accuracy:88, speed:62, control:86 },
+      { name:'D. Beckham',   pos:'MID', rightFoot:93, leftFoot:38, power:75, accuracy:85, speed:65, control:70 },
+      { name:'R. Keane',     pos:'MID', rightFoot:82, leftFoot:65, power:82, accuracy:72, speed:68, control:80 },
+      { name:'M. Carrick',   pos:'MID', rightFoot:78, leftFoot:62, power:68, accuracy:80, speed:65, control:82 },
+      { name:'G. Barry',     pos:'MID', rightFoot:75, leftFoot:70, power:72, accuracy:74, speed:68, control:76 },
+      { name:'S. Parker',    pos:'MID', rightFoot:74, leftFoot:62, power:76, accuracy:70, speed:72, control:74 },
+      { name:'J. Cole',      pos:'MID', rightFoot:80, leftFoot:74, power:68, accuracy:76, speed:80, control:82 },
+      { name:'D. Duff',      pos:'MID', rightFoot:60, leftFoot:88, power:68, accuracy:72, speed:86, control:78 },
+      { name:'R. Giggs',     pos:'MID', rightFoot:62, leftFoot:90, power:70, accuracy:78, speed:85, control:88 },
+      { name:'K. Dyer',      pos:'MID', rightFoot:72, leftFoot:60, power:65, accuracy:68, speed:90, control:70 },
+      { name:'A. Lennon',    pos:'MID', rightFoot:78, leftFoot:48, power:62, accuracy:68, speed:93, control:76 },
+      { name:'S. Wright-P.', pos:'MID', rightFoot:80, leftFoot:52, power:65, accuracy:72, speed:90, control:74 },
+      { name:'N. Butt',      pos:'MID', rightFoot:74, leftFoot:62, power:74, accuracy:68, speed:65, control:70 },
+      { name:'P. Neville',   pos:'MID', rightFoot:72, leftFoot:65, power:68, accuracy:66, speed:70, control:72 },
+      { name:'A. Robben',    pos:'MID', rightFoot:48, leftFoot:90, power:80, accuracy:82, speed:88, control:82 },
+      { name:'C. Ronaldo',   pos:'MID', rightFoot:88, leftFoot:88, power:88, accuracy:86, speed:93, control:90 },
+      { name:'Bergkamp',     pos:'MID', rightFoot:87, leftFoot:76, power:65, accuracy:92, speed:65, control:95 },
+      { name:'Van Persie',   pos:'MID', rightFoot:72, leftFoot:92, power:80, accuracy:88, speed:72, control:84 },
+      // FWD
+      { name:'W. Rooney',    pos:'FWD', rightFoot:86, leftFoot:75, power:86, accuracy:84, speed:78, control:82 },
+      { name:'M. Owen',      pos:'FWD', rightFoot:88, leftFoot:65, power:72, accuracy:88, speed:90, control:74 },
+      { name:'T. Henry',     pos:'FWD', rightFoot:68, leftFoot:92, power:78, accuracy:92, speed:93, control:92 },
+      { name:'A. Shearer',   pos:'FWD', rightFoot:92, leftFoot:55, power:88, accuracy:85, speed:68, control:72 },
+      { name:'D. Drogba',    pos:'FWD', rightFoot:85, leftFoot:72, power:92, accuracy:82, speed:72, control:76 },
+      { name:'F. Torres',    pos:'FWD', rightFoot:86, leftFoot:78, power:76, accuracy:88, speed:90, control:80 },
+      { name:'E. Heskey',    pos:'FWD', rightFoot:75, leftFoot:68, power:88, accuracy:62, speed:72, control:58 },
+      { name:'P. Crouch',    pos:'FWD', rightFoot:72, leftFoot:55, power:70, accuracy:68, speed:55, control:64 },
+      { name:'J. Defoe',     pos:'FWD', rightFoot:87, leftFoot:65, power:74, accuracy:84, speed:82, control:72 },
+      { name:'D. Bent',      pos:'FWD', rightFoot:86, leftFoot:60, power:76, accuracy:82, speed:78, control:68 },
+      { name:'N. Anelka',    pos:'FWD', rightFoot:85, leftFoot:78, power:78, accuracy:82, speed:82, control:80 },
+      { name:'A. Johnson',   pos:'FWD', rightFoot:82, leftFoot:65, power:70, accuracy:76, speed:85, control:70 },
+      { name:'R. Fowler',    pos:'FWD', rightFoot:88, leftFoot:74, power:76, accuracy:88, speed:72, control:76 },
+      { name:'Hasselbaink',  pos:'FWD', rightFoot:88, leftFoot:72, power:88, accuracy:80, speed:65, control:72 },
+      { name:'D. Vassell',   pos:'FWD', rightFoot:78, leftFoot:62, power:72, accuracy:74, speed:82, control:66 },
+      { name:'Andy Cole',    pos:'FWD', rightFoot:80, leftFoot:70, power:74, accuracy:76, speed:78, control:72 },
+    ];
+
+    // ─── GENERATE PLAYERS ────────────────────────────────────────────────────────
     function generatePlayers(rng) {
-      /* user will fill */
-      return [];
+      const arr = ALL_PLAYERS.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr.slice(0, 16);
     }
 
     // ─── SCORING ────────────────────────────────────────────────────────────────
@@ -775,7 +840,7 @@
             ? `<span style="color:var(--color-accent);font-size:0.7rem;margin-left:4px">RECV</span>`
             : `<span style="color:var(--color-primary);font-size:0.7rem;margin-left:4px">MISSED</span>`;
         }
-        return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #1c4020;font-family:'VT323',monospace;">
+        return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #3a8040;font-family:'VT323',monospace;">
           <span style="color:var(--color-primary);font-size:0.72rem;width:82px;flex-shrink:0;text-transform:uppercase">${escHtml(cfg.label)}</span>
           <span style="flex:1;color:var(--color-glow);font-size:0.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${player ? escHtml(player.name) : '<span style="opacity:0.35">—</span>'}</span>
           <span style="color:var(--color-accent);font-size:1.05rem;flex-shrink:0;text-align:right">${Math.round(sc[id])}${chainTag}</span>
