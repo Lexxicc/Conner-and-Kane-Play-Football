@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="author" content="lexxicc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Proper Football v0.0.7</title>
+  <title>Proper Football v0.0.8</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&family=Righteous&family=Barlow:wght@400;600&display=swap');
@@ -326,7 +326,7 @@
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px;opacity:0.6;">
         <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,#fff);"></div>
-        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.7</span>
+        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.8</span>
         <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,#fff);"></div>
       </div>
     </div>
@@ -513,7 +513,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.7</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.8</p>
 
   </div><!-- /game-shell -->
 
@@ -584,6 +584,7 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.8', date:'2026-05', notes:['Fixed Play Again routing to main menu instead of starting a new game directly.'] },
       { v:'v0.0.7', date:'2026-05', notes:['Character face SVG artwork for Conner and Kane added; control scheme styling updated.'] },
       { v:'v0.0.6', date:'2026-05', notes:['Version bump.'] },
       { v:'v0.0.5', date:'2026-05', notes:['Game renamed from Socka. Updated play slots: Corner Kick, Mid Right, and Through Ball Run added; Goalkeeper removed. Score maximum raised to 600.'] },
@@ -1125,9 +1126,7 @@
 
     function playAgain() {
       document.getElementById('end-overlay').classList.remove('show');
-      document.getElementById('start-overlay').classList.remove('hidden');
-      showStartPanel('main');
-      initGame();
+      startGame();
     }
 
     // ─── GAME INIT / START ───────────────────────────────────────────────────────
