@@ -1,57 +1,57 @@
 PROPER FOOTBALL — PLAYER POOL
 ==============================
 
-Name             | Pos | Overall
------------------|-----|--------
-P. Robinson      | GK  | 53
-D. James         | GK  | 53
-Van der Sar      | GK  | 58
-P. Cech          | GK  | 58
-A. Cole          | DEF | 76
-G. Neville       | DEF | 70
-Rio Ferdinand    | DEF | 72
-J. Terry         | DEF | 73
-S. Campbell      | DEF | 72
-Carragher        | DEF | 71
-W. Gallas        | DEF | 72
-L. King          | DEF | 73
-M. Richards      | DEF | 71
-G. Johnson       | DEF | 71
-W. Brown         | DEF | 69
-S. Distin        | DEF | 71
-S. Gerrard       | MID | 79
-F. Lampard       | MID | 76
-P. Scholes       | MID | 77
-D. Beckham       | MID | 67
-R. Keane         | MID | 75
-M. Carrick       | MID | 72
-G. Barry         | MID | 73
-S. Parker        | MID | 73
-J. Cole          | MID | 75
-D. Duff          | MID | 73
-R. Giggs         | MID | 77
-K. Dyer          | MID | 71
-A. Lennon        | MID | 70
-S. Wright-P.     | MID | 71
-N. Butt          | MID | 70
-P. Neville       | MID | 70
-A. Robben        | MID | 74
-C. Ronaldo       | MID | 84
-Bergkamp         | MID | 77
-Van Persie       | MID | 77
-W. Rooney        | FWD | 77
-M. Owen          | FWD | 73
-T. Henry         | FWD | 80
-A. Shearer       | FWD | 70
-D. Drogba        | FWD | 75
-F. Torres        | FWD | 77
-E. Heskey        | FWD | 67
-P. Crouch        | FWD | 59
-J. Defoe         | FWD | 71
-D. Bent          | FWD | 69
-N. Anelka        | FWD | 75
-A. Johnson       | FWD | 72
-R. Fowler        | FWD | 72
-Hasselbaink      | FWD | 72
-D. Vassell       | FWD | 68
-Andy Cole        | FWD | 70
+Name             | Pos | RF | LF | SH | SP | CT | TK
+-----------------|-----|----|----|----|----|----|----|
+P. Robinson      | GK  | 55 | 52 | 60 | 55 | 70 | 28
+D. James         | GK  | 52 | 50 | 58 | 58 | 72 | 25
+Van der Sar      | GK  | 60 | 58 | 64 | 55 | 80 | 30
+P. Cech          | GK  | 58 | 55 | 64 | 57 | 82 | 32
+A. Cole          | DEF | 65 | 82 | 70 | 82 | 78 | 80
+G. Neville       | DEF | 72 | 55 | 64 | 72 | 76 | 78
+Rio Ferdinand    | DEF | 68 | 62 | 68 | 72 | 82 | 82
+J. Terry         | DEF | 72 | 65 | 74 | 65 | 76 | 86
+S. Campbell      | DEF | 70 | 64 | 74 | 68 | 74 | 84
+Carragher        | DEF | 68 | 62 | 67 | 65 | 78 | 85
+W. Gallas        | DEF | 66 | 72 | 70 | 72 | 74 | 80
+L. King          | DEF | 70 | 63 | 70 | 74 | 78 | 82
+M. Richards      | DEF | 70 | 60 | 68 | 80 | 68 | 80
+G. Johnson       | DEF | 75 | 60 | 68 | 78 | 72 | 75
+W. Brown         | DEF | 68 | 60 | 66 | 70 | 70 | 78
+S. Distin        | DEF | 65 | 68 | 69 | 70 | 72 | 80
+S. Gerrard       | MID | 88 | 70 | 84 | 78 | 76 | 78
+F. Lampard       | MID | 87 | 65 | 84 | 70 | 74 | 74
+P. Scholes       | MID | 87 | 68 | 83 | 62 | 86 | 76
+D. Beckham       | MID | 93 | 38 | 80 | 65 | 70 | 58
+R. Keane         | MID | 82 | 65 | 77 | 68 | 80 | 76
+M. Carrick       | MID | 78 | 62 | 74 | 65 | 82 | 72
+G. Barry         | MID | 75 | 70 | 73 | 68 | 76 | 76
+S. Parker        | MID | 74 | 62 | 73 | 72 | 74 | 82
+J. Cole          | MID | 80 | 74 | 72 | 80 | 82 | 60
+D. Duff          | MID | 60 | 88 | 70 | 86 | 78 | 58
+R. Giggs         | MID | 62 | 90 | 74 | 85 | 88 | 62
+K. Dyer          | MID | 72 | 60 | 67 | 90 | 70 | 65
+A. Lennon        | MID | 78 | 48 | 65 | 93 | 76 | 60
+S. Wright-P.     | MID | 80 | 52 | 69 | 90 | 74 | 62
+N. Butt          | MID | 74 | 62 | 71 | 65 | 70 | 78
+P. Neville       | MID | 72 | 65 | 67 | 70 | 72 | 75
+A. Robben        | MID | 48 | 90 | 81 | 88 | 82 | 55
+C. Ronaldo       | MID | 88 | 88 | 87 | 93 | 90 | 58
+Bergkamp         | MID | 87 | 76 | 79 | 65 | 95 | 60
+Van Persie       | MID | 72 | 92 | 84 | 72 | 84 | 60
+W. Rooney        | FWD | 86 | 75 | 85 | 78 | 82 | 58
+M. Owen          | FWD | 88 | 65 | 80 | 90 | 74 | 42
+T. Henry         | FWD | 68 | 92 | 85 | 93 | 92 | 50
+A. Shearer       | FWD | 92 | 55 | 87 | 68 | 72 | 48
+D. Drogba        | FWD | 85 | 72 | 87 | 72 | 76 | 55
+F. Torres        | FWD | 86 | 78 | 82 | 90 | 80 | 48
+E. Heskey        | FWD | 75 | 68 | 75 | 72 | 58 | 52
+P. Crouch        | FWD | 72 | 55 | 69 | 55 | 64 | 40
+J. Defoe         | FWD | 87 | 65 | 79 | 82 | 72 | 42
+D. Bent          | FWD | 86 | 60 | 79 | 78 | 68 | 40
+N. Anelka        | FWD | 85 | 78 | 80 | 82 | 80 | 45
+A. Johnson       | FWD | 82 | 65 | 73 | 85 | 70 | 55
+R. Fowler        | FWD | 88 | 74 | 82 | 72 | 76 | 42
+Hasselbaink      | FWD | 88 | 72 | 84 | 65 | 72 | 50
+D. Vassell       | FWD | 78 | 62 | 73 | 82 | 66 | 44
+Andy Cole        | FWD | 80 | 70 | 75 | 78 | 72 | 45

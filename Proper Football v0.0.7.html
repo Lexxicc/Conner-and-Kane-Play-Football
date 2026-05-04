@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="author" content="lexxicc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Proper Football v0.0.5</title>
+  <title>Proper Football v0.0.7</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=VT323&family=Righteous&family=Barlow:wght@400;600&display=swap');
@@ -159,7 +159,12 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .card-stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px 1px; }
-    .cs-item { display: flex; flex-direction: column; align-items: center; }
+    .cs-item { display: flex; flex-direction: column; align-items: center; padding: 2px 0; border-radius: 3px; }
+    .cs-item.cs-key {
+      box-shadow: inset 0 0 0 2px #c1121f;
+      background: rgba(193,18,31,0.10);
+    }
+    .cs-item.cs-key .cs-abbr { color: #fca5a5; opacity: 1; }
     .cs-abbr { font-family: 'VT323', monospace; font-size: 0.52rem; color: var(--color-primary); opacity: 0.65; white-space: nowrap; }
     .cs-val  { font-family: 'VT323', monospace; font-size: 0.78rem; color: var(--color-glow); }
 
@@ -201,45 +206,93 @@
             <!-- Shield fill -->
             <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z" fill="#1d5e24"/>
 
-            <!-- FACE 1 (Conner) cx=85 — blonde, fair skin -->
-            <rect x="55" y="207" width="60" height="40" rx="6" fill="#f0f0f0" clip-path="url(#ck-shield)"/>
-            <rect x="82" y="207" width="6"  height="40" fill="#c1121f" clip-path="url(#ck-shield)"/>
+            <!-- FACE 1 (Conner) cx=85 — blonde, fair skin, caricature style -->
+            <rect x="55" y="207" width="60" height="42" rx="6" fill="#f0f0f0" clip-path="url(#ck-shield)"/>
+            <rect x="82" y="207" width="6"  height="42" fill="#c1121f" clip-path="url(#ck-shield)"/>
             <rect x="55" y="222" width="60" height="6"  fill="#c1121f" clip-path="url(#ck-shield)"/>
-            <rect x="80" y="196" width="10" height="14" rx="3" fill="#e8c090" clip-path="url(#ck-shield)"/>
-            <ellipse cx="85" cy="162" rx="34" ry="40" fill="#e8c090" clip-path="url(#ck-shield)"/>
-            <ellipse cx="51" cy="165" rx="6" ry="8" fill="#d8a878" clip-path="url(#ck-shield)"/>
-            <ellipse cx="119" cy="165" rx="6" ry="8" fill="#d8a878" clip-path="url(#ck-shield)"/>
-            <path d="M51,155 Q56,105 85,97 Q114,105 119,155 Q112,128 85,126 Q58,128 51,155 Z" fill="#d4a017" clip-path="url(#ck-shield)"/>
-            <path d="M66,143 Q74,138 82,141" fill="none" stroke="#b88010" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M88,141 Q96,138 104,143" fill="none" stroke="#b88010" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <ellipse cx="74" cy="153" rx="7" ry="8" fill="#fff" clip-path="url(#ck-shield)"/>
-            <ellipse cx="96" cy="153" rx="7" ry="8" fill="#fff" clip-path="url(#ck-shield)"/>
-            <circle cx="75" cy="154" r="4.5" fill="#2a1a00" clip-path="url(#ck-shield)"/>
-            <circle cx="97" cy="154" r="4.5" fill="#2a1a00" clip-path="url(#ck-shield)"/>
-            <circle cx="76.5" cy="152" r="1.5" fill="rgba(255,255,255,0.7)" clip-path="url(#ck-shield)"/>
-            <circle cx="98.5" cy="152" r="1.5" fill="rgba(255,255,255,0.7)" clip-path="url(#ck-shield)"/>
-            <path d="M83,160 Q85,168 87,160" fill="none" stroke="#c09060" stroke-width="1.5" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M72,177 Q85,188 98,177" fill="none" stroke="#b07050" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <rect x="79" y="195" width="12" height="15" rx="3" fill="#f0c280" clip-path="url(#ck-shield)"/>
+            <!-- Head -->
+            <ellipse cx="85" cy="157" rx="37" ry="45" fill="#f5c890" clip-path="url(#ck-shield)"/>
+            <!-- Ears -->
+            <ellipse cx="48" cy="161" rx="7" ry="10" fill="#eab87a" clip-path="url(#ck-shield)"/>
+            <ellipse cx="122" cy="161" rx="7" ry="10" fill="#eab87a" clip-path="url(#ck-shield)"/>
+            <ellipse cx="48" cy="161" rx="4"  ry="6"  fill="#d8a06a" clip-path="url(#ck-shield)"/>
+            <ellipse cx="122" cy="161" rx="4"  ry="6"  fill="#d8a06a" clip-path="url(#ck-shield)"/>
+            <!-- Hair — golden blonde, side-swept quiff -->
+            <path d="M48,151 Q50,91 85,81 Q120,91 122,151 Q117,114 85,111 Q53,114 48,151 Z" fill="#d4aa20" clip-path="url(#ck-shield)"/>
+            <path d="M57,111 Q69,97 88,95 Q103,97 113,109" fill="none" stroke="#eac840" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M55,126 Q67,110 84,107" fill="none" stroke="#eac840" stroke-width="2" stroke-linecap="round" opacity="0.6" clip-path="url(#ck-shield)"/>
+            <!-- Eyebrows -->
+            <path d="M59,136 Q69,129 80,133" fill="none" stroke="#a07820" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M90,133 Q101,129 111,136" fill="none" stroke="#a07820" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <!-- Eyes — whites -->
+            <ellipse cx="71" cy="148" rx="10" ry="11" fill="#fff" clip-path="url(#ck-shield)"/>
+            <ellipse cx="99" cy="148" rx="10" ry="11" fill="#fff" clip-path="url(#ck-shield)"/>
+            <ellipse cx="71" cy="148" rx="10" ry="11" fill="none" stroke="#c09060" stroke-width="1" clip-path="url(#ck-shield)"/>
+            <ellipse cx="99" cy="148" rx="10" ry="11" fill="none" stroke="#c09060" stroke-width="1" clip-path="url(#ck-shield)"/>
+            <!-- Pupils -->
+            <circle cx="72" cy="149" r="6" fill="#2a1800" clip-path="url(#ck-shield)"/>
+            <circle cx="100" cy="149" r="6" fill="#2a1800" clip-path="url(#ck-shield)"/>
+            <circle cx="73.5" cy="146.5" r="2" fill="rgba(255,255,255,0.8)" clip-path="url(#ck-shield)"/>
+            <circle cx="101.5" cy="146.5" r="2" fill="rgba(255,255,255,0.8)" clip-path="url(#ck-shield)"/>
+            <!-- Nose -->
+            <path d="M80,158 Q85,167 90,158" fill="none" stroke="#c08050" stroke-width="2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <ellipse cx="79" cy="163" rx="3" ry="2" fill="#d09060" clip-path="url(#ck-shield)"/>
+            <ellipse cx="91" cy="163" rx="3" ry="2" fill="#d09060" clip-path="url(#ck-shield)"/>
+            <!-- Cheek blush -->
+            <ellipse cx="59"  cy="170" rx="10" ry="7" fill="rgba(220,80,60,0.18)" clip-path="url(#ck-shield)"/>
+            <ellipse cx="111" cy="170" rx="10" ry="7" fill="rgba(220,80,60,0.18)" clip-path="url(#ck-shield)"/>
+            <!-- Big wide smile -->
+            <path d="M62,170 Q85,204 108,170 Q108,177 85,183 Q62,177 62,170 Z" fill="#7a1a10" clip-path="url(#ck-shield)"/>
+            <path d="M64,172 Q85,188 106,172 L104,177 Q85,191 66,177 Z" fill="#f5f5ea" clip-path="url(#ck-shield)"/>
+            <path d="M74,172.5 L73.5,177" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M85,173 L85,177.5" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M96,172.5 L96.5,177" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M62,170 Q85,204 108,170" fill="none" stroke="#b04030" stroke-width="2.5" stroke-linecap="round" clip-path="url(#ck-shield)"/>
 
-            <!-- FACE 2 (Kane) cx=195 — dark hair, tan skin -->
-            <rect x="165" y="207" width="60" height="40" rx="6" fill="#f0f0f0" clip-path="url(#ck-shield)"/>
-            <rect x="192" y="207" width="6"  height="40" fill="#c1121f" clip-path="url(#ck-shield)"/>
+            <!-- FACE 2 (Kane) cx=195 — dark hair, tan skin, caricature style -->
+            <rect x="165" y="207" width="60" height="42" rx="6" fill="#f0f0f0" clip-path="url(#ck-shield)"/>
+            <rect x="192" y="207" width="6"  height="42" fill="#c1121f" clip-path="url(#ck-shield)"/>
             <rect x="165" y="222" width="60" height="6"  fill="#c1121f" clip-path="url(#ck-shield)"/>
-            <rect x="190" y="196" width="10" height="14" rx="3" fill="#c8783e" clip-path="url(#ck-shield)"/>
-            <ellipse cx="195" cy="162" rx="34" ry="40" fill="#c8783e" clip-path="url(#ck-shield)"/>
-            <ellipse cx="161" cy="165" rx="6" ry="8" fill="#b86830" clip-path="url(#ck-shield)"/>
-            <ellipse cx="229" cy="165" rx="6" ry="8" fill="#b86830" clip-path="url(#ck-shield)"/>
-            <path d="M161,155 Q166,105 195,97 Q224,105 229,155 Q222,128 195,126 Q168,128 161,155 Z" fill="#120600" clip-path="url(#ck-shield)"/>
-            <path d="M176,143 Q184,138 192,141" fill="none" stroke="#0a0400" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M198,141 Q206,138 214,143" fill="none" stroke="#0a0400" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <ellipse cx="184" cy="153" rx="7" ry="8" fill="#fff" clip-path="url(#ck-shield)"/>
-            <ellipse cx="206" cy="153" rx="7" ry="8" fill="#fff" clip-path="url(#ck-shield)"/>
-            <circle cx="185" cy="154" r="4.5" fill="#1a0800" clip-path="url(#ck-shield)"/>
-            <circle cx="207" cy="154" r="4.5" fill="#1a0800" clip-path="url(#ck-shield)"/>
-            <circle cx="186.5" cy="152" r="1.5" fill="rgba(255,255,255,0.7)" clip-path="url(#ck-shield)"/>
-            <circle cx="208.5" cy="152" r="1.5" fill="rgba(255,255,255,0.7)" clip-path="url(#ck-shield)"/>
-            <path d="M193,160 Q195,168 197,160" fill="none" stroke="#a05828" stroke-width="1.5" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M182,177 Q195,188 208,177" fill="none" stroke="#8a3820" stroke-width="2.2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <rect x="189" y="195" width="12" height="15" rx="3" fill="#c07840" clip-path="url(#ck-shield)"/>
+            <!-- Head -->
+            <ellipse cx="195" cy="157" rx="37" ry="45" fill="#c8783e" clip-path="url(#ck-shield)"/>
+            <!-- Ears -->
+            <ellipse cx="158" cy="161" rx="7" ry="10" fill="#b86830" clip-path="url(#ck-shield)"/>
+            <ellipse cx="232" cy="161" rx="7" ry="10" fill="#b86830" clip-path="url(#ck-shield)"/>
+            <ellipse cx="158" cy="161" rx="4"  ry="6"  fill="#a05828" clip-path="url(#ck-shield)"/>
+            <ellipse cx="232" cy="161" rx="4"  ry="6"  fill="#a05828" clip-path="url(#ck-shield)"/>
+            <!-- Hair — dark brown, short swept -->
+            <path d="M158,151 Q160,91 195,81 Q230,91 232,151 Q228,114 195,111 Q162,114 158,151 Z" fill="#1c0802" clip-path="url(#ck-shield)"/>
+            <path d="M167,111 Q179,97 198,95 Q213,97 221,109" fill="none" stroke="#3d1508" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M165,126 Q177,110 194,107" fill="none" stroke="#3d1508" stroke-width="2" stroke-linecap="round" opacity="0.6" clip-path="url(#ck-shield)"/>
+            <!-- Eyebrows -->
+            <path d="M169,136 Q179,129 190,133" fill="none" stroke="#0a0402" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M200,133 Q211,129 221,136" fill="none" stroke="#0a0402" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <!-- Eyes — whites -->
+            <ellipse cx="181" cy="148" rx="10" ry="11" fill="#fff" clip-path="url(#ck-shield)"/>
+            <ellipse cx="209" cy="148" rx="10" ry="11" fill="#fff" clip-path="url(#ck-shield)"/>
+            <ellipse cx="181" cy="148" rx="10" ry="11" fill="none" stroke="#8a4818" stroke-width="1" clip-path="url(#ck-shield)"/>
+            <ellipse cx="209" cy="148" rx="10" ry="11" fill="none" stroke="#8a4818" stroke-width="1" clip-path="url(#ck-shield)"/>
+            <!-- Pupils -->
+            <circle cx="182" cy="149" r="6" fill="#1a0800" clip-path="url(#ck-shield)"/>
+            <circle cx="210" cy="149" r="6" fill="#1a0800" clip-path="url(#ck-shield)"/>
+            <circle cx="183.5" cy="146.5" r="2" fill="rgba(255,255,255,0.8)" clip-path="url(#ck-shield)"/>
+            <circle cx="211.5" cy="146.5" r="2" fill="rgba(255,255,255,0.8)" clip-path="url(#ck-shield)"/>
+            <!-- Nose -->
+            <path d="M190,158 Q195,167 200,158" fill="none" stroke="#a05828" stroke-width="2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <ellipse cx="189" cy="163" rx="3" ry="2" fill="#b06830" clip-path="url(#ck-shield)"/>
+            <ellipse cx="201" cy="163" rx="3" ry="2" fill="#b06830" clip-path="url(#ck-shield)"/>
+            <!-- Cheek blush -->
+            <ellipse cx="169" cy="170" rx="10" ry="7" fill="rgba(160,60,20,0.2)" clip-path="url(#ck-shield)"/>
+            <ellipse cx="221" cy="170" rx="10" ry="7" fill="rgba(160,60,20,0.2)" clip-path="url(#ck-shield)"/>
+            <!-- Big wide smile -->
+            <path d="M172,170 Q195,204 218,170 Q218,177 195,183 Q172,177 172,170 Z" fill="#7a1a10" clip-path="url(#ck-shield)"/>
+            <path d="M174,172 Q195,188 216,172 L214,177 Q195,191 176,177 Z" fill="#f5f5ea" clip-path="url(#ck-shield)"/>
+            <path d="M184,172.5 L183.5,177" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M195,173 L195,177.5" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M206,172.5 L206.5,177" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <path d="M172,170 Q195,204 218,170" fill="none" stroke="#8a3018" stroke-width="2.5" stroke-linecap="round" clip-path="url(#ck-shield)"/>
 
             <!-- Bottom gradient -->
             <path d="M8,190 C8,190 8,330 140,330 C272,330 272,190 272,190 Z" fill="url(#face-btm)" clip-path="url(#ck-shield)"/>
@@ -273,7 +326,7 @@
       </div>
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px;opacity:0.6;">
         <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,#fff);"></div>
-        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.5</span>
+        <span style="font-size:13px;text-transform:uppercase;letter-spacing:0.3em;color:#fff;white-space:nowrap;font-family:'VT323',monospace;">Tacticon Studios 2026 · v0.0.7</span>
         <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,#fff);"></div>
       </div>
     </div>
@@ -399,9 +452,9 @@
 
     <!-- Pitch -->
     <div id="pitch-container">
-      <svg id="pitch-svg" viewBox="0 0 280 760" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <svg id="pitch-svg" viewBox="0 0 280 380" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
         <!-- Background -->
-        <rect width="280" height="760" fill="#2a7d30"/>
+        <rect width="280" height="380" fill="#2a7d30"/>
         <!-- Full pitch base -->
         <rect x="10" y="15" width="260" height="730" fill="#2e8b35"/>
         <!-- Grass stripes — opposition half -->
@@ -410,12 +463,6 @@
         <rect x="10" y="159" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
         <rect x="10" y="231" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
         <rect x="10" y="303" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
-        <!-- Grass stripes — own half -->
-        <rect x="10" y="415" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
-        <rect x="10" y="487" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
-        <rect x="10" y="559" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
-        <rect x="10" y="631" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
-        <rect x="10" y="703" width="260" height="36" fill="#2a7d30" opacity="0.4"/>
         <!-- Full pitch boundary -->
         <rect x="10" y="15" width="260" height="730" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
         <!-- Corner arcs (top) -->
@@ -434,16 +481,6 @@
         <line x1="10" y1="380" x2="270" y2="380" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
         <circle cx="140" cy="380" r="2" fill="rgba(255,255,255,0.7)"/>
         <circle cx="140" cy="380" r="66" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-        <text x="140" y="393" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.45)" letter-spacing="1">KICK OFF</text>
-        <!-- Own penalty area -->
-        <rect x="77" y="659" width="126" height="86" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-        <!-- Own 6-yard box -->
-        <rect x="117" y="717" width="46" height="28" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-        <circle cx="140" cy="684" r="2" fill="rgba(255,255,255,0.7)"/>
-        <path d="M 79,659 A 66,66 0 0,0 201,659" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-        <!-- Own goal (bottom) -->
-        <rect x="109" y="745" width="62" height="12" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
-        <text x="140" y="754" text-anchor="middle" font-family="VT323,monospace" font-size="8" fill="rgba(255,255,255,0.6)" letter-spacing="1">GOAL</text>
         <!-- Football -->
         <g id="football-group" transform="translate(140,380)" opacity="0" style="pointer-events:none">
           <ellipse cx="0" cy="7" rx="8" ry="3" fill="rgba(0,0,0,0.25)"/>
@@ -476,7 +513,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.5</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.7</p>
 
   </div><!-- /game-shell -->
 
@@ -547,6 +584,8 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.7', date:'2026-05', notes:['Character face SVG artwork for Conner and Kane added; control scheme styling updated.'] },
+      { v:'v0.0.6', date:'2026-05', notes:['Version bump.'] },
       { v:'v0.0.5', date:'2026-05', notes:['Game renamed from Socka. Updated play slots: Corner Kick, Mid Right, and Through Ball Run added; Goalkeeper removed. Score maximum raised to 600.'] },
       { v:'v0.0.4', date:'2026-05', notes:[
         'New logo — two drawn cartoon faces in the shield.',
@@ -683,15 +722,18 @@
     let gamePhase = 'selection'; // 'selection' | 'playOut' | 'done'
     let activePosId = null;
     let currentPickerOffers = [];
+    // Cached 3-card offer per slot — set on first open, never re-rolled.
+    // Prevents the "open / close / reopen for fresh cards" cheese.
+    let slotOffers = {};
     let footballX = 140, footballY = 380;
 
     const POS_COORDS = {
       penaltyEdgeLeft: { cx: 80,  cy: 102, label: 'PEN L'   },
-      longShotRight:   { cx: 222, cy: 175, label: 'LONG R'  },
-      cornerKick:      { cx: 265, cy: 20,  label: 'CORNER'  },
-      midRight:        { cx: 163, cy: 110, label: 'MID R'   },
-      crossInLeft:     { cx: 48,  cy: 130, label: 'CROSS'   },
-      throughBallRun:  { cx: 188, cy: 52,  label: 'RUN'     },
+      longShotRight:   { cx: 222, cy: 200, label: 'LONG R'  },
+      cornerKick:      { cx: 15,  cy: 20,  label: 'CORNER'  },
+      midRight:        { cx: 163, cy: 135, label: 'MID R'   },
+      crossInLeft:     { cx: 48,  cy: 155, label: 'CROSS'   },
+      throughBallRun:  { cx: 188, cy: 77,  label: 'RUN'     },
     };
     const PLAY_ORDER = ['longShotRight','penaltyEdgeLeft','crossInLeft','throughBallRun','cornerKick','midRight'];
 
@@ -885,18 +927,35 @@
         slots[slotId]._slotId = null;
         slots[slotId] = null;
       }
-      const available = pool.filter(p => !p._slotId);
-      for (let i = available.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [available[i], available[j]] = [available[j], available[i]];
+
+      // First time this slot has been opened — roll 3 cards from the cards
+      // not currently locked into another slot, then cache the offer for the
+      // remainder of the game. Re-opening this slot will show the same trio.
+      if (!slotOffers[slotId]) {
+        const available = pool.filter(p => !p._slotId);
+        for (let i = available.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [available[i], available[j]] = [available[j], available[i]];
+        }
+        slotOffers[slotId] = available.slice(0, 3);
       }
-      currentPickerOffers = available.slice(0, 3);
+
+      currentPickerOffers = slotOffers[slotId];
       const cfg = SLOT_CONFIG[slotId];
       document.getElementById('picker-pos-name').innerText = cfg.label;
       const row = document.getElementById('picker-cards-row');
       row.innerHTML = currentPickerOffers.map((p, i) => {
         const overall = Math.round((p.rightFoot + p.leftFoot + p.shooting + p.speed + p.control + p.tackle) / 6);
-        return `<div class="collector-card" onclick="pickPlayer(${i})">
+        // If one of the cached offers has been picked up by another slot,
+        // render it disabled with a "taken" tag so the player can see why
+        // it's not pickable here. Clears once that other slot is reopened.
+        const takenElsewhere = !!p._slotId && p._slotId !== slotId;
+        const cardStyle = takenElsewhere ? 'opacity:0.4;cursor:not-allowed;filter:grayscale(0.5);' : '';
+        const cardClick = takenElsewhere ? '' : `onclick="pickPlayer(${i})"`;
+        const takenTag  = takenElsewhere
+          ? `<div style="text-align:center;font-size:9px;color:#fbbf24;margin-top:4px;letter-spacing:0.05em">In ${escHtml(SLOT_CONFIG[p._slotId].label)}</div>`
+          : '';
+        return `<div class="collector-card" ${cardClick} style="${cardStyle}">
           <div class="card-top">
             <span class="card-pos-badge pos-${escHtml(p.pos.toLowerCase())}">${escHtml(p.pos)}</span>
             <span class="card-rating">${overall}</span>
@@ -910,6 +969,7 @@
             <div class="cs-item"><span class="cs-abbr">Control</span><span class="cs-val">${p.control}</span></div>
             <div class="cs-item"><span class="cs-abbr">Tackle</span><span class="cs-val">${p.tackle}</span></div>
           </div>
+          ${takenTag}
         </div>`;
       }).join('');
       document.getElementById('picker-panel').classList.remove('closed');
@@ -919,6 +979,8 @@
     function pickPlayer(idx) {
       const p = currentPickerOffers[idx];
       if (!p) return;
+      // Guard against picking a card already locked into a different slot
+      if (p._slotId && p._slotId !== activePosId) return;
       p._slotId = activePosId;
       slots[activePosId] = p;
       SFX.assign();
@@ -1035,7 +1097,7 @@
 
       document.getElementById('end-card').innerHTML = `
         <div style="text-align:center;margin-bottom:16px">
-          <div style="font-family:'VT323',monospace;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.35em;color:var(--color-primary);opacity:0.7;margin-bottom:4px">Full Time</div>
+          <div style="font-family:'VT323',monospace;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.35em;color:var(--color-primary);opacity:0.7;margin-bottom:4px;font-weight:bold;-webkit-text-stroke:0.5px currentColor">Full Time</div>
           <div style="font-family:'Righteous',sans-serif;font-size:4rem;color:var(--color-glow);line-height:1;text-shadow:0 0 20px rgba(230,57,70,0.4)">${sc.total}</div>
           <div style="font-family:'VT323',monospace;font-size:0.85rem;color:var(--color-primary);opacity:0.45">/ 6</div>
         </div>
@@ -1043,17 +1105,17 @@
         <div style="display:flex;flex-direction:column;gap:8px">
           <button id="share-btn" onclick="copyShareText(${sc.total})"
                   style="width:100%;padding:12px;font-family:'VT323',monospace;font-size:1.25rem;text-transform:uppercase;
-                         background:var(--color-primary);color:var(--color-bg-dark);border:none;cursor:pointer;letter-spacing:0.1em">
+                         background:var(--color-primary);color:var(--color-bg-dark);border:none;cursor:pointer;letter-spacing:0.1em;font-weight:bold;-webkit-text-stroke:0.5px currentColor">
             Share Score
           </button>
           <button onclick="playAgain()"
                   style="width:100%;padding:10px;font-family:'VT323',monospace;font-size:1.1rem;text-transform:uppercase;
-                         background:transparent;color:var(--color-primary);border:2px solid var(--color-primary);cursor:pointer;letter-spacing:0.08em">
+                         background:transparent;color:var(--color-primary);border:2px solid var(--color-primary);cursor:pointer;letter-spacing:0.08em;font-weight:bold;-webkit-text-stroke:0.5px currentColor">
             Play Again
           </button>
           <button onclick="document.getElementById('end-overlay').classList.remove('show'); document.getElementById('start-overlay').classList.remove('hidden'); showStartPanel('main');"
                   style="width:100%;padding:10px;font-family:'VT323',monospace;font-size:1.1rem;text-transform:uppercase;
-                         background:transparent;color:var(--color-primary);border:1px solid rgba(76,175,80,0.4);cursor:pointer;letter-spacing:0.08em;opacity:0.7">
+                         background:transparent;color:var(--color-primary);border:1px solid rgba(76,175,80,0.4);cursor:pointer;letter-spacing:0.08em;opacity:0.7;font-weight:bold;-webkit-text-stroke:0.5px currentColor">
             Main Menu
           </button>
         </div>`;
@@ -1076,6 +1138,7 @@
       gamePhase = 'selection';
       activePosId = null;
       currentPickerOffers = [];
+      slotOffers = {};
       footballX = 140; footballY = 380;
       selectedIdx = null;
       SLOT_IDS.forEach(k => slots[k] = null);
@@ -1101,6 +1164,7 @@
       gamePhase = 'selection';
       activePosId = null;
       currentPickerOffers = [];
+      slotOffers = {};
       footballX = 140; footballY = 380;
       selectedIdx = null;
       SLOT_IDS.forEach(k => slots[k] = null);
