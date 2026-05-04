@@ -1,0 +1,57 @@
+PROPER FOOTBALL — PLAYER POOL
+==============================
+
+Name             | Pos | Overall
+-----------------|-----|--------
+P. Robinson      | GK  | 53
+D. James         | GK  | 53
+Van der Sar      | GK  | 58
+P. Cech          | GK  | 58
+A. Cole          | DEF | 76
+G. Neville       | DEF | 70
+Rio Ferdinand    | DEF | 72
+J. Terry         | DEF | 73
+S. Campbell      | DEF | 72
+Carragher        | DEF | 71
+W. Gallas        | DEF | 72
+L. King          | DEF | 73
+M. Richards      | DEF | 71
+G. Johnson       | DEF | 71
+W. Brown         | DEF | 69
+S. Distin        | DEF | 71
+S. Gerrard       | MID | 79
+F. Lampard       | MID | 76
+P. Scholes       | MID | 77
+D. Beckham       | MID | 67
+R. Keane         | MID | 75
+M. Carrick       | MID | 72
+G. Barry         | MID | 73
+S. Parker        | MID | 73
+J. Cole          | MID | 75
+D. Duff          | MID | 73
+R. Giggs         | MID | 77
+K. Dyer          | MID | 71
+A. Lennon        | MID | 70
+S. Wright-P.     | MID | 71
+N. Butt          | MID | 70
+P. Neville       | MID | 70
+A. Robben        | MID | 74
+C. Ronaldo       | MID | 84
+Bergkamp         | MID | 77
+Van Persie       | MID | 77
+W. Rooney        | FWD | 77
+M. Owen          | FWD | 73
+T. Henry         | FWD | 80
+A. Shearer       | FWD | 70
+D. Drogba        | FWD | 75
+F. Torres        | FWD | 77
+E. Heskey        | FWD | 67
+P. Crouch        | FWD | 59
+J. Defoe         | FWD | 71
+D. Bent          | FWD | 69
+N. Anelka        | FWD | 75
+A. Johnson       | FWD | 72
+R. Fowler        | FWD | 72
+Hasselbaink      | FWD | 72
+D. Vassell       | FWD | 68
+Andy Cole        | FWD | 70
