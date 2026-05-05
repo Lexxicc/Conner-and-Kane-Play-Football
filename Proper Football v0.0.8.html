@@ -165,8 +165,23 @@
       background: rgba(193,18,31,0.10);
     }
     .cs-item.cs-key .cs-abbr { color: #fca5a5; opacity: 1; }
+    .cs-item.cs-dim { opacity: 0.38; }
     .cs-abbr { font-family: 'VT323', monospace; font-size: 0.52rem; color: var(--color-primary); opacity: 0.65; white-space: nowrap; }
     .cs-val  { font-family: 'VT323', monospace; font-size: 0.78rem; color: var(--color-glow); }
+
+    /* ── PENALTY SETUP ── */
+    #penalty-overlay {
+      display: none; position: fixed; inset: 0; z-index: 290;
+      background: rgba(0,0,0,0.92); align-items: center; justify-content: center;
+    }
+    #penalty-overlay.show { display: flex; }
+    #penalty-card {
+      background: var(--color-panel); border: 4px solid var(--color-primary);
+      box-shadow: 0 0 30px rgba(230,57,70,0.3); width: 92vw; max-width: 400px;
+      max-height: 90dvh; overflow-y: auto; scrollbar-width: none; padding: 16px 14px;
+    }
+    #penalty-cards-row::-webkit-scrollbar { display: none; }
+    #penalty-confirm-btn:not([disabled]) { opacity: 1 !important; }
 
     /* ── END SCREEN ── */
     #end-overlay {
@@ -206,93 +221,96 @@
             <!-- Shield fill -->
             <path d="M140,330 C60,295 8,230 8,148 L8,22 Q140,3 272,22 L272,148 C272,230 220,295 140,330 Z" fill="#1d5e24"/>
 
-            <!-- FACE 1 (Conner) cx=85 — blonde, fair skin, caricature style -->
-            <rect x="55" y="207" width="60" height="42" rx="6" fill="#f0f0f0" clip-path="url(#ck-shield)"/>
-            <rect x="82" y="207" width="6"  height="42" fill="#c1121f" clip-path="url(#ck-shield)"/>
-            <rect x="55" y="222" width="60" height="6"  fill="#c1121f" clip-path="url(#ck-shield)"/>
-            <rect x="79" y="195" width="12" height="15" rx="3" fill="#f0c280" clip-path="url(#ck-shield)"/>
-            <!-- Head -->
-            <ellipse cx="85" cy="157" rx="37" ry="45" fill="#f5c890" clip-path="url(#ck-shield)"/>
-            <!-- Ears -->
-            <ellipse cx="48" cy="161" rx="7" ry="10" fill="#eab87a" clip-path="url(#ck-shield)"/>
-            <ellipse cx="122" cy="161" rx="7" ry="10" fill="#eab87a" clip-path="url(#ck-shield)"/>
-            <ellipse cx="48" cy="161" rx="4"  ry="6"  fill="#d8a06a" clip-path="url(#ck-shield)"/>
-            <ellipse cx="122" cy="161" rx="4"  ry="6"  fill="#d8a06a" clip-path="url(#ck-shield)"/>
-            <!-- Hair — golden blonde, side-swept quiff -->
-            <path d="M48,151 Q50,91 85,81 Q120,91 122,151 Q117,114 85,111 Q53,114 48,151 Z" fill="#d4aa20" clip-path="url(#ck-shield)"/>
-            <path d="M57,111 Q69,97 88,95 Q103,97 113,109" fill="none" stroke="#eac840" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M55,126 Q67,110 84,107" fill="none" stroke="#eac840" stroke-width="2" stroke-linecap="round" opacity="0.6" clip-path="url(#ck-shield)"/>
-            <!-- Eyebrows -->
-            <path d="M59,136 Q69,129 80,133" fill="none" stroke="#a07820" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M90,133 Q101,129 111,136" fill="none" stroke="#a07820" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <!-- Eyes — whites -->
-            <ellipse cx="71" cy="148" rx="10" ry="11" fill="#fff" clip-path="url(#ck-shield)"/>
-            <ellipse cx="99" cy="148" rx="10" ry="11" fill="#fff" clip-path="url(#ck-shield)"/>
-            <ellipse cx="71" cy="148" rx="10" ry="11" fill="none" stroke="#c09060" stroke-width="1" clip-path="url(#ck-shield)"/>
-            <ellipse cx="99" cy="148" rx="10" ry="11" fill="none" stroke="#c09060" stroke-width="1" clip-path="url(#ck-shield)"/>
-            <!-- Pupils -->
-            <circle cx="72" cy="149" r="6" fill="#2a1800" clip-path="url(#ck-shield)"/>
-            <circle cx="100" cy="149" r="6" fill="#2a1800" clip-path="url(#ck-shield)"/>
-            <circle cx="73.5" cy="146.5" r="2" fill="rgba(255,255,255,0.8)" clip-path="url(#ck-shield)"/>
-            <circle cx="101.5" cy="146.5" r="2" fill="rgba(255,255,255,0.8)" clip-path="url(#ck-shield)"/>
-            <!-- Nose -->
-            <path d="M80,158 Q85,167 90,158" fill="none" stroke="#c08050" stroke-width="2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <ellipse cx="79" cy="163" rx="3" ry="2" fill="#d09060" clip-path="url(#ck-shield)"/>
-            <ellipse cx="91" cy="163" rx="3" ry="2" fill="#d09060" clip-path="url(#ck-shield)"/>
-            <!-- Cheek blush -->
-            <ellipse cx="59"  cy="170" rx="10" ry="7" fill="rgba(220,80,60,0.18)" clip-path="url(#ck-shield)"/>
-            <ellipse cx="111" cy="170" rx="10" ry="7" fill="rgba(220,80,60,0.18)" clip-path="url(#ck-shield)"/>
-            <!-- Big wide smile -->
-            <path d="M62,170 Q85,204 108,170 Q108,177 85,183 Q62,177 62,170 Z" fill="#7a1a10" clip-path="url(#ck-shield)"/>
-            <path d="M64,172 Q85,188 106,172 L104,177 Q85,191 66,177 Z" fill="#f5f5ea" clip-path="url(#ck-shield)"/>
-            <path d="M74,172.5 L73.5,177" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M85,173 L85,177.5" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M96,172.5 L96.5,177" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M62,170 Q85,204 108,170" fill="none" stroke="#b04030" stroke-width="2.5" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <!-- FACE 1 (Conner) — blonde, leaning right toward centre -->
+            <g clip-path="url(#ck-shield)">
+              <g transform="rotate(7,83,146)">
+                <rect x="54" y="209" width="58" height="48" rx="5" fill="#f0f0f0"/>
+                <path d="M67,209 Q83,219 99,209 L99,219 Q83,229 67,219 Z" fill="#c1121f"/>
+                <circle cx="72" cy="231" r="7" fill="#c1121f"/>
+                <circle cx="72" cy="231" r="5" fill="#e8c840"/>
+                <rect x="54" y="209" width="7" height="48" rx="2" fill="#e0e0e0"/>
+                <rect x="105" y="209" width="7" height="48" rx="2" fill="#e0e0e0"/>
+                <rect x="77" y="195" width="12" height="18" rx="5" fill="#f4c880"/>
+                <ellipse cx="83" cy="146" rx="43" ry="53" fill="#f4c880"/>
+                <ellipse cx="40" cy="151" rx="9" ry="13" fill="#e8a870"/>
+                <ellipse cx="126" cy="151" rx="9" ry="13" fill="#e8a870"/>
+                <ellipse cx="40" cy="151" rx="5.5" ry="8" fill="#d89060"/>
+                <ellipse cx="126" cy="151" rx="5.5" ry="8" fill="#d89060"/>
+                <path d="M40,140 Q42,76 83,65 Q124,76 126,140 Q120,99 83,96 Q46,99 40,140 Z" fill="#c8940e"/>
+                <path d="M60,89 Q70,65 83,62 Q93,64 100,75 Q88,69 72,75 Z" fill="#e0b020"/>
+                <path d="M53,97 Q66,80 85,75" fill="none" stroke="#f0cc30" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M58,112 Q70,94 86,90" fill="none" stroke="#f0cc30" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+                <path d="M104,93 Q113,103 118,116" fill="none" stroke="#b07808" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+                <path d="M50,131 Q63,120 78,127" fill="none" stroke="#9a7010" stroke-width="5" stroke-linecap="round"/>
+                <path d="M88,127 Q103,120 116,131" fill="none" stroke="#9a7010" stroke-width="5" stroke-linecap="round"/>
+                <ellipse cx="67" cy="141" rx="13" ry="14" fill="#fff"/>
+                <ellipse cx="99" cy="141" rx="13" ry="14" fill="#fff"/>
+                <ellipse cx="67" cy="141" rx="13" ry="14" fill="none" stroke="#7a4820" stroke-width="1.5"/>
+                <ellipse cx="99" cy="141" rx="13" ry="14" fill="none" stroke="#7a4820" stroke-width="1.5"/>
+                <circle cx="68" cy="142" r="9" fill="#4a5e28"/>
+                <circle cx="100" cy="142" r="9" fill="#4a5e28"/>
+                <circle cx="68" cy="142" r="7" fill="#1a1000"/>
+                <circle cx="100" cy="142" r="7" fill="#1a1000"/>
+                <circle cx="71" cy="137" r="3" fill="rgba(255,255,255,0.9)"/>
+                <circle cx="103" cy="137" r="3" fill="rgba(255,255,255,0.9)"/>
+                <path d="M77,158 Q83,169 89,158" fill="none" stroke="#c07848" stroke-width="3.5" stroke-linecap="round"/>
+                <ellipse cx="76" cy="165" rx="4.5" ry="3.5" fill="#d09060"/>
+                <ellipse cx="90" cy="165" rx="4.5" ry="3.5" fill="#d09060"/>
+                <ellipse cx="46" cy="162" rx="14" ry="10" fill="rgba(230,90,65,0.22)"/>
+                <ellipse cx="120" cy="162" rx="14" ry="10" fill="rgba(230,90,65,0.22)"/>
+                <path d="M51,170 Q83,198 115,170 Q115,181 83,193 Q51,181 51,170 Z" fill="#8a1810"/>
+                <path d="M54,174 Q83,193 112,174 L110,181 Q83,200 56,181 Z" fill="#f8f8ee"/>
+                <line x1="67" y1="175" x2="66.5" y2="183" stroke="#dde" stroke-width="1.5"/>
+                <line x1="83" y1="177" x2="83" y2="185" stroke="#dde" stroke-width="1.5"/>
+                <line x1="99" y1="175" x2="99.5" y2="183" stroke="#dde" stroke-width="1.5"/>
+                <path d="M51,170 Q83,198 115,170" fill="none" stroke="#a02818" stroke-width="3.5" stroke-linecap="round"/>
+              </g>
+            </g>
 
-            <!-- FACE 2 (Kane) cx=195 — dark hair, tan skin, caricature style -->
-            <rect x="165" y="207" width="60" height="42" rx="6" fill="#f0f0f0" clip-path="url(#ck-shield)"/>
-            <rect x="192" y="207" width="6"  height="42" fill="#c1121f" clip-path="url(#ck-shield)"/>
-            <rect x="165" y="222" width="60" height="6"  fill="#c1121f" clip-path="url(#ck-shield)"/>
-            <rect x="189" y="195" width="12" height="15" rx="3" fill="#c07840" clip-path="url(#ck-shield)"/>
-            <!-- Head -->
-            <ellipse cx="195" cy="157" rx="37" ry="45" fill="#c8783e" clip-path="url(#ck-shield)"/>
-            <!-- Ears -->
-            <ellipse cx="158" cy="161" rx="7" ry="10" fill="#b86830" clip-path="url(#ck-shield)"/>
-            <ellipse cx="232" cy="161" rx="7" ry="10" fill="#b86830" clip-path="url(#ck-shield)"/>
-            <ellipse cx="158" cy="161" rx="4"  ry="6"  fill="#a05828" clip-path="url(#ck-shield)"/>
-            <ellipse cx="232" cy="161" rx="4"  ry="6"  fill="#a05828" clip-path="url(#ck-shield)"/>
-            <!-- Hair — dark brown, short swept -->
-            <path d="M158,151 Q160,91 195,81 Q230,91 232,151 Q228,114 195,111 Q162,114 158,151 Z" fill="#1c0802" clip-path="url(#ck-shield)"/>
-            <path d="M167,111 Q179,97 198,95 Q213,97 221,109" fill="none" stroke="#3d1508" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M165,126 Q177,110 194,107" fill="none" stroke="#3d1508" stroke-width="2" stroke-linecap="round" opacity="0.6" clip-path="url(#ck-shield)"/>
-            <!-- Eyebrows -->
-            <path d="M169,136 Q179,129 190,133" fill="none" stroke="#0a0402" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M200,133 Q211,129 221,136" fill="none" stroke="#0a0402" stroke-width="3" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <!-- Eyes — whites -->
-            <ellipse cx="181" cy="148" rx="10" ry="11" fill="#fff" clip-path="url(#ck-shield)"/>
-            <ellipse cx="209" cy="148" rx="10" ry="11" fill="#fff" clip-path="url(#ck-shield)"/>
-            <ellipse cx="181" cy="148" rx="10" ry="11" fill="none" stroke="#8a4818" stroke-width="1" clip-path="url(#ck-shield)"/>
-            <ellipse cx="209" cy="148" rx="10" ry="11" fill="none" stroke="#8a4818" stroke-width="1" clip-path="url(#ck-shield)"/>
-            <!-- Pupils -->
-            <circle cx="182" cy="149" r="6" fill="#1a0800" clip-path="url(#ck-shield)"/>
-            <circle cx="210" cy="149" r="6" fill="#1a0800" clip-path="url(#ck-shield)"/>
-            <circle cx="183.5" cy="146.5" r="2" fill="rgba(255,255,255,0.8)" clip-path="url(#ck-shield)"/>
-            <circle cx="211.5" cy="146.5" r="2" fill="rgba(255,255,255,0.8)" clip-path="url(#ck-shield)"/>
-            <!-- Nose -->
-            <path d="M190,158 Q195,167 200,158" fill="none" stroke="#a05828" stroke-width="2" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <ellipse cx="189" cy="163" rx="3" ry="2" fill="#b06830" clip-path="url(#ck-shield)"/>
-            <ellipse cx="201" cy="163" rx="3" ry="2" fill="#b06830" clip-path="url(#ck-shield)"/>
-            <!-- Cheek blush -->
-            <ellipse cx="169" cy="170" rx="10" ry="7" fill="rgba(160,60,20,0.2)" clip-path="url(#ck-shield)"/>
-            <ellipse cx="221" cy="170" rx="10" ry="7" fill="rgba(160,60,20,0.2)" clip-path="url(#ck-shield)"/>
-            <!-- Big wide smile -->
-            <path d="M172,170 Q195,204 218,170 Q218,177 195,183 Q172,177 172,170 Z" fill="#7a1a10" clip-path="url(#ck-shield)"/>
-            <path d="M174,172 Q195,188 216,172 L214,177 Q195,191 176,177 Z" fill="#f5f5ea" clip-path="url(#ck-shield)"/>
-            <path d="M184,172.5 L183.5,177" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M195,173 L195,177.5" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M206,172.5 L206.5,177" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" clip-path="url(#ck-shield)"/>
-            <path d="M172,170 Q195,204 218,170" fill="none" stroke="#8a3018" stroke-width="2.5" stroke-linecap="round" clip-path="url(#ck-shield)"/>
+            <!-- FACE 2 (Kane) — dark hair, leaning left toward centre -->
+            <g clip-path="url(#ck-shield)">
+              <g transform="rotate(-7,197,146)">
+                <rect x="168" y="209" width="58" height="48" rx="5" fill="#f0f0f0"/>
+                <path d="M181,209 Q197,219 213,209 L213,219 Q197,229 181,219 Z" fill="#c1121f"/>
+                <circle cx="187" cy="231" r="7" fill="#c1121f"/>
+                <circle cx="187" cy="231" r="5" fill="#e8c840"/>
+                <rect x="168" y="209" width="7" height="48" rx="2" fill="#e0e0e0"/>
+                <rect x="219" y="209" width="7" height="48" rx="2" fill="#e0e0e0"/>
+                <rect x="191" y="195" width="12" height="18" rx="5" fill="#c47238"/>
+                <ellipse cx="197" cy="146" rx="43" ry="53" fill="#c47238"/>
+                <ellipse cx="154" cy="151" rx="9" ry="13" fill="#b06230"/>
+                <ellipse cx="240" cy="151" rx="9" ry="13" fill="#b06230"/>
+                <ellipse cx="154" cy="151" rx="5.5" ry="8" fill="#a05228"/>
+                <ellipse cx="240" cy="151" rx="5.5" ry="8" fill="#a05228"/>
+                <path d="M154,140 Q156,76 197,65 Q238,76 240,140 Q234,99 197,96 Q160,99 154,140 Z" fill="#180804"/>
+                <path d="M178,90 Q188,70 197,68 Q206,70 216,80" fill="none" stroke="#3d1208" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M162,108 Q174,90 194,86" fill="none" stroke="#3d1208" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+                <path d="M221,88 Q230,96 234,108" fill="none" stroke="#1a0604" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+                <path d="M164,131 Q177,120 192,127" fill="none" stroke="#0a0402" stroke-width="5" stroke-linecap="round"/>
+                <path d="M202,127 Q217,120 230,131" fill="none" stroke="#0a0402" stroke-width="5" stroke-linecap="round"/>
+                <ellipse cx="181" cy="141" rx="13" ry="14" fill="#fff"/>
+                <ellipse cx="213" cy="141" rx="13" ry="14" fill="#fff"/>
+                <ellipse cx="181" cy="141" rx="13" ry="14" fill="none" stroke="#8a4820" stroke-width="1.5"/>
+                <ellipse cx="213" cy="141" rx="13" ry="14" fill="none" stroke="#8a4820" stroke-width="1.5"/>
+                <circle cx="182" cy="142" r="9" fill="#402818"/>
+                <circle cx="214" cy="142" r="9" fill="#402818"/>
+                <circle cx="182" cy="142" r="7" fill="#100800"/>
+                <circle cx="214" cy="142" r="7" fill="#100800"/>
+                <circle cx="185" cy="137" r="3" fill="rgba(255,255,255,0.9)"/>
+                <circle cx="217" cy="137" r="3" fill="rgba(255,255,255,0.9)"/>
+                <path d="M191,158 Q197,169 203,158" fill="none" stroke="#a06030" stroke-width="3.5" stroke-linecap="round"/>
+                <ellipse cx="190" cy="165" rx="4.5" ry="3.5" fill="#b07040"/>
+                <ellipse cx="204" cy="165" rx="4.5" ry="3.5" fill="#b07040"/>
+                <ellipse cx="160" cy="162" rx="14" ry="10" fill="rgba(180,70,30,0.20)"/>
+                <ellipse cx="234" cy="162" rx="14" ry="10" fill="rgba(180,70,30,0.20)"/>
+                <path d="M165,170 Q197,198 229,170 Q229,181 197,193 Q165,181 165,170 Z" fill="#8a1810"/>
+                <path d="M168,174 Q197,193 226,174 L224,181 Q197,200 170,181 Z" fill="#f8f8ee"/>
+                <line x1="181" y1="175" x2="180.5" y2="183" stroke="#dde" stroke-width="1.5"/>
+                <line x1="197" y1="177" x2="197" y2="185" stroke="#dde" stroke-width="1.5"/>
+                <line x1="213" y1="175" x2="213.5" y2="183" stroke="#dde" stroke-width="1.5"/>
+                <path d="M165,170 Q197,198 229,170" fill="none" stroke="#8a2818" stroke-width="3.5" stroke-linecap="round"/>
+              </g>
+            </g>
 
             <!-- Bottom gradient -->
             <path d="M8,190 C8,190 8,330 140,330 C272,330 272,190 272,190 Z" fill="url(#face-btm)" clip-path="url(#ck-shield)"/>
@@ -435,6 +453,17 @@
                            box-shadow:inset -2px -2px 0px var(--color-shadow);cursor:pointer;">ON</button>
           </div>
         </div>
+        <div>
+          <h3 style="color:var(--color-glow);text-transform:uppercase;font-weight:bold;font-size:0.875rem;border-bottom:1px solid var(--color-shadow);padding-bottom:8px;margin-bottom:16px;letter-spacing:0.1em">Display</h3>
+          <div class="flex items-center justify-between py-2">
+            <span style="color:#d1d5db">Brightness</span>
+            <div class="flex items-center gap-3">
+              <input type="range" id="brightness-slider" min="20" max="150" value="100" oninput="updateBrightness(this.value)"
+                     style="accent-color:var(--color-primary);width:120px">
+              <span id="brightness-label" style="color:var(--color-glow);width:40px;text-align:right">100%</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="subpanel-footer"></div>
     </div>
@@ -517,14 +546,47 @@
 
   </div><!-- /game-shell -->
 
+  <!-- ═══ PENALTY SETUP OVERLAY ═══ -->
+  <div id="penalty-overlay">
+    <div id="penalty-card">
+      <div style="text-align:center;margin-bottom:10px">
+        <div style="font-family:'VT323',monospace;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.35em;color:var(--color-primary);opacity:0.7;font-weight:bold;-webkit-text-stroke:0.5px currentColor">Penalty Setup</div>
+        <div style="font-family:'VT323',monospace;font-size:0.78rem;color:var(--color-glow);opacity:0.55;margin-top:3px">Nominate your taker — used only if it goes to a shootout</div>
+      </div>
+      <svg id="penalty-svg" viewBox="0 0 280 180" style="width:100%;display:block;border-radius:4px;margin-bottom:8px">
+        <rect x="0" y="0" width="280" height="180" fill="#1d5e24" rx="4"/>
+        <rect x="0" y="0" width="280" height="180" fill="rgba(0,0,0,0.06)" rx="4"/>
+        <!-- Penalty area -->
+        <rect x="40" y="0" width="200" height="135" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+        <!-- 6-yard box -->
+        <rect x="110" y="0" width="60" height="40" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+        <!-- Goal net -->
+        <rect x="100" y="0" width="80" height="20" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
+        <!-- Goal line -->
+        <line x1="0" y1="20" x2="280" y2="20" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
+        <!-- Penalty spot dot -->
+        <circle cx="140" cy="148" r="2.5" fill="rgba(255,255,255,0.65)"/>
+        <!-- Dynamic content: cosmetic players + penalty slot -->
+        <g id="penalty-svg-inner"></g>
+      </svg>
+      <div id="penalty-hint" style="font-family:'VT323',monospace;font-size:0.85rem;color:var(--color-glow);text-align:center;margin-bottom:8px;opacity:0.65"></div>
+      <div id="penalty-cards-row" style="display:flex;gap:8px;overflow-x:auto;padding:4px 0;margin-bottom:10px"></div>
+      <button id="penalty-confirm-btn" onclick="confirmPenaltySetup()"
+              style="width:100%;padding:12px;font-family:'VT323',monospace;font-size:1.25rem;text-transform:uppercase;
+                     background:var(--color-primary);color:var(--color-bg-dark);border:none;cursor:pointer;letter-spacing:0.1em;
+                     font-weight:bold;-webkit-text-stroke:0.5px currentColor;opacity:0.4"
+              disabled>
+        CONFIRM &amp; KICK OFF ▶
+      </button>
+    </div>
+  </div>
+
   <!-- ═══ END OVERLAY ═══ -->
   <div id="end-overlay">
     <div id="end-card"></div>
   </div>
 
   <script>
-    // ─── WIPE GUARD ────────────────────────────────────────────────────────────
-    (function(){ var k='PFB_wipe_v1'; if(localStorage.getItem(k)!=='1'){ localStorage.removeItem('PFB_stats'); localStorage.setItem(k,'1'); } })();
 
     // ─── STATS ─────────────────────────────────────────────────────────────────
     const STATS_KEY = 'PFB_stats';
@@ -574,7 +636,7 @@
       const text = `I scored ${score}/6 on Proper Football! Challenge code: ${challengeSeed} — can you beat it?`;
       navigator.clipboard.writeText(text).then(() => {
         const btn = document.getElementById('share-btn');
-        if (btn) { btn.innerText = 'Copied!'; setTimeout(() => btn.innerText = 'Share Score', 2000); }
+        if (btn) { btn.innerText = 'Copied!'; setTimeout(() => btn.innerText = 'Challenge Code', 2000); }
       });
     }
 
@@ -684,6 +746,11 @@
       sfxEnabled = !sfxEnabled;
       document.getElementById('sfx-toggle').innerText = sfxEnabled ? 'ON' : 'OFF';
     }
+    function updateBrightness(v) {
+      document.body.style.filter = 'brightness(' + (parseInt(v) / 100) + ')';
+      var label = document.getElementById('brightness-label');
+      if (label) label.textContent = v + '%';
+    }
     const SFX = {
       select()  { _tone(660, 'square', 0.06, 0.005, 0.01, 0.04); },
       assign()  { _tone(550, 'sine', 0.10, 0.01, 0.02, 0.07); _tone(880, 'sine', 0.06, 0.01, 0.01, 0.06, 0.06); },
@@ -727,6 +794,9 @@
     // Prevents the "open / close / reopen for fresh cards" cheese.
     let slotOffers = {};
     let footballX = 140, footballY = 380;
+    let friendlyPlayer = null;
+    let penaltyTaker = null;
+    let penaltyPickerOffers = [];
 
     const POS_COORDS = {
       penaltyEdgeLeft: { cx: 80,  cy: 102, label: 'PEN L'   },
@@ -889,6 +959,15 @@
         }
         html += `</g>`;
       });
+      if (friendlyPlayer && (gamePhase === 'playOut' || gamePhase === 'done')) {
+        const fcx = 195, fcy = 362;
+        html += `<g style="pointer-events:none;opacity:0.85">
+          <circle cx="${fcx}" cy="${fcy}" r="26" fill="rgba(0,0,0,0.15)"/>
+          <circle cx="${fcx}" cy="${fcy}" r="22" fill="#1a5228" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+          <text x="${fcx}" y="${fcy - 4}" text-anchor="middle" font-family="VT323,monospace" font-size="9.5" fill="#fff">${escHtml(shortenName(friendlyPlayer.name))}</text>
+          <text x="${fcx}" y="${fcy + 8}" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.55)">TEAMMATE</text>
+        </g>`;
+      }
       layer.innerHTML = html;
       updateScoreDisplay();
     }
@@ -945,6 +1024,15 @@
       const cfg = SLOT_CONFIG[slotId];
       document.getElementById('picker-pos-name').innerText = cfg.label;
       const row = document.getElementById('picker-cards-row');
+      const keyStats = new Set([cfg.primary, cfg.secondary]);
+      const ALL_STATS = [
+        { key:'rightFoot', label:'Right Foot' },
+        { key:'leftFoot',  label:'Left Foot'  },
+        { key:'shooting',  label:'Shooting'   },
+        { key:'speed',     label:'Speed'      },
+        { key:'control',   label:'Control'    },
+        { key:'tackle',    label:'Tackle'     },
+      ];
       row.innerHTML = currentPickerOffers.map((p, i) => {
         const overall = Math.round((p.rightFoot + p.leftFoot + p.shooting + p.speed + p.control + p.tackle) / 6);
         // If one of the cached offers has been picked up by another slot,
@@ -956,20 +1044,17 @@
         const takenTag  = takenElsewhere
           ? `<div style="text-align:center;font-size:9px;color:#fbbf24;margin-top:4px;letter-spacing:0.05em">In ${escHtml(SLOT_CONFIG[p._slotId].label)}</div>`
           : '';
+        const statsHtml = ALL_STATS.map(s => {
+          const cls = keyStats.has(s.key) ? 'cs-key' : 'cs-dim';
+          return `<div class="cs-item ${cls}"><span class="cs-abbr">${s.label}</span><span class="cs-val">${p[s.key]}</span></div>`;
+        }).join('');
         return `<div class="collector-card" ${cardClick} style="${cardStyle}">
           <div class="card-top">
             <span class="card-pos-badge pos-${escHtml(p.pos.toLowerCase())}">${escHtml(p.pos)}</span>
             <span class="card-rating">${overall}</span>
           </div>
           <div class="card-name">${escHtml(p.name)}</div>
-          <div class="card-stats-grid">
-            <div class="cs-item"><span class="cs-abbr">Right Foot</span><span class="cs-val">${p.rightFoot}</span></div>
-            <div class="cs-item"><span class="cs-abbr">Left Foot</span><span class="cs-val">${p.leftFoot}</span></div>
-            <div class="cs-item"><span class="cs-abbr">Shooting</span><span class="cs-val">${p.shooting}</span></div>
-            <div class="cs-item"><span class="cs-abbr">Speed</span><span class="cs-val">${p.speed}</span></div>
-            <div class="cs-item"><span class="cs-abbr">Control</span><span class="cs-val">${p.control}</span></div>
-            <div class="cs-item"><span class="cs-abbr">Tackle</span><span class="cs-val">${p.tackle}</span></div>
-          </div>
+          <div class="card-stats-grid">${statsHtml}</div>
           ${takenTag}
         </div>`;
       }).join('');
@@ -998,9 +1083,98 @@
     function confirmTeam() {
       if (gamePhase !== 'selection') return;
       if (!SLOT_IDS.every(id => !!slots[id])) return;
-      gamePhase = 'playOut';
       if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
       closePicker();
+      openPenaltySetup();
+    }
+
+    // ─── PENALTY SETUP ───────────────────────────────────────────────────────────
+    function openPenaltySetup() {
+      gamePhase = 'penaltySetup';
+      penaltyTaker = null;
+      const remaining = pool.filter(p => !p._slotId);
+      penaltyPickerOffers = [...remaining];
+      for (let i = penaltyPickerOffers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [penaltyPickerOffers[i], penaltyPickerOffers[j]] = [penaltyPickerOffers[j], penaltyPickerOffers[i]];
+      }
+      penaltyPickerOffers = penaltyPickerOffers.slice(0, 3);
+      document.getElementById('penalty-hint').innerText = 'Tap the penalty spot to pick your taker';
+      document.getElementById('penalty-cards-row').innerHTML = '';
+      document.getElementById('penalty-confirm-btn').disabled = true;
+      renderPenaltyPitch();
+      document.getElementById('penalty-overlay').classList.add('show');
+    }
+
+    function renderPenaltyPitch() {
+      const inner = document.getElementById('penalty-svg-inner');
+      if (!inner) return;
+      const picked = !!penaltyTaker;
+      const spotName = picked ? shortenName(penaltyTaker.name) : 'PEN SPOT';
+      const spotFill = picked ? '#c1121f' : '#1d5e24';
+      const spotStroke = picked ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)';
+      const cosmetics = [
+        { cx: 48,  cy: 128, label: 'MID' },
+        { cx: 232, cy: 128, label: 'FWD' },
+        { cx: 28,  cy: 100, label: 'DEF' },
+        { cx: 252, cy: 100, label: 'DEF' },
+      ];
+      let html = '';
+      cosmetics.forEach(cp => {
+        html += `<g style="pointer-events:none;opacity:0.55">
+          <circle cx="${cp.cx}" cy="${cp.cy}" r="16" fill="rgba(0,0,0,0.15)"/>
+          <circle cx="${cp.cx}" cy="${cp.cy}" r="12" fill="#1a5228" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"/>
+          <text x="${cp.cx}" y="${cp.cy + 4}" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.5)">${cp.label}</text>
+        </g>`;
+      });
+      html += `<g onclick="openPenaltyPicker()" style="cursor:pointer">
+        <circle cx="140" cy="148" r="26" fill="rgba(0,0,0,0.18)"/>
+        <circle cx="140" cy="148" r="22" fill="${spotFill}" stroke="${spotStroke}" stroke-width="1.5"/>
+        <text x="140" y="${picked ? '144' : '152'}" text-anchor="middle" font-family="VT323,monospace" font-size="9.5" fill="#fff">${escHtml(spotName)}</text>
+        ${picked ? `<text x="140" y="157" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.6)">SHOOTER</text>` : ''}
+      </g>`;
+      inner.innerHTML = html;
+    }
+
+    function openPenaltyPicker() {
+      const penaltyKeyStats = new Set(['shooting', 'rightFoot', 'leftFoot']);
+      const row = document.getElementById('penalty-cards-row');
+      document.getElementById('penalty-hint').innerText = 'Choose your penalty taker:';
+      row.innerHTML = penaltyPickerOffers.map((p, i) => {
+        const overall = Math.round((p.rightFoot + p.leftFoot + p.shooting + p.speed + p.control + p.tackle) / 6);
+        const statsHtml = [
+          { key:'rightFoot', label:'Right Foot' }, { key:'leftFoot',  label:'Left Foot'  },
+          { key:'shooting',  label:'Shooting'   }, { key:'speed',     label:'Speed'      },
+          { key:'control',   label:'Control'    }, { key:'tackle',    label:'Tackle'     },
+        ].map(s => {
+          const cls = penaltyKeyStats.has(s.key) ? 'cs-key' : 'cs-dim';
+          return `<div class="cs-item ${cls}"><span class="cs-abbr">${s.label}</span><span class="cs-val">${p[s.key]}</span></div>`;
+        }).join('');
+        return `<div class="collector-card" onclick="pickPenaltyPlayer(${i})">
+          <div class="card-top">
+            <span class="card-pos-badge pos-${escHtml(p.pos.toLowerCase())}">${escHtml(p.pos)}</span>
+            <span class="card-rating">${overall}</span>
+          </div>
+          <div class="card-name">${escHtml(p.name)}</div>
+          <div class="card-stats-grid">${statsHtml}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function pickPenaltyPlayer(idx) {
+      const p = penaltyPickerOffers[idx];
+      if (!p) return;
+      penaltyTaker = p;
+      renderPenaltyPitch();
+      document.getElementById('penalty-hint').innerText = `${escHtml(p.name)} nominated as penalty taker`;
+      document.getElementById('penalty-cards-row').innerHTML = '';
+      document.getElementById('penalty-confirm-btn').disabled = false;
+    }
+
+    function confirmPenaltySetup() {
+      if (!penaltyTaker) return;
+      document.getElementById('penalty-overlay').classList.remove('show');
+      gamePhase = 'playOut';
       playOut();
     }
 
@@ -1049,6 +1223,11 @@
       fbEl.style.opacity = '1';
       footballX = 140; footballY = 380;
       fbEl.setAttribute('transform','translate(140,380)');
+      const remaining = pool.filter(p => !p._slotId);
+      if (remaining.length > 0) {
+        friendlyPlayer = remaining[Math.floor(rng() * remaining.length)];
+        renderPitch();
+      }
       await delay(400);
       const sc = calcScores();
       for (const slotId of PLAY_ORDER) {
@@ -1107,7 +1286,7 @@
           <button id="share-btn" onclick="copyShareText(${sc.total})"
                   style="width:100%;padding:12px;font-family:'VT323',monospace;font-size:1.25rem;text-transform:uppercase;
                          background:var(--color-primary);color:var(--color-bg-dark);border:none;cursor:pointer;letter-spacing:0.1em;font-weight:bold;-webkit-text-stroke:0.5px currentColor">
-            Share Score
+            Challenge Code
           </button>
           <button onclick="playAgain()"
                   style="width:100%;padding:10px;font-family:'VT323',monospace;font-size:1.1rem;text-transform:uppercase;
@@ -1144,6 +1323,9 @@
       pool = [];
       crossReceivedRoll = 0;
       shotRolls = {};
+      friendlyPlayer = null;
+      penaltyTaker = null;
+      penaltyPickerOffers = [];
       document.getElementById('timer-display').innerText = '3:00';
       document.getElementById('timer-display').classList.remove('warn');
       renderPitch();
@@ -1167,6 +1349,9 @@
       footballX = 140; footballY = 380;
       selectedIdx = null;
       SLOT_IDS.forEach(k => slots[k] = null);
+      friendlyPlayer = null;
+      penaltyTaker = null;
+      penaltyPickerOffers = [];
       pool = generatePlayers(rng).map(p => ({ ...p, _slotId: null }));
       crossReceivedRoll = rng();
       shotRolls = {};
