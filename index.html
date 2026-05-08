@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="author" content="lexxicc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Proper Football v0.0.16</title>
+  <title>Proper Football v0.0.17</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e63946">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -38,26 +38,25 @@
       width: 640px; max-width: 94vw; height: calc(100dvh - 3.2vw); max-height: calc(100dvh - 3.2vw);
       margin: 1.6vw;
       overflow-y: auto; scrollbar-width: none;
-      /* Unified menu spec — 5 zones, padding/gap 1.5vw (bottom 1vw), elastic logo→tagline gap */
+      /* Unified menu spec — 5 zones, uniform 1.5vw padding+gap, logo container is the flex/stretch component */
       display: flex; flex-direction: column;
-      padding: 1.5vw 1.5vw 1vw 1.5vw; gap: 1.5vw; box-sizing: border-box;
+      padding: 1.5vw; gap: 1.5vw; box-sizing: border-box;
     }
     .menu-scroll::-webkit-scrollbar { display: none; }
 
-    /* ── ZONE 1 — LOGO (expanded 0.5vw downwards to absorb the 0.5vw saved from bottom padding) ── */
+    /* ── ZONE 1 — LOGO (FLEX/STRETCH — grows to fill leftover panel height) ── */
     .logo-container {
-      flex: 0 0 calc(240px - 1.5vw);
-      height: calc(240px - 1.5vw);
+      flex: 1 1 auto;
+      min-height: calc(240px - 1.5vw);
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
     }
     .logo-container svg,
     .logo-container img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
-    /* ── ZONE 2 — TAGLINE (carries elastic margin-top:auto) ── */
+    /* ── ZONE 2 — TAGLINE (fixed; gap above is fixed 1.5vw, not elastic) ── */
     .tagline-container {
       flex: 0 0 auto;
-      margin-top: auto;
       display: flex; align-items: center; justify-content: center;
       gap: 12px; padding: 8px 16px;
     }
@@ -336,7 +335,7 @@
       <!-- ZONE 5 — FOOTER -->
       <div class="menu-footer">
         <div class="footer-line left"></div>
-        <span class="footer-text">Tacticon Studios 2026 · v0.0.16</span>
+        <span class="footer-text">Tacticon Studios 2026 · v0.0.17</span>
         <div class="footer-line right"></div>
       </div>
 
@@ -502,7 +501,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.16</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.17</p>
 
   </div><!-- /game-shell -->
   </div><!-- /game-shell-wrapper -->
@@ -608,6 +607,7 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.17', date:'2026-05', notes:['SoT pattern flip: logo container is now the flex/stretch component; all 5 inter-container gaps uniform 1.5vw; panel padding restored to 1.5vw all sides; tagline margin-top:auto removed.'] },
       { v:'v0.0.16', date:'2026-05', notes:['Unified menu spec implementation: 5 zones with 1.5vw padding/gap, elastic logo→tagline gap. Logo container expanded; bottom panel padding tightened to 1vw. Inline challenge widget; CFK silhouette artwork inlined as panel backdrop.'] },
       { v:'v0.0.15', date:'2026-05', notes:['OPW shell retrofit: start overlay with match history, patch notes, and back-button support.'] },
       { v:'v0.0.14', date:'2026-05', notes:['Collector card visual redesign — gold border, position colour stripes, dark card backgrounds.'] },
