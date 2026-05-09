@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="author" content="lexxicc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Proper Football v0.0.17</title>
+  <title>Proper Football v0.0.18</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e63946">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -44,10 +44,10 @@
     }
     .menu-scroll::-webkit-scrollbar { display: none; }
 
-    /* ── ZONE 1 — LOGO (FLEX/STRETCH — grows to fill leftover panel height) ── */
+    /* ── ZONE 1 — LOGO (FB override: fixed 240px — not the SoT flex/stretch pattern) ── */
     .logo-container {
-      flex: 1 1 auto;
-      min-height: calc(240px - 1.5vw);
+      flex: 0 0 240px;
+      height: 240px;
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
     }
@@ -335,7 +335,7 @@
       <!-- ZONE 5 — FOOTER -->
       <div class="menu-footer">
         <div class="footer-line left"></div>
-        <span class="footer-text">Tacticon Studios 2026 · v0.0.17</span>
+        <span class="footer-text">Tacticon Studios 2026 · v0.0.18</span>
         <div class="footer-line right"></div>
       </div>
 
@@ -501,7 +501,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.17</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.18</p>
 
   </div><!-- /game-shell -->
   </div><!-- /game-shell-wrapper -->
