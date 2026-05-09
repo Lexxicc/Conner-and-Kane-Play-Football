@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="author" content="lexxicc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Proper Football v0.0.18</title>
+  <title>Proper Football v0.0.19</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e63946">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -64,9 +64,12 @@
     .tagline-line.left  { background: linear-gradient(to right, transparent, var(--color-primary)); }
     .tagline-line.right { background: linear-gradient(to left,  transparent, var(--color-primary)); }
     .tagline-text {
-      font-family: 'VT323', monospace; font-size: 0.95rem;
+      font-family: 'VT323', monospace;
+      font-size: clamp(0.65rem, 3.2vw, 0.95rem);
       color: var(--color-primary); text-transform: uppercase;
-      letter-spacing: 0.35em; white-space: nowrap;
+      letter-spacing: clamp(0.12em, 1vw, 0.3em);
+      white-space: nowrap;
+      flex-shrink: 1; min-width: 0;
     }
 
     /* ── ZONE 3 — BUTTONS ── */
@@ -168,22 +171,68 @@
     #score-display {
       font-family: 'VT323', monospace; font-size: 1.4rem; color: var(--color-accent); letter-spacing: 0.05em;
     }
+    #goals-display {
+      font-family: 'VT323', monospace; font-size: 1.4rem; color: var(--color-glow); letter-spacing: 0.05em;
+      opacity: 0.85;
+    }
+    #goals-display .label { color: var(--color-primary); opacity: 0.7; font-size: 0.85rem; margin-right: 4px; }
 
     /* ── PITCH ── */
     #pitch-container {
       flex: 1; min-height: 0; display: flex; align-items: center;
       justify-content: center; background: #2a7d30; overflow: hidden;
+      position: relative;
     }
     #pitch-svg { height: 100%; width: auto; max-width: 100%; display: block; }
 
-    /* ── PICKER ── */
-    #picker-panel {
-      flex-shrink: 0; background: var(--color-panel);
-      border-top: 2px solid var(--color-primary);
-      max-height: 0; overflow: hidden;
-      transition: max-height 0.2s ease;
+    /* ── NARRATION BANNER ── */
+    #narration-banner {
+      position: absolute; left: 50%; top: 8px;
+      transform: translateX(-50%);
+      max-width: 92%;
+      padding: 8px 14px;
+      background: rgba(10,46,14,0.92);
+      border: 2px solid var(--color-primary);
+      border-radius: 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1rem; line-height: 1.15;
+      color: var(--color-glow);
+      text-align: center;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 220ms ease;
+      z-index: 50;
+      white-space: normal;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
     }
-    #picker-panel:not(.closed) { max-height: 210px; }
+    #narration-banner.show { opacity: 1; }
+    #narration-banner.lose { color: #f1a7a7; border-color: #c1121f; }
+
+    /* ── PICKER ── */
+    /* Popup toast — overlays the pitch, doesn't compress it. */
+    #picker-panel {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%) translateY(16px);
+      width: min(94vw, 460px);
+      background: var(--color-panel);
+      border: 2px solid var(--color-primary);
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 0 0 4px rgba(0,0,0,0.35);
+      overflow: hidden;
+      z-index: 60;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    #picker-panel:not(.closed) {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
     #picker-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 6px 10px; border-bottom: 1px solid #3a8040;
@@ -306,10 +355,88 @@
     <!-- MAIN -->
     <div id="start-main" class="menu-scroll relative z-10">
 
+      <!-- ZONE 1 — LOGO (240px slot — stadium → crowd → 2 players, draft v1) -->
+      <div class="logo-container">
+        <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <radialGradient id="fb-sky" cx="50%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#3a1a1f"/>
+              <stop offset="60%" stop-color="#1a0608"/>
+              <stop offset="100%" stop-color="#000"/>
+            </radialGradient>
+            <linearGradient id="fb-pitch" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a3d24"/>
+              <stop offset="100%" stop-color="#0a2010"/>
+            </linearGradient>
+          </defs>
+          <!-- sky / arena ambience -->
+          <rect width="240" height="240" fill="url(#fb-sky)"/>
+          <!-- stadium silhouette (back wall — symmetrical curved upper stand) -->
+          <path d="M -10 130 Q 120 60 250 130 L 250 170 L -10 170 Z" fill="#0c0303" opacity="0.95"/>
+          <!-- light towers -->
+          <g fill="#1a0608" stroke="#2a0e12" stroke-width="1">
+            <rect x="22"  y="60"  width="3" height="78"/>
+            <rect x="215" y="60"  width="3" height="78"/>
+            <rect x="14"  y="56"  width="19" height="9"/>
+            <rect x="207" y="56"  width="19" height="9"/>
+          </g>
+          <circle cx="23.5"  cy="60.5" r="2.6" fill="#ffd76b" opacity="0.55"/>
+          <circle cx="216.5" cy="60.5" r="2.6" fill="#ffd76b" opacity="0.55"/>
+          <!-- crowd row 1 (further back, smaller heads) -->
+          <g fill="#070202">
+            <g id="fb-crowd-back">
+              <!-- 28 small heads scattered along the upper stand -->
+            </g>
+          </g>
+          <g fill="#0a0303">
+            <!-- back row: y=128, small radii -->
+            <circle cx="20"  cy="128" r="2.2"/><circle cx="32"  cy="126" r="2.2"/><circle cx="44"  cy="128" r="2.2"/>
+            <circle cx="56"  cy="125" r="2.2"/><circle cx="68"  cy="127" r="2.2"/><circle cx="80"  cy="124" r="2.2"/>
+            <circle cx="92"  cy="126" r="2.2"/><circle cx="104" cy="123" r="2.2"/><circle cx="116" cy="125" r="2.2"/>
+            <circle cx="128" cy="123" r="2.2"/><circle cx="140" cy="125" r="2.2"/><circle cx="152" cy="123" r="2.2"/>
+            <circle cx="164" cy="126" r="2.2"/><circle cx="176" cy="124" r="2.2"/><circle cx="188" cy="127" r="2.2"/>
+            <circle cx="200" cy="125" r="2.2"/><circle cx="212" cy="128" r="2.2"/><circle cx="224" cy="126" r="2.2"/>
+          </g>
+          <!-- crowd row 2 (mid, slightly larger) -->
+          <g fill="#100404">
+            <circle cx="14"  cy="142" r="2.8"/><circle cx="28"  cy="140" r="2.8"/><circle cx="42"  cy="142" r="2.8"/>
+            <circle cx="56"  cy="139" r="2.8"/><circle cx="70"  cy="141" r="2.8"/><circle cx="84"  cy="138" r="2.8"/>
+            <circle cx="98"  cy="140" r="2.8"/><circle cx="112" cy="138" r="2.8"/><circle cx="126" cy="139" r="2.8"/>
+            <circle cx="140" cy="138" r="2.8"/><circle cx="154" cy="140" r="2.8"/><circle cx="168" cy="138" r="2.8"/>
+            <circle cx="182" cy="141" r="2.8"/><circle cx="196" cy="139" r="2.8"/><circle cx="210" cy="142" r="2.8"/>
+            <circle cx="224" cy="140" r="2.8"/>
+          </g>
+          <!-- crowd row 3 (front-most stand, biggest heads) -->
+          <g fill="#150505">
+            <circle cx="10"  cy="158" r="3.4"/><circle cx="26"  cy="156" r="3.4"/><circle cx="42"  cy="158" r="3.4"/>
+            <circle cx="58"  cy="155" r="3.4"/><circle cx="74"  cy="157" r="3.4"/><circle cx="90"  cy="154" r="3.4"/>
+            <circle cx="106" cy="156" r="3.4"/><circle cx="122" cy="154" r="3.4"/><circle cx="138" cy="156" r="3.4"/>
+            <circle cx="154" cy="154" r="3.4"/><circle cx="170" cy="157" r="3.4"/><circle cx="186" cy="155" r="3.4"/>
+            <circle cx="202" cy="158" r="3.4"/><circle cx="218" cy="156" r="3.4"/><circle cx="232" cy="158" r="3.4"/>
+          </g>
+          <!-- pitch -->
+          <rect x="0" y="170" width="240" height="70" fill="url(#fb-pitch)"/>
+          <line x1="0" y1="174" x2="240" y2="174" stroke="#2d6038" stroke-width="0.8" opacity="0.6"/>
+          <!-- 2 players — small, distant, foregrounded on the pitch -->
+          <g fill="#e63946" stroke="#000" stroke-width="0.5">
+            <!-- left player -->
+            <circle cx="100" cy="195" r="4.5"/>
+            <path d="M 100 199.5 L 96 215 L 99 215 L 99 224 L 101 224 L 101 215 L 104 215 Z"/>
+          </g>
+          <g fill="#f1faee" stroke="#000" stroke-width="0.5">
+            <!-- right player (in white kit, half-stride toward left) -->
+            <circle cx="140" cy="197" r="4.5"/>
+            <path d="M 140 201.5 L 136 217 L 139 217 L 139 226 L 141 226 L 141 217 L 144 217 Z"/>
+          </g>
+          <!-- football between them -->
+          <circle cx="120" cy="215" r="2.4" fill="#fff" stroke="#000" stroke-width="0.5"/>
+        </svg>
+      </div>
+
       <!-- ZONE 2 — TAGLINE (elastic gap above) -->
       <div class="tagline-container">
         <div class="tagline-line left"></div>
-        <span class="tagline-text">Tactical · Positional · Glorious</span>
+        <span class="tagline-text">Fantasy Draft Football</span>
         <div class="tagline-line right"></div>
       </div>
 
@@ -335,7 +462,7 @@
       <!-- ZONE 5 — FOOTER -->
       <div class="menu-footer">
         <div class="footer-line left"></div>
-        <span class="footer-text">Tacticon Studios 2026 · v0.0.18</span>
+        <span class="footer-text">Tacticon Studios 2026 · v0.0.19</span>
         <div class="footer-line right"></div>
       </div>
 
@@ -435,11 +562,13 @@
     <!-- Header -->
     <div id="game-header">
       <div id="timer-display">3:00</div>
+      <div id="goals-display"><span class="label">GOALS</span><span id="goals-count">0</span></div>
       <div id="score-display">? pts</div>
     </div>
 
     <!-- Pitch -->
     <div id="pitch-container">
+      <div id="narration-banner"></div>
       <svg id="pitch-svg" viewBox="0 0 280 380" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
         <!-- Background -->
         <rect width="280" height="380" fill="#2a7d30"/>
@@ -501,7 +630,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.18</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.19</p>
 
   </div><!-- /game-shell -->
   </div><!-- /game-shell-wrapper -->
@@ -607,6 +736,7 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.19', date:'2026-05', notes:['Mechanics overhaul: linear DFS resolution engine — 6 slots × 2 actions per play, stat-vs-stat duels with seeded opposition (1 GK + 6 DEFs from real player pool). Narration banner displays per-action commentary; goal counter in header. STR/MID/DEF/GK position-scaled DFS points (DEF +15 > MID +12 > STR +10 > GK +20 per goal). Forwards renamed to Strikers throughout.'] },
       { v:'v0.0.17', date:'2026-05', notes:['SoT pattern flip: logo container is now the flex/stretch component; all 5 inter-container gaps uniform 1.5vw; panel padding restored to 1.5vw all sides; tagline margin-top:auto removed.'] },
       { v:'v0.0.16', date:'2026-05', notes:['Unified menu spec implementation: 5 zones with 1.5vw padding/gap, elastic logo→tagline gap. Logo container expanded; bottom panel padding tightened to 1vw. Inline challenge widget; CFK silhouette artwork inlined as panel backdrop.'] },
       { v:'v0.0.15', date:'2026-05', notes:['OPW shell retrofit: start overlay with match history, patch notes, and back-button support.'] },
@@ -799,6 +929,7 @@
     let selectedIdx = null;
     let crossReceivedRoll = 0;
     let shotRolls = {};
+    let actionRolls = {}; // { slotId: [roll0, roll1] } — pre-rolled per startGame for 2 actions per slot
     let gameActive = false;
     let gamePhase = 'selection'; // 'selection' | 'playOut' | 'done'
     let activePosId = null;
@@ -824,14 +955,61 @@
     const PLAY_ORDER = ['midRight','longShotRight','penaltyEdgeLeft','crossInLeft','throughBallRun','cornerKick'];
 
     const SLOT_CONFIG = {
-      penaltyEdgeLeft: { label:'Pen Edge L',  primary:'leftFoot',  secondary:'shooting'  },
-      longShotRight:   { label:'Long Shot R', primary:'shooting',  secondary:'rightFoot' },
-      cornerKick:      { label:'Corner Kick', primary:'rightFoot', secondary:'shooting'  },
-      midRight:        { label:'Mid Right',   primary:'shooting',  secondary:'rightFoot' },
-      crossInLeft:     { label:'Cross-In L',  primary:'leftFoot',  secondary:'shooting'  },
-      throughBallRun:  { label:'Thru Ball R', primary:'speed',     secondary:'control'   },
+      midRight:        {
+        label:'Mid Right',   primary:'shooting',  secondary:'rightFoot',
+        actions: [
+          { playerPrimary:'control', playerSecondary:'speed',     oppStat:'tackle',  oppRole:'DEF', type:'receive', winText:'CONTROLLED',                 loseText:'TACKLED' },
+          { playerPrimary:'tackle',  playerSecondary:'rightFoot', oppStat:'tackle',  oppRole:'DEF', type:'pass',    winText:'KEPT POSSESSION, BACK PASS', loseText:'INTERCEPTED' },
+        ],
+      },
+      longShotRight:   {
+        label:'Long Shot R', primary:'shooting',  secondary:'rightFoot',
+        actions: [
+          { playerPrimary:'control',   playerSecondary:'speed',    oppStat:'tackle',  oppRole:'DEF', type:'receive', winText:'CONTROLLED, SHOT ON GOAL', loseText:'TRYING TO FIND AN OPENING...' },
+          { playerPrimary:'rightFoot', playerSecondary:'shooting', oppStat:'control', oppRole:'GK',  type:'shot',    winText:'GOAL!!!',                  loseText:'HIT THE POST FROM A MILE OUT!' },
+        ],
+      },
+      penaltyEdgeLeft: {
+        label:'Pen Edge L',  primary:'leftFoot',  secondary:'shooting',
+        actions: [
+          { playerPrimary:'control',  playerSecondary:'speed',    oppStat:'tackle',  oppRole:'DEF', type:'receive', winText:'{player} DRIBBLES IT INTO THE BOX',                 loseText:"FIRM TACKLE ON THE EDGE, BUT HE'S KEPT IT" },
+          { playerPrimary:'leftFoot', playerSecondary:'shooting', oppStat:'control', oppRole:'GK',  type:'shot',    winText:"GOAL!!! HE'S SUNK IT PERFECTLY INTO THE TOP CORNER", loseText:'GOALIE GOT A TOUCH ON AND PUSHED IT WIDE' },
+        ],
+      },
+      crossInLeft:     {
+        label:'Cross-In L',  primary:'leftFoot',  secondary:'shooting',
+        actions: [
+          { playerPrimary:'speed',    playerSecondary:'control',  oppStat:'tackle',  oppRole:'DEF', type:'receive', winText:'TOOK IT AROUND THE DEFENDER...',                    loseText:"TACKLED AND THE BALL'S OUT OF PLAY. THROW-IN" },
+          { playerPrimary:'leftFoot', playerSecondary:'shooting', oppStat:'control', oppRole:'DEF', type:'cross',   winText:'{player} WHIPS IN A DANGEROUS CROSS',               loseText:"THAT WASN'T WHERE IT WAS SUPPOSED TO GO. GOAL KICK" },
+        ],
+      },
+      throughBallRun:  {
+        label:'Thru Ball R', primary:'speed',     secondary:'control',
+        actions: [
+          { playerPrimary:'speed',    playerSecondary:'control',  oppStat:'speed',   oppRole:'DEF', type:'receive', winText:'GOT ON THE END OF IT',           loseText:'BEATEN TO IT BY A SPLIT SECOND' },
+          { playerPrimary:'shooting', playerSecondary:'rightFoot', oppStat:'control',oppRole:'GK',  type:'finish',  winText:'A CLEAN HEADER FROM {player}!!!', loseText:"HEADED IT STRAIGHT INTO KEEPER'S ARMS" },
+        ],
+      },
+      cornerKick:      {
+        label:'Corner Kick', primary:'rightFoot', secondary:'shooting',
+        actions: [
+          { playerPrimary:'rightFoot', playerSecondary:'shooting', oppStat:'control', oppRole:'DEF', type:'cross',  winText:'DELIVERED A PROMISING BALL',                          loseText:'EASILY CLEARED BY THE DEFENCE AT THE NEAR POST' },
+          { playerPrimary:'shooting',  playerSecondary:'rightFoot', oppStat:'control', oppRole:'GK',  type:'finish', winText:"IT'S IN! {player} MANAGED TO PUT IT AWAY!!!",         loseText:'HEADER WENT SKY-HIGH OVER THE BAR' },
+        ],
+      },
     };
     const STAT_ABBR = { rightFoot:'RF', leftFoot:'LF', shooting:'SH', speed:'SP', control:'CT', tackle:'TK' };
+
+    // ─── DFS POINTS TABLE ───────────────────────────────────────────────────────
+    // Per Game Sequence.txt — points awarded by action type, win/lose, and player position.
+    // Goal points scale by position (DEF +15 > MID +12 > STR +10 > GK +20 for the rare keeper goal).
+    const DFS_POINTS = {
+      receive: { win: { STR:+1, MID:+1, DEF:+1, GK:+1 }, lose: { STR:-1, MID:-1, DEF:-1, GK:-1 } },
+      pass:    { win: { STR:+2, MID:+2, DEF:+2, GK:+2 }, lose: { STR: 0, MID: 0, DEF: 0, GK: 0 } },
+      cross:   { win: { STR:+2, MID:+2, DEF:+2, GK:+2 }, lose: { STR: 0, MID: 0, DEF: 0, GK: 0 } },
+      shot:    { win: { STR:+10,MID:+12,DEF:+15,GK:+20}, lose: { STR:+1, MID:+1, DEF:+1, GK: 0 } }, // lose = shot on target
+      finish:  { win: { STR:+10,MID:+12,DEF:+15,GK:+20}, lose: { STR: 0, MID: 0, DEF: 0, GK: 0 } },
+    };
 
     // ─── PLAYER DATABASE ────────────────────────────────────────────────────────
     const ALL_PLAYERS = [
@@ -871,22 +1049,22 @@
       { name:'C. Ronaldo',   pos:'MID', rightFoot:88, leftFoot:88, shooting:87, speed:93, control:90, tackle:58 },
       { name:'Bergkamp',     pos:'MID', rightFoot:87, leftFoot:76, shooting:79, speed:65, control:95, tackle:60 },
       { name:'Van Persie',   pos:'MID', rightFoot:72, leftFoot:92, shooting:84, speed:72, control:84, tackle:60 },
-      { name:'W. Rooney',    pos:'FWD', rightFoot:86, leftFoot:75, shooting:85, speed:78, control:82, tackle:58 },
-      { name:'M. Owen',      pos:'FWD', rightFoot:88, leftFoot:65, shooting:80, speed:90, control:74, tackle:42 },
-      { name:'T. Henry',     pos:'FWD', rightFoot:68, leftFoot:92, shooting:85, speed:93, control:92, tackle:50 },
-      { name:'A. Shearer',   pos:'FWD', rightFoot:92, leftFoot:55, shooting:87, speed:68, control:72, tackle:48 },
-      { name:'D. Drogba',    pos:'FWD', rightFoot:85, leftFoot:72, shooting:87, speed:72, control:76, tackle:55 },
-      { name:'F. Torres',    pos:'FWD', rightFoot:86, leftFoot:78, shooting:82, speed:90, control:80, tackle:48 },
-      { name:'E. Heskey',    pos:'FWD', rightFoot:75, leftFoot:68, shooting:75, speed:72, control:58, tackle:52 },
-      { name:'P. Crouch',    pos:'FWD', rightFoot:72, leftFoot:55, shooting:69, speed:55, control:64, tackle:40 },
-      { name:'J. Defoe',     pos:'FWD', rightFoot:87, leftFoot:65, shooting:79, speed:82, control:72, tackle:42 },
-      { name:'D. Bent',      pos:'FWD', rightFoot:86, leftFoot:60, shooting:79, speed:78, control:68, tackle:40 },
-      { name:'N. Anelka',    pos:'FWD', rightFoot:85, leftFoot:78, shooting:80, speed:82, control:80, tackle:45 },
-      { name:'A. Johnson',   pos:'FWD', rightFoot:82, leftFoot:65, shooting:73, speed:85, control:70, tackle:55 },
-      { name:'R. Fowler',    pos:'FWD', rightFoot:88, leftFoot:74, shooting:82, speed:72, control:76, tackle:42 },
-      { name:'Hasselbaink',  pos:'FWD', rightFoot:88, leftFoot:72, shooting:84, speed:65, control:72, tackle:50 },
-      { name:'D. Vassell',   pos:'FWD', rightFoot:78, leftFoot:62, shooting:73, speed:82, control:66, tackle:44 },
-      { name:'Andy Cole',    pos:'FWD', rightFoot:80, leftFoot:70, shooting:75, speed:78, control:72, tackle:45 },
+      { name:'W. Rooney',    pos:'STR', rightFoot:86, leftFoot:75, shooting:85, speed:78, control:82, tackle:58 },
+      { name:'M. Owen',      pos:'STR', rightFoot:88, leftFoot:65, shooting:80, speed:90, control:74, tackle:42 },
+      { name:'T. Henry',     pos:'STR', rightFoot:68, leftFoot:92, shooting:85, speed:93, control:92, tackle:50 },
+      { name:'A. Shearer',   pos:'STR', rightFoot:92, leftFoot:55, shooting:87, speed:68, control:72, tackle:48 },
+      { name:'D. Drogba',    pos:'STR', rightFoot:85, leftFoot:72, shooting:87, speed:72, control:76, tackle:55 },
+      { name:'F. Torres',    pos:'STR', rightFoot:86, leftFoot:78, shooting:82, speed:90, control:80, tackle:48 },
+      { name:'E. Heskey',    pos:'STR', rightFoot:75, leftFoot:68, shooting:75, speed:72, control:58, tackle:52 },
+      { name:'P. Crouch',    pos:'STR', rightFoot:72, leftFoot:55, shooting:69, speed:55, control:64, tackle:40 },
+      { name:'J. Defoe',     pos:'STR', rightFoot:87, leftFoot:65, shooting:79, speed:82, control:72, tackle:42 },
+      { name:'D. Bent',      pos:'STR', rightFoot:86, leftFoot:60, shooting:79, speed:78, control:68, tackle:40 },
+      { name:'N. Anelka',    pos:'STR', rightFoot:85, leftFoot:78, shooting:80, speed:82, control:80, tackle:45 },
+      { name:'A. Johnson',   pos:'STR', rightFoot:82, leftFoot:65, shooting:73, speed:85, control:70, tackle:55 },
+      { name:'R. Fowler',    pos:'STR', rightFoot:88, leftFoot:74, shooting:82, speed:72, control:76, tackle:42 },
+      { name:'Hasselbaink',  pos:'STR', rightFoot:88, leftFoot:72, shooting:84, speed:65, control:72, tackle:50 },
+      { name:'D. Vassell',   pos:'STR', rightFoot:78, leftFoot:62, shooting:73, speed:82, control:66, tackle:44 },
+      { name:'Andy Cole',    pos:'STR', rightFoot:80, leftFoot:70, shooting:75, speed:78, control:72, tackle:45 },
     ];
 
     // ─── GENERATE PLAYERS ────────────────────────────────────────────────────────
@@ -899,17 +1077,104 @@
       return arr.slice(0, 16);
     }
 
+    // ─── GENERATE OPPOSITION ─────────────────────────────────────────────────────
+    // Pulls 1 GK + 6 DEFs from ALL_PLAYERS using the seeded rng. One DEF per slot,
+    // one shared GK for all shot/finish actions. Same seed → identical opposition,
+    // so async same-seed competitive play is fair.
+    let opposition = null;
+    function generateOpposition(rng) {
+      const gks  = ALL_PLAYERS.filter(p => p.pos === 'GK');
+      const defs = ALL_PLAYERS.filter(p => p.pos === 'DEF');
+      const shuffle = (arr) => {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      };
+      const gk = shuffle(gks)[0];
+      const shuffledDefs = shuffle(defs);
+      return {
+        gk,
+        defenders: {
+          midRight:        shuffledDefs[0],
+          longShotRight:   shuffledDefs[1],
+          penaltyEdgeLeft: shuffledDefs[2],
+          crossInLeft:     shuffledDefs[3],
+          throughBallRun:  shuffledDefs[4],
+          cornerKick:      shuffledDefs[5],
+        },
+      };
+    }
+    function getOpponent(slotId, actionIdx) {
+      if (!opposition) return null;
+      const action = SLOT_CONFIG[slotId].actions[actionIdx];
+      if (action.oppRole === 'GK') return opposition.gk;
+      return opposition.defenders[slotId];
+    }
+
     // ─── SCORING ────────────────────────────────────────────────────────────────
     function slotProbability(slotId, player) {
       const cfg = SLOT_CONFIG[slotId];
       return (player[cfg.primary] * 10 + player[cfg.secondary] * 5) / (99 * 15);
     }
 
+    // ─── ACTION RESOLVER (v2 engine) ────────────────────────────────────────────
+    // Resolves a single action: stat-vs-stat duel between player and opp.
+    // Returns { win, popupText, points } — points awarded per DFS_POINTS table.
+    function resolveAction(player, opp, action, roll) {
+      const playerValue = (player[action.playerPrimary] * 2 + player[action.playerSecondary]) / 3;
+      const oppValue    = opp[action.oppStat];
+      const ratio       = playerValue / (playerValue + oppValue);
+      const win         = roll < ratio;
+      const pointsTable = DFS_POINTS[action.type];
+      const pos         = player.pos; // 'STR' | 'MID' | 'DEF' | 'GK'
+      const points      = win ? pointsTable.win[pos] : pointsTable.lose[pos];
+      const text        = (win ? action.winText : action.loseText).replace(/\{player\}/g, player.name);
+      return { win, popupText: text, points };
+    }
+
+    // ─── SEQUENCE RUNNER (v2 engine) ────────────────────────────────────────────
+    // Linear chain through all 6 slots × 2 actions. Every action resolves every
+    // play. Returns { events: [...], totalPoints, goals } where events feeds the
+    // pop-up narration UI and totalPoints is the DFS score.
+    function runSequence() {
+      const events = [];
+      let totalPoints = 0;
+      let goals = 0;
+      PLAY_ORDER.forEach(slotId => {
+        const player = slots[slotId];
+        if (!player) return; // empty slot — skip (shouldn't happen post-validation)
+        const cfg = SLOT_CONFIG[slotId];
+        cfg.actions.forEach((action, actionIdx) => {
+          const opp  = getOpponent(slotId, actionIdx);
+          const roll = (actionRolls[slotId] && actionRolls[slotId][actionIdx] !== undefined)
+                       ? actionRolls[slotId][actionIdx]
+                       : rng();
+          const result = resolveAction(player, opp, action, roll);
+          totalPoints += result.points;
+          const isGoal = result.win && (action.type === 'shot' || action.type === 'finish');
+          if (isGoal) goals += 1;
+          events.push({
+            slotId, actionIdx,
+            player, opp,
+            actionType: action.type,
+            win: result.win,
+            popupText: result.popupText,
+            points: result.points,
+            isGoal,
+          });
+        });
+      });
+      return { events, totalPoints, goals };
+    }
+
     function calcScores() {
       const sc = {};
       ['penaltyEdgeLeft','longShotRight','cornerKick','midRight'].forEach(id => {
         if (slots[id]) {
-          const roll = (shotRolls[id] !== undefined) ? shotRolls[id] : Math.random();
+          const roll = (shotRolls[id] !== undefined) ? shotRolls[id] : rng();
           const hit = roll < slotProbability(id, slots[id]);
           const cfg = SLOT_CONFIG[id]; const p = slots[id];
           sc[id] = hit ? Math.round((p[cfg.primary] + p[cfg.secondary]) / 2) : 0;
@@ -920,7 +1185,7 @@
       const crosser = slots.crossInLeft;
       const runner  = slots.throughBallRun;
       if (crosser) {
-        const roll = (shotRolls.crossInLeft !== undefined) ? shotRolls.crossInLeft : Math.random();
+        const roll = (shotRolls.crossInLeft !== undefined) ? shotRolls.crossInLeft : rng();
         const hit = roll < slotProbability('crossInLeft', crosser);
         sc.crossInLeft = hit ? Math.round((crosser[SLOT_CONFIG.crossInLeft.primary] + crosser[SLOT_CONFIG.crossInLeft.secondary]) / 2) : 0;
       } else {
@@ -932,7 +1197,7 @@
         sc.crossReceived  = crossReceivedRoll < receptionChance;
         if (sc.crossReceived) {
           const runProb = (runner.speed * 10 + runner.control * 5 + runner.rightFoot * 5) / (99 * 20);
-          const roll = (shotRolls.throughBallRun !== undefined) ? shotRolls.throughBallRun : Math.random();
+          const roll = (shotRolls.throughBallRun !== undefined) ? shotRolls.throughBallRun : rng();
           const hit = roll < runProb;
           sc.throughBallRun = hit ? Math.round((runner.speed + runner.control) / 2) : 0;
         } else {
@@ -1041,7 +1306,7 @@
       if (!slotOffers[slotId]) {
         const available = pool.filter(p => !p._slotId);
         for (let i = available.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
+          const j = Math.floor(rng() * (i + 1));
           [available[i], available[j]] = [available[j], available[i]];
         }
         slotOffers[slotId] = available.slice(0, 3);
@@ -1129,7 +1394,7 @@
       const remaining = pool.filter(p => !p._slotId);
       penaltyPickerOffers = [...remaining];
       for (let i = penaltyPickerOffers.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(rng() * (i + 1));
         [penaltyPickerOffers[i], penaltyPickerOffers[j]] = [penaltyPickerOffers[j], penaltyPickerOffers[i]];
       }
       penaltyPickerOffers = penaltyPickerOffers.slice(0, 3);
@@ -1149,7 +1414,7 @@
       const spotStroke = picked ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)';
       const cosmetics = [
         { cx: 48,  cy: 128, label: 'MID' },
-        { cx: 232, cy: 128, label: 'FWD' },
+        { cx: 232, cy: 128, label: 'STR' },
         { cx: 28,  cy: 100, label: 'DEF' },
         { cx: 252, cy: 100, label: 'DEF' },
       ];
@@ -1253,6 +1518,21 @@
       requestAnimationFrame(() => requestAnimationFrame(() => { txt.style.opacity = '1'; }));
     }
 
+    // Narration banner — top-centered overlay, displays one event line for `holdMs`
+    // ms with a 220ms fade in/out. Returns a Promise that resolves after fadeOut.
+    async function showNarration(text, isWin, holdMs = 900) {
+      const el = document.getElementById('narration-banner');
+      if (!el) return;
+      el.textContent = text;
+      el.classList.toggle('lose', !isWin);
+      // Force reflow so transition triggers reliably even on rapid re-show
+      void el.offsetWidth;
+      el.classList.add('show');
+      await delay(holdMs);
+      el.classList.remove('show');
+      await delay(220);
+    }
+
     function showEventPop(x, y, label, isNeg) {
       const layer = document.getElementById('score-pops-layer');
       const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
@@ -1299,40 +1579,47 @@
         });
       }, 50);
       await delay(400);
-      const sc = calcScores();
-      const midRPos = POS_COORDS.midRight;
-      const longRPos = POS_COORDS.longShotRight;
-      await animateFootball(midRPos.cx, midRPos.cy, 750);
-      await delay(300);
-      const midControlled = sc.midRight > 0;
-      showEventPop(midRPos.cx, midRPos.cy, midControlled ? 'CONTROLLED' : 'INTERCEPTED', !midControlled);
-      SFX.assign();
-      await delay(700);
-      await animateFootball(longRPos.cx, longRPos.cy, 750);
-      await delay(300);
-      showEventPop(longRPos.cx, longRPos.cy, midControlled ? 'PASS' : 'FUMBLE', !midControlled);
-      await delay(350);
-      showScorePop(longRPos.cx, longRPos.cy - 14, sc.longShotRight, sc.longShotRight === 0);
-      SFX.assign();
-      await delay(700);
-      for (const slotId of PLAY_ORDER.slice(2)) {
-        const pos = POS_COORDS[slotId];
-        await animateFootball(pos.cx, pos.cy, 750);
-        await delay(300);
-        const isMiss = sc[slotId] === 0;
-        showScorePop(pos.cx, pos.cy, sc[slotId], isMiss);
+
+      const { events, totalPoints, goals } = runSequence();
+      let pointsRunning = 0;
+      let goalsRunning = 0;
+      let lastSlotId = null;
+      const goalsCountEl = document.getElementById('goals-count');
+      const scoreEl = document.getElementById('score-display');
+      if (goalsCountEl) goalsCountEl.textContent = '0';
+      if (scoreEl) scoreEl.innerText = '0 pts';
+
+      for (const ev of events) {
+        if (ev.slotId !== lastSlotId) {
+          const pos = POS_COORDS[ev.slotId];
+          await animateFootball(pos.cx, pos.cy, 700);
+          lastSlotId = ev.slotId;
+          await delay(180);
+        }
+        await showNarration(ev.popupText, ev.win, 850);
+        pointsRunning += ev.points;
+        if (ev.isGoal) {
+          goalsRunning += 1;
+          if (goalsCountEl) goalsCountEl.textContent = String(goalsRunning);
+        }
+        if (scoreEl) scoreEl.innerText = `${pointsRunning} pts`;
+        const pos = POS_COORDS[ev.slotId];
+        if (ev.points !== 0) {
+          showScorePop(pos.cx, pos.cy + (ev.actionIdx === 1 ? 14 : -4), ev.points, ev.points < 0);
+        }
         SFX.assign();
-        await delay(700);
+        await delay(220);
       }
+
       clearInterval(opponentDriftInterval);
       opponentDriftInterval = null;
       await delay(300);
       gamePhase = 'done';
       gameActive = false;
-      document.getElementById('score-display').innerText = `${sc.total} pts`;
-      saveGame(sc.total, isChallengeMode, true);
+      if (scoreEl) scoreEl.innerText = `${totalPoints} pts`;
+      saveGame(totalPoints, isChallengeMode, true);
       await delay(600);
-      showEndScreen(sc);
+      showEndScreen({ total: totalPoints, goals, events });
     }
 
     // ─── END GAME ───────────────────────────────────────────────────────────────
@@ -1341,25 +1628,32 @@
       if (gamePhase === 'playOut') return;
       gameActive = false;
       stopCrowd();
-      const sc = calcScores();
-      saveGame(sc.total, isChallengeMode, true);
-      showEndScreen(sc);
+      const { events, totalPoints, goals } = runSequence();
+      saveGame(totalPoints, isChallengeMode, true);
+      showEndScreen({ total: totalPoints, goals, events });
     }
 
     function showEndScreen(sc) {
-      const breakdown = SLOT_IDS.map(id => {
+      // Group events by slot to compute per-slot totals + goal flag
+      const perSlot = {};
+      SLOT_IDS.forEach(id => { perSlot[id] = { points: 0, goal: false }; });
+      (sc.events || []).forEach(ev => {
+        perSlot[ev.slotId].points += ev.points;
+        if (ev.isGoal) perSlot[ev.slotId].goal = true;
+      });
+      const breakdown = PLAY_ORDER.map(id => {
         const cfg    = SLOT_CONFIG[id];
         const player = slots[id];
-        let chainTag = '';
-        if (id === 'throughBallRun' && slots.crossInLeft && slots.throughBallRun) {
-          chainTag = sc.crossReceived
-            ? `<span style="color:var(--color-accent);font-size:0.7rem;margin-left:4px">RECV</span>`
-            : `<span style="color:var(--color-primary);font-size:0.7rem;margin-left:4px">MISSED</span>`;
-        }
+        const slotData = perSlot[id];
+        const goalTag = slotData.goal
+          ? `<span style="color:var(--color-accent);font-size:0.7rem;margin-left:4px">GOAL</span>`
+          : '';
+        const ptsCol  = slotData.points > 0 ? 'var(--color-accent)' : (slotData.points < 0 ? '#f1a7a7' : 'var(--color-primary)');
+        const ptsTxt  = `${slotData.points > 0 ? '+' : ''}${slotData.points} pts`;
         return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #3a8040;font-family:'VT323',monospace;">
           <span style="color:var(--color-primary);font-size:0.72rem;width:82px;flex-shrink:0;text-transform:uppercase">${escHtml(cfg.label)}</span>
           <span style="flex:1;color:var(--color-glow);font-size:0.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${player ? escHtml(player.name) : '<span style="opacity:0.35">—</span>'}</span>
-          <span style="color:${sc[id] > 0 ? 'var(--color-accent)' : 'var(--color-primary)'};font-size:1.05rem;flex-shrink:0;text-align:right;opacity:${sc[id] > 0 ? '1' : '0.55'}">${sc[id] > 0 ? sc[id] + ' pts' : 'MISS'}${chainTag}</span>
+          <span style="color:${ptsCol};font-size:1.05rem;flex-shrink:0;text-align:right;opacity:${slotData.points !== 0 ? '1' : '0.55'}">${ptsTxt}${goalTag}</span>
         </div>`;
       }).join('');
 
@@ -1449,6 +1743,11 @@
       crossReceivedRoll = rng();
       shotRolls = {};
       SLOT_IDS.forEach(id => { shotRolls[id] = rng(); });
+      opposition = generateOpposition(rng);
+      actionRolls = {};
+      SLOT_IDS.forEach(id => { actionRolls[id] = [rng(), rng()]; });
+      const goalsCountEl0 = document.getElementById('goals-count');
+      if (goalsCountEl0) goalsCountEl0.textContent = '0';
       document.getElementById('timer-display').innerText = '3:00';
       document.getElementById('timer-display').classList.remove('warn');
       opponents = [{ cx: 95, cy: 55 }, { cx: 163, cy: 85 }, { cx: 205, cy: 40 }];

@@ -1,0 +1,83 @@
+Gameplay Resolution Sequence On-Pitch:
+
+(win/lose outcome determines pop-up text)
+
+Linear chain — every slot resolves both actions every play.
+
+Pop-up text + visible goal counter = theatre. DFS points = real metric.
+Implement none of the proposed Bonus events 
+
+#	Slot			Label
+
+0	NPC player		Kick-off		[The friendly NPC player has their own predefined part in the chain]
+
+1	midRight		Mid Right		First Stat Test		Pop-up text on win							Pop-up text on lose	
+							control/  speed		"CONTROLLED"								"TACKLED"
+
+1	midRight		Mid Right		Second Stat Test		Pop-up text on win							Pop-up text on lose						
+							tackling/ rightFoot	"KEPT POSSESSION, BACK PASS"  					"INTERCEPTED"
+
+2	longShotRight	Long Shot R	First Stat Test			Pop-up text on win							Pop-up text on lose							
+							control/  speed		"CONTROLLED, SHOT ON GOAL"  						"TRYING TO FIND AN OPENING..."
+
+							Second Stat Test		Pop-up text on win							Pop-up text on lose							
+							rightFoot/ shooting	"GOAL!!!"  									"HIT THE POST FROM A MILE OUT!"
+
+3	penaltyEdgeLeft	Pen Edge L		First Stat Test		Pop-up text on win							Pop-up text on lose							
+							control/  speed	"{player} DRIBBLE IT INTO THE BOX"				"FIRM TACKLE ON THE EDGE, BUT HE'S KEPT IT"
+
+							Second Stat Test		Pop-up text on win							Pop-up text on lose							
+							leftFoot/ shooting	"GOAL!!! HE'S SUNK IT PERFECTLY INTO THE TOP CORNER"	"GOALIE GOT A TOUCH ON AND PUSHED IT WIDE"
+
+4	crossInLeft		Cross-In L		First Stat Test		Pop-up text on win							Pop-up text on lose							
+							speed/    control		"TOOK IT AROUND THE DEFENDER..."			"TACKLED AND THE BALLS OUT OF PLAY. THROW-IN"
+
+							Second Stat Test		Pop-up text on win							Pop-up text on lose							
+							leftFoot/ shooting	"{player} WHIPS IN A DANGEROUS CROSS"		"THAT WASN'T WHERE IT WAS SUPPOSED TO GO. GOAL KICK"
+
+5	throughBallRun	Thru Ball R	First Stat Test			Pop-up text on win							Pop-up text on lose						
+							speed/    control		"GOT ON THE END OF IT"							"BEATEN TO IT BY A SPLIT SECOND"
+
+							Second Stat Test		Pop-up text on win							Pop-up text on lose							
+							shooting/ rightFoot	"A CLEAN HEADER FROM {player}!!!"			"HEADED IT STRAIGHT INTO KEEPERS ARMS"
+
+6	cornerKick		Corner Kick	First Stat Test			Pop-up text on win							Pop-up text on lose
+							rightFoot/ shooting	"DELIVERED A PROMISING BALL"				"EASILY CLEARED BY THE DEFENCE AT THE NEAR POST"
+							
+							Second Stat Test		Pop-up text on win							Pop-up text on lose
+							shooting/ rightFoot	"IT'S IN! <PLAYER NAME> MANAGED TO PUT IT AWAY!!!"		"HEADER WENT SKY-HIGH OVER THE BAR"
+─────────────────────────────────────────────────────────────────
+OPPONENT STAT MATCHUPS (what the opp uses vs each action)
+─────────────────────────────────────────────────────────────────
+
+Slot              Action 1 — opp contests with    Action 2 — opp contests with
+───────────────   ─────────────────────────────   ─────────────────────────────
+midRight          tackling                        tackling
+longShotRight     tackling                        control (GK)
+penaltyEdgeLeft   tackling                        control (GK)
+crossInLeft       tackling                        control (defender heading clear)
+throughBallRun    speed (defender foot-race)      control (GK)
+cornerKick        control (first defender)        control (GK)
+
+Player formula (proposed):  (primary × 2 + secondary) / 3
+Opp formula:                single stat (or averaged where listed as X / Y)
+
+Resolution per action:  player_value / 99 vs opp_value / 99 → roll vs ratio
+                        (deterministic per-match seed for fair async play)
+─────────────────────────────────────────────────────────────────
+DFS POINTS — DRAFT TABLE (for review)
+─────────────────────────────────────────────────────────────────
+
+Outcome                                   STR     MID     DEF     GK
+─────────────────────────────────────     ────    ────    ────    ────
+Goal                                      +10     +12     +15     +20
+Assist (cross/throughball that scores)    +5      +6      +7      +8
+Action 1 won (received/beat man)          +1      +1      +1      +1
+Action 2 won, no goal                     +2      +2      +2      +2
+Shot on target (no goal)                  +1      +1      +1      —
+Tackle won (defending an action)          +2      +2      +2      +2
+Possession lost (Action 1 lose)           -1      -1      -1      -1
+Goal conceded (GK only)                   —       —       —       -2
+Yellow card (5% trigger on lost duel)     -1      -1      -1      -1
+Clean sheet (no goals across sequence)    +1      +2      +4      +6
+─────────────────────────────────────────────────────────────────

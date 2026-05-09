@@ -39,19 +39,19 @@ A. Robben        | MID | 48 | 90 | 81 | 88 | 82 | 55
 C. Ronaldo       | MID | 88 | 88 | 87 | 93 | 90 | 58
 Bergkamp         | MID | 87 | 76 | 79 | 65 | 95 | 60
 Van Persie       | MID | 72 | 92 | 84 | 72 | 84 | 60
-W. Rooney        | FWD | 86 | 75 | 85 | 78 | 82 | 58
-M. Owen          | FWD | 88 | 65 | 80 | 90 | 74 | 42
-T. Henry         | FWD | 68 | 92 | 85 | 93 | 92 | 50
-A. Shearer       | FWD | 92 | 55 | 87 | 68 | 72 | 48
-D. Drogba        | FWD | 85 | 72 | 87 | 72 | 76 | 55
-F. Torres        | FWD | 86 | 78 | 82 | 90 | 80 | 48
-E. Heskey        | FWD | 75 | 68 | 75 | 72 | 58 | 52
-P. Crouch        | FWD | 72 | 55 | 69 | 55 | 64 | 40
-J. Defoe         | FWD | 87 | 65 | 79 | 82 | 72 | 42
-D. Bent          | FWD | 86 | 60 | 79 | 78 | 68 | 40
-N. Anelka        | FWD | 85 | 78 | 80 | 82 | 80 | 45
-A. Johnson       | FWD | 82 | 65 | 73 | 85 | 70 | 55
-R. Fowler        | FWD | 88 | 74 | 82 | 72 | 76 | 42
-Hasselbaink      | FWD | 88 | 72 | 84 | 65 | 72 | 50
-D. Vassell       | FWD | 78 | 62 | 73 | 82 | 66 | 44
-Andy Cole        | FWD | 80 | 70 | 75 | 78 | 72 | 45
+W. Rooney        | STR | 86 | 75 | 85 | 78 | 82 | 58
+M. Owen          | STR | 88 | 65 | 80 | 90 | 74 | 42
+T. Henry         | STR | 68 | 92 | 85 | 93 | 92 | 50
+A. Shearer       | STR | 92 | 55 | 87 | 68 | 72 | 48
+D. Drogba        | STR | 85 | 72 | 87 | 72 | 76 | 55
+F. Torres        | STR | 86 | 78 | 82 | 90 | 80 | 48
+E. Heskey        | STR | 75 | 68 | 75 | 72 | 58 | 52
+P. Crouch        | STR | 72 | 55 | 69 | 55 | 64 | 40
+J. Defoe         | STR | 87 | 65 | 79 | 82 | 72 | 42
+D. Bent          | STR | 86 | 60 | 79 | 78 | 68 | 40
+N. Anelka        | STR | 85 | 78 | 80 | 82 | 80 | 45
+A. Johnson       | STR | 82 | 65 | 73 | 85 | 70 | 55
+R. Fowler        | STR | 88 | 74 | 82 | 72 | 76 | 42
+Hasselbaink      | STR | 88 | 72 | 84 | 65 | 72 | 50
+D. Vassell       | STR | 78 | 62 | 73 | 82 | 66 | 44
+Andy Cole        | STR | 80 | 70 | 75 | 78 | 72 | 45
