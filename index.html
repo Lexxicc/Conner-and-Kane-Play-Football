@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="author" content="lexxicc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Proper Football v0.0.20</title>
+  <title>Proper Football v0.0.21</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e63946">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -111,6 +111,40 @@
       color: var(--color-bg-dark); border: none; cursor: pointer; white-space: nowrap;
     }
 
+    /* ── DEV MODE ── */
+    #dev-banner {
+      position: fixed; top: 4px; left: 50%; transform: translateX(-50%);
+      background: rgba(251,191,36,0.92); color: #111;
+      font-family: 'VT323', monospace; font-size: 0.75rem; letter-spacing: 0.15em;
+      padding: 2px 10px; border-radius: 0 0 4px 4px; z-index: 9999;
+      text-transform: uppercase; pointer-events: none;
+    }
+    #dev-autofill-btn {
+      display: none;
+      padding: 6px 14px; margin: 6px auto 0; font-family: 'VT323', monospace; font-size: 0.95rem;
+      text-transform: uppercase; background: rgba(251,191,36,0.9); color: #111;
+      border: 2px solid #b45309; cursor: pointer; letter-spacing: 0.1em; font-weight: bold;
+    }
+    #dev-step-controls {
+      display: none;
+      position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+      gap: 10px; z-index: 9998; background: rgba(0,0,0,0.65);
+      padding: 8px 12px; border-radius: 8px; border: 2px solid #fbbf24;
+      align-items: center; font-family: 'VT323', monospace;
+    }
+    #dev-step-controls.visible { display: flex; }
+    .dev-step-btn {
+      width: 44px; height: 44px; font-size: 1.5rem;
+      background: rgba(251,191,36,0.9); color: #111; border: none;
+      cursor: pointer; font-family: 'VT323', monospace; font-weight: bold;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dev-step-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    #dev-step-status {
+      color: #fbbf24; font-size: 0.85rem; min-width: 80px; text-align: center;
+      letter-spacing: 0.08em;
+    }
+
     /* ── ZONE 5 — FOOTER ── */
     .menu-footer {
       flex: 0 0 auto;
@@ -171,11 +205,19 @@
     #score-display {
       font-family: 'VT323', monospace; font-size: 1.4rem; color: var(--color-accent); letter-spacing: 0.05em;
     }
-    #goals-display {
-      font-family: 'VT323', monospace; font-size: 1.4rem; color: var(--color-glow); letter-spacing: 0.05em;
-      opacity: 0.85;
+    #scoreboard {
+      display: flex; align-items: center; gap: 5px;
+      font-family: 'VT323', monospace; font-size: 1.45rem;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 4px;
+      padding: 2px 9px;
+      letter-spacing: 0.04em;
+      line-height: 1;
     }
-    #goals-display .label { color: var(--color-primary); opacity: 0.7; font-size: 0.85rem; margin-right: 4px; }
+    #scoreboard .sb-ticker { color: var(--color-accent); font-weight: bold; min-width: 32px; text-align: center; }
+    #scoreboard .sb-flag   { font-size: 1.15rem; line-height: 1; }
+    #scoreboard .sb-score  { color: #fff; padding: 0 5px; min-width: 32px; text-align: center; letter-spacing: 0.08em; }
 
     /* ── PITCH ── */
     #pitch-container {
@@ -391,7 +433,7 @@
       <!-- ZONE 5 — FOOTER -->
       <div class="menu-footer">
         <div class="footer-line left"></div>
-        <span class="footer-text">Tacticon Studios 2026 · v0.0.20</span>
+        <span class="footer-text">Tacticon Studios 2026 · v0.0.21</span>
         <div class="footer-line right"></div>
       </div>
 
@@ -478,6 +520,32 @@
             </div>
           </div>
         </div>
+        <div>
+          <h3 style="color:var(--color-glow);text-transform:uppercase;font-weight:bold;font-size:0.875rem;border-bottom:1px solid var(--color-shadow);padding-bottom:8px;margin-bottom:16px;letter-spacing:0.1em">Kit</h3>
+          <div style="font-size:0.78rem;color:#9ca3af;margin-bottom:10px;line-height:1.4">Each game rolls 70% home / 30% away. Slot fill uses primary, ring uses accent.</div>
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;margin-bottom:14px">
+            <span style="color:#d1d5db;font-size:0.9rem;grid-column:1/-1;border-bottom:1px solid var(--color-shadow);padding-bottom:4px;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-glow);opacity:0.75">Home</span>
+            <span style="color:#d1d5db">Primary</span>
+            <input type="color" id="kit-home-primary" oninput="updateKit('home','primary',this.value)" style="width:100%;height:28px;background:transparent;border:1px solid var(--color-shadow);cursor:pointer">
+            <span id="kit-home-primary-hex" style="color:var(--color-glow);font-family:'VT323',monospace;font-size:0.85rem;width:64px;text-align:right">#000000</span>
+            <span style="color:#d1d5db">Accent</span>
+            <input type="color" id="kit-home-accent" oninput="updateKit('home','accent',this.value)" style="width:100%;height:28px;background:transparent;border:1px solid var(--color-shadow);cursor:pointer">
+            <span id="kit-home-accent-hex" style="color:var(--color-glow);font-family:'VT323',monospace;font-size:0.85rem;width:64px;text-align:right">#000000</span>
+          </div>
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;margin-bottom:12px">
+            <span style="color:#d1d5db;font-size:0.9rem;grid-column:1/-1;border-bottom:1px solid var(--color-shadow);padding-bottom:4px;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-glow);opacity:0.75">Away</span>
+            <span style="color:#d1d5db">Primary</span>
+            <input type="color" id="kit-away-primary" oninput="updateKit('away','primary',this.value)" style="width:100%;height:28px;background:transparent;border:1px solid var(--color-shadow);cursor:pointer">
+            <span id="kit-away-primary-hex" style="color:var(--color-glow);font-family:'VT323',monospace;font-size:0.85rem;width:64px;text-align:right">#000000</span>
+            <span style="color:#d1d5db">Accent</span>
+            <input type="color" id="kit-away-accent" oninput="updateKit('away','accent',this.value)" style="width:100%;height:28px;background:transparent;border:1px solid var(--color-shadow);cursor:pointer">
+            <span id="kit-away-accent-hex" style="color:var(--color-glow);font-family:'VT323',monospace;font-size:0.85rem;width:64px;text-align:right">#000000</span>
+          </div>
+          <div style="display:flex;justify-content:center;gap:24px;padding:8px 0">
+            <svg id="kit-preview-home" viewBox="-30 -30 60 60" style="width:56px;height:56px"><circle cx="0" cy="0" r="22" fill="#000" stroke="#fff" stroke-width="3"/><text x="0" y="3" text-anchor="middle" font-family="VT323,monospace" font-size="9" fill="#fff" style="pointer-events:none">HOME</text></svg>
+            <svg id="kit-preview-away" viewBox="-30 -30 60 60" style="width:56px;height:56px"><circle cx="0" cy="0" r="22" fill="#000" stroke="#fff" stroke-width="3"/><text x="0" y="3" text-anchor="middle" font-family="VT323,monospace" font-size="9" fill="#fff" style="pointer-events:none">AWAY</text></svg>
+          </div>
+        </div>
       </div>
       <div class="subpanel-footer"></div>
     </div>
@@ -491,7 +559,13 @@
     <!-- Header -->
     <div id="game-header">
       <div id="timer-display">3:00</div>
-      <div id="goals-display"><span class="label">GOALS</span><span id="goals-count">0</span></div>
+      <div id="scoreboard">
+        <span class="sb-ticker home">TAC</span>
+        <span class="sb-flag home">🇦🇺</span>
+        <span class="sb-score">0:0</span>
+        <span class="sb-flag away">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+        <span class="sb-ticker away">ENG</span>
+      </div>
       <div id="score-display">? pts</div>
     </div>
 
@@ -555,14 +629,23 @@
     <!-- Phase area -->
     <div id="phase-area">
       <span id="phase-hint">Tap a position to pick a player</span>
+      <button id="dev-autofill-btn" onclick="devAutoFill()">⚡ AUTO-FILL (DEV)</button>
       <button id="confirm-btn" onclick="confirmTeam()">KICK OFF ▶</button>
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.20</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.21</p>
 
   </div><!-- /game-shell -->
   </div><!-- /game-shell-wrapper -->
+
+  <!-- ═══ DEV MODE OVERLAYS ═══ -->
+  <div id="dev-banner" style="display:none">🔧 DEV MODE</div>
+  <div id="dev-step-controls">
+    <button class="dev-step-btn" id="dev-prev-btn" onclick="devStep('back')" title="Previous (←)">‹</button>
+    <span id="dev-step-status">— / —</span>
+    <button class="dev-step-btn" id="dev-next-btn" onclick="devStep('forward')" title="Next (→)">›</button>
+  </div>
 
   <!-- ═══ PENALTY SETUP OVERLAY ═══ -->
   <div id="penalty-overlay">
@@ -622,6 +705,105 @@
       localStorage.setItem(STATS_KEY, JSON.stringify(s));
     }
 
+    // ─── KIT SYSTEM ────────────────────────────────────────────────────────────
+    const KIT_KEY = 'FB_kit';
+    const DEFAULT_KIT = {
+      home: { primary: '#2563eb', accent: '#ffffff' },
+      away: { primary: '#facc15', accent: '#111827' }
+    };
+    function loadKit() {
+      try {
+        const raw = localStorage.getItem(KIT_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_KIT));
+        const k = JSON.parse(raw);
+        return {
+          home: { primary: k?.home?.primary || DEFAULT_KIT.home.primary, accent: k?.home?.accent || DEFAULT_KIT.home.accent },
+          away: { primary: k?.away?.primary || DEFAULT_KIT.away.primary, accent: k?.away?.accent || DEFAULT_KIT.away.accent }
+        };
+      } catch { return JSON.parse(JSON.stringify(DEFAULT_KIT)); }
+    }
+    function saveKit() { localStorage.setItem(KIT_KEY, JSON.stringify(userKit)); }
+    let userKit = loadKit();
+    let currentKit = userKit.home;
+    let currentKitSide = 'home';
+    function rollKit() {
+      currentKitSide = Math.random() < 0.7 ? 'home' : 'away';
+      currentKit = userKit[currentKitSide];
+    }
+    function updateKit(side, slot, value) {
+      userKit[side][slot] = value;
+      saveKit();
+      syncKitUI();
+    }
+    function syncKitUI() {
+      ['home','away'].forEach(side => {
+        ['primary','accent'].forEach(slot => {
+          const inputEl = document.getElementById(`kit-${side}-${slot}`);
+          const hexEl = document.getElementById(`kit-${side}-${slot}-hex`);
+          if (inputEl) inputEl.value = userKit[side][slot];
+          if (hexEl) hexEl.innerText = userKit[side][slot].toUpperCase();
+        });
+        const sv = document.getElementById(`kit-preview-${side}`);
+        if (sv) {
+          const c = sv.querySelector('circle');
+          if (c) {
+            c.setAttribute('fill', userKit[side].primary);
+            c.setAttribute('stroke', userKit[side].accent);
+          }
+        }
+      });
+    }
+
+    // ─── TEAM IDENTITY (scoreboard tickers + flags) ────────────────────────────
+    const TEAM_KEY = 'FB_team';
+    const DEFAULT_TEAM = { ticker: 'TAC', flag: '🇦🇺' };
+    function loadTeam() {
+      try {
+        const raw = localStorage.getItem(TEAM_KEY);
+        if (!raw) return { ...DEFAULT_TEAM };
+        const t = JSON.parse(raw);
+        return {
+          ticker: (t?.ticker || DEFAULT_TEAM.ticker).toUpperCase().slice(0, 3),
+          flag:   t?.flag   || DEFAULT_TEAM.flag
+        };
+      } catch { return { ...DEFAULT_TEAM }; }
+    }
+    let userTeam = loadTeam();
+
+    const OPP_POOL = [
+      { ticker: 'ENG', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+      { ticker: 'GER', flag: '🇩🇪' },
+      { ticker: 'FRA', flag: '🇫🇷' },
+      { ticker: 'BRA', flag: '🇧🇷' },
+      { ticker: 'ARG', flag: '🇦🇷' },
+      { ticker: 'ESP', flag: '🇪🇸' },
+      { ticker: 'ITA', flag: '🇮🇹' },
+      { ticker: 'POR', flag: '🇵🇹' },
+      { ticker: 'NED', flag: '🇳🇱' },
+      { ticker: 'BEL', flag: '🇧🇪' }
+    ];
+    let currentOpp = OPP_POOL[0];
+    function rollOpp(rngFn) {
+      const r = rngFn || Math.random;
+      currentOpp = OPP_POOL[Math.floor(r() * OPP_POOL.length)];
+      syncScoreboardIdentity();
+    }
+    function syncScoreboardIdentity() {
+      const ht = document.querySelector('#scoreboard .sb-ticker.home');
+      const hf = document.querySelector('#scoreboard .sb-flag.home');
+      const at = document.querySelector('#scoreboard .sb-ticker.away');
+      const af = document.querySelector('#scoreboard .sb-flag.away');
+      if (ht) ht.textContent = userTeam.ticker;
+      if (hf) hf.textContent = userTeam.flag;
+      if (at) at.textContent = currentOpp.ticker;
+      if (af) af.textContent = currentOpp.flag;
+    }
+    let oppGoals = 0;
+    function updateScoreboard(homeGoals) {
+      const sc = document.querySelector('#scoreboard .sb-score');
+      if (sc) sc.textContent = `${homeGoals|0}:${oppGoals|0}`;
+    }
+
     // ─── SEEDED RNG (mulberry32) ────────────────────────────────────────────────
     function mulberry32(seed) {
       return function() {
@@ -644,12 +826,88 @@
       const raw = document.getElementById('challenge-input').value.trim().toUpperCase();
       const errEl = document.getElementById('challenge-error');
       if (!raw) { errEl.innerText = 'Paste a challenge code first.'; errEl.classList.remove('hidden'); return; }
+      if (raw === 'LEXXICC') {
+        enterDevMode();
+        errEl.classList.add('hidden');
+        document.getElementById('challenge-input').value = '';
+        startGame(false);
+        return;
+      }
       challengeSeed = raw;
       rng = mulberry32(parseInt(challengeSeed, 16));
       isChallengeMode = true;
       errEl.classList.add('hidden');
       startGame(true);
     }
+
+    // ─── DEV MODE ──────────────────────────────────────────────────────────────
+    let devMode = false;
+    let devStepResolve = null;
+    let devEventIdx = -1;
+    let devEventTotal = 0;
+
+    function enterDevMode() {
+      devMode = true;
+      const banner = document.getElementById('dev-banner');
+      if (banner) banner.style.display = 'block';
+      const af = document.getElementById('dev-autofill-btn');
+      if (af) af.style.display = 'inline-block';
+    }
+    function exitDevMode() {
+      devMode = false;
+      const banner = document.getElementById('dev-banner');
+      if (banner) banner.style.display = 'none';
+      const af = document.getElementById('dev-autofill-btn');
+      if (af) af.style.display = 'none';
+      const sc = document.getElementById('dev-step-controls');
+      if (sc) sc.classList.remove('visible');
+      if (devStepResolve) { const r = devStepResolve; devStepResolve = null; r(); }
+    }
+    function devAutoFill() {
+      if (!devMode || gamePhase !== 'selection') return;
+      const remaining = pool.filter(p => !p._slotId);
+      for (let i = remaining.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
+      }
+      let pickIdx = 0;
+      SLOT_IDS.forEach(slotId => {
+        if (slots[slotId]) return;
+        if (pickIdx < remaining.length) {
+          const p = remaining[pickIdx++];
+          p._slotId = slotId;
+          slots[slotId] = p;
+        }
+      });
+      activePosId = null;
+      closePicker();
+      renderPitch();
+    }
+    function devGate() {
+      return new Promise(resolve => { devStepResolve = resolve; });
+    }
+    function devStep(direction) {
+      if (!devMode) return;
+      if (direction === 'forward' && devStepResolve) {
+        const r = devStepResolve; devStepResolve = null; r();
+      }
+    }
+    function devShowStepControls(show) {
+      const sc = document.getElementById('dev-step-controls');
+      if (!sc) return;
+      sc.classList.toggle('visible', show && devMode);
+      const prev = document.getElementById('dev-prev-btn');
+      if (prev) prev.disabled = true;  // back-step not implemented (state rewind too costly)
+    }
+    function devUpdateStepStatus() {
+      const el = document.getElementById('dev-step-status');
+      if (el) el.innerText = `${devEventIdx + 1} / ${devEventTotal}`;
+    }
+    document.addEventListener('keydown', (e) => {
+      if (!devMode) return;
+      if (e.key === '.' || e.key === '>' || e.key === 'ArrowRight') { e.preventDefault(); devStep('forward'); }
+      if (e.key === ',' || e.key === '<' || e.key === 'ArrowLeft')  { e.preventDefault(); devStep('back'); }
+    });
     function copyShareText(score) {
       if (!challengeSeed) challengeSeed = generateSeed();
       const text = `I scored ${score} pts on Proper Football! Challenge code: ${challengeSeed} — can you beat it?`;
@@ -665,6 +923,7 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.21', date:'2026-05', notes:['Opponents reduced 8 -> 5 (1 GK + 4 DEFs). Keeper holds his line near goal (excluded from drift), gets 2 white glove circles flanking the slot + GK label.','Defenders patrol around home anchors via sin/cos paths: top-left + top-right do horizontal back-and-forth, mid-left loops counter-clockwise, mid-right loops clockwise. Nearest defender chases ball when in range; others lightly bias toward ball if in zone; else pure patrol.','Scoreboard widget replaces goals counter: 3-char ticker + flag + 0:0 + flag + ticker. New TEAM_KEY localStorage (default TAC + AU flag). 10-nation OPP_POOL randomised per match (ENG/GER/FRA/BRA/ARG/ESP/ITA/POR/NED/BEL).','Outcome messages merged: showNarration appends (+N pts) / (-N pts) inline; the floating score-pop sprite removed. Single banner per resolved action.','Earlier in same dev cycle: kit system (home/away primary+accent), dev mode for fast-test, crowd audio rebuilt (brown noise + LFO + clap/cheer bursts), MID R + LONG R repositioned, opp slot size tweaks.'] },
       { v:'v0.0.20', date:'2026-05', notes:['Ball moves on Action 2 — toward goal for shots/finishes (or wide of post on miss), toward next slot for passes/crosses. 8 red opponents now spread across the pitch (was 3 clustered at top); nearest opp chases hard while others drift; on a lost duel the nearest opp flashes red as the tackler. Pre-existing opponent SVG render bug fixed (escaped template literals). Front-menu logo reverted to invisible placeholder. Max-goals denominator on end card adjusted 6→4.'] },
       { v:'v0.0.19', date:'2026-05', notes:['Mechanics overhaul: linear DFS resolution engine — 6 slots × 2 actions per play, stat-vs-stat duels with seeded opposition (1 GK + 6 DEFs from real player pool). Narration banner displays per-action commentary; goal counter in header. STR/MID/DEF/GK position-scaled DFS points (DEF +15 > MID +12 > STR +10 > GK +20 per goal). Forwards renamed to Strikers throughout.'] },
       { v:'v0.0.17', date:'2026-05', notes:['SoT pattern flip: logo container is now the flex/stretch component; all 5 inter-container gaps uniform 1.5vw; panel padding restored to 1.5vw all sides; tagline margin-top:auto removed.'] },
@@ -789,35 +1048,90 @@
       if (!sfxEnabled) stopCrowd(); else if (gameActive) startCrowd();
     }
 
+    let _crowdLFO = null, _crowdBurstTimer = null;
     function startCrowd() {
       if (!sfxEnabled) return;
       stopCrowd();
       const ac = _getAC();
-      const bufLen = ac.sampleRate * 2;
+      // Brown noise base — deeper, more organic than pure white noise.
+      const bufLen = ac.sampleRate * 4;
       const buf = ac.createBuffer(1, bufLen, ac.sampleRate);
       const data = buf.getChannelData(0);
-      for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+      let brownLast = 0;
+      for (let i = 0; i < bufLen; i++) {
+        const white = Math.random() * 2 - 1;
+        brownLast = (brownLast + 0.02 * white) / 1.02;
+        data[i] = brownLast * 3.5;
+      }
       _crowdSource = ac.createBufferSource();
       _crowdSource.buffer = buf;
       _crowdSource.loop = true;
+      const hp = ac.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 80; hp.Q.value = 0.3;
       const lp = ac.createBiquadFilter();
-      lp.type = 'lowpass'; lp.frequency.value = 800; lp.Q.value = 0.4;
-      const bp = ac.createBiquadFilter();
-      bp.type = 'bandpass'; bp.frequency.value = 420; bp.Q.value = 0.3;
+      lp.type = 'lowpass'; lp.frequency.value = 360; lp.Q.value = 0.7;
       _crowdGain = ac.createGain();
       _crowdGain.gain.setValueAtTime(0, ac.currentTime);
-      _crowdGain.gain.linearRampToValueAtTime(0.07, ac.currentTime + 2.5);
-      _crowdSource.connect(lp); lp.connect(bp); bp.connect(_crowdGain); _crowdGain.connect(_masterGain);
+      _crowdGain.gain.linearRampToValueAtTime(0.18, ac.currentTime + 2.5);
+      // Slow LFO for breathing-style swell — keeps the bed alive.
+      _crowdLFO = ac.createOscillator();
+      _crowdLFO.frequency.value = 0.13;
+      const lfoGain = ac.createGain();
+      lfoGain.gain.value = 0.04;
+      _crowdLFO.connect(lfoGain); lfoGain.connect(_crowdGain.gain);
+      _crowdLFO.start();
+      _crowdSource.connect(hp); hp.connect(lp); lp.connect(_crowdGain); _crowdGain.connect(_masterGain);
       _crowdSource.start();
+      _scheduleCrowdBursts();
+    }
+
+    function _scheduleCrowdBursts() {
+      if (_crowdBurstTimer) clearTimeout(_crowdBurstTimer);
+      if (!_crowdSource) return;
+      const next = 6000 + Math.random() * 14000;
+      _crowdBurstTimer = setTimeout(() => {
+        if (_crowdSource && sfxEnabled) {
+          _crowdBurst(Math.random() < 0.3 ? 'cheer' : 'clap');
+          _scheduleCrowdBursts();
+        }
+      }, next);
+    }
+
+    function _crowdBurst(type) {
+      const ac = _getAC();
+      const dur = type === 'cheer' ? 1.4 : 0.5;
+      const bufLen = Math.floor(ac.sampleRate * dur);
+      const buf = ac.createBuffer(1, bufLen, ac.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufLen; i++) {
+        const t = i / bufLen;
+        const env = type === 'cheer'
+          ? Math.exp(-Math.pow((t - 0.3) * 3.2, 2))
+          : Math.exp(-t * 4.5);
+        data[i] = (Math.random() * 2 - 1) * env;
+      }
+      const src = ac.createBufferSource();
+      src.buffer = buf;
+      const filt = ac.createBiquadFilter();
+      filt.type = type === 'cheer' ? 'bandpass' : 'highpass';
+      filt.frequency.value = type === 'cheer' ? 750 : 1400;
+      filt.Q.value = type === 'cheer' ? 1.2 : 0.6;
+      const g = ac.createGain();
+      g.gain.value = type === 'cheer' ? 0.05 : 0.035;
+      src.connect(filt); filt.connect(g); g.connect(_masterGain);
+      src.start();
+      src.stop(ac.currentTime + dur + 0.05);
     }
 
     function stopCrowd() {
+      if (_crowdBurstTimer) { clearTimeout(_crowdBurstTimer); _crowdBurstTimer = null; }
       if (!_crowdSource) return;
       const ac = _getAC();
       _crowdGain.gain.setValueAtTime(_crowdGain.gain.value, ac.currentTime);
       _crowdGain.gain.linearRampToValueAtTime(0, ac.currentTime + 1.2);
       const src = _crowdSource; _crowdSource = null;
-      setTimeout(() => { try { src.stop(); } catch(e){} }, 1400);
+      const lfo = _crowdLFO; _crowdLFO = null;
+      setTimeout(() => { try { src.stop(); } catch(e){} try { lfo && lfo.stop(); } catch(e){} }, 1400);
     }
     function updateBrightness(v) {
       document.body.style.filter = 'brightness(' + (parseInt(v) / 100) + ')';
@@ -871,14 +1185,20 @@
     let friendlyPlayer = null;
     let penaltyTaker = null;
     let penaltyPickerOffers = [];
-    let opponents = [{ cx: 95, cy: 55 }, { cx: 163, cy: 85 }, { cx: 205, cy: 40 }];
+    let opponents = [
+        { cx: 140, cy: 32,  role: 'GK',  homeX: 140, homeY: 32,  patrol: 'none',     phase: 0   },
+        { cx: 90,  cy: 55,  role: 'DEF', homeX: 90,  homeY: 55,  patrol: 'hori-bf',  phase: 0.0 },
+        { cx: 195, cy: 50,  role: 'DEF', homeX: 195, homeY: 50,  patrol: 'hori-bf',  phase: 1.6 },
+        { cx: 70,  cy: 115, role: 'DEF', homeX: 70,  homeY: 115, patrol: 'loop-ccw', phase: 0.8 },
+        { cx: 215, cy: 120, role: 'DEF', homeX: 215, homeY: 120, patrol: 'loop-cw',  phase: 2.3 },
+      ];
     let opponentDriftInterval = null;
 
     const POS_COORDS = {
       penaltyEdgeLeft: { cx: 80,  cy: 102, label: 'PEN L'   },
-      longShotRight:   { cx: 222, cy: 200, label: 'LONG R'  },
+      longShotRight:   { cx: 222, cy: 305, label: 'LONG R'  },
       cornerKick:      { cx: 15,  cy: 20,  label: 'CORNER'  },
-      midRight:        { cx: 163, cy: 135, label: 'MID R'   },
+      midRight:        { cx: 163, cy: 240, label: 'MID R'   },
       crossInLeft:     { cx: 48,  cy: 155, label: 'CROSS'   },
       throughBallRun:  { cx: 188, cy: 77,  label: 'RUN'     },
     };
@@ -1159,9 +1479,9 @@
         const isActive = activePosId === slotId;
         const isFilled = !!player;
         const cx = pos.cx, cy = pos.cy, r = 22;
-        const fillColor = isFilled ? '#c1121f' : '#1d5e24';
-        const strokeColor = isActive ? '#fbbf24' : (isFilled ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)');
-        const strokeW = isActive ? 2.5 : 1.5;
+        const fillColor = isFilled ? currentKit.primary : '#1d5e24';
+        const strokeColor = isActive ? '#fbbf24' : (isFilled ? currentKit.accent : 'rgba(255,255,255,0.35)');
+        const strokeW = isActive ? 2.5 : (isFilled ? 2.5 : 1.5);
         const topLabel = isFilled ? shortenName(player.name) : pos.label;
         const botLabel = isFilled ? SLOT_CONFIG[slotId].label.toUpperCase() : '';
         const clickable = gamePhase === 'selection';
@@ -1176,18 +1496,25 @@
       });
       if (friendlyPlayer) {
         const fcx = 195, fcy = 362;
-        html += `<g style="pointer-events:none;opacity:0.85">
+        html += `<g style="pointer-events:none;opacity:0.9">
           <circle cx="${fcx}" cy="${fcy}" r="26" fill="rgba(0,0,0,0.15)"/>
-          <circle cx="${fcx}" cy="${fcy}" r="22" fill="#1a5228" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+          <circle cx="${fcx}" cy="${fcy}" r="22" fill="${currentKit.primary}" stroke="${currentKit.accent}" stroke-width="2.5"/>
           <text x="${fcx}" y="${fcy - 4}" text-anchor="middle" font-family="VT323,monospace" font-size="9.5" fill="#fff">${escHtml(shortenName(friendlyPlayer.name))}</text>
-          <text x="${fcx}" y="${fcy + 8}" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.55)">KICK-OFF</text>
+          <text x="${fcx}" y="${fcy + 8}" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.7)">KICK-OFF</text>
         </g>`;
       }
       opponents.forEach((op, i) => {
+        const isGK = op.role === 'GK';
+        const label = isGK ? 'GK' : 'OPP';
+        const gloves = isGK
+          ? `<circle cx="${(op.cx-19).toFixed(1)}" cy="${(op.cy+6).toFixed(1)}" r="4" fill="#fff" stroke="rgba(0,0,0,0.4)" stroke-width="0.7"/>
+             <circle cx="${(op.cx+19).toFixed(1)}" cy="${(op.cy+6).toFixed(1)}" r="4" fill="#fff" stroke="rgba(0,0,0,0.4)" stroke-width="0.7"/>`
+          : '';
         html += `<g id="opp-${i}" style="pointer-events:none">
-          <circle cx="${op.cx.toFixed(1)}" cy="${op.cy.toFixed(1)}" r="10" fill="rgba(0,0,0,0.18)"/>
-          <circle cx="${op.cx.toFixed(1)}" cy="${op.cy.toFixed(1)}" r="8" fill="#c1121f" stroke="rgba(255,150,150,0.45)" stroke-width="1.2"/>
-          <text x="${op.cx.toFixed(1)}" y="${(op.cy+3).toFixed(1)}" text-anchor="middle" font-family="VT323,monospace" font-size="6" fill="rgba(255,255,255,0.6)">OPP</text>
+          <circle cx="${op.cx.toFixed(1)}" cy="${op.cy.toFixed(1)}" r="26" fill="rgba(0,0,0,0.18)"/>
+          <circle cx="${op.cx.toFixed(1)}" cy="${op.cy.toFixed(1)}" r="22" fill="#c1121f" stroke="rgba(255,180,180,0.6)" stroke-width="1.5"/>
+          ${gloves}
+          <text x="${op.cx.toFixed(1)}" y="${(op.cy+3).toFixed(1)}" text-anchor="middle" font-family="VT323,monospace" font-size="9.5" fill="rgba(255,255,255,0.85)">${label}</text>
         </g>`;
       });
       layer.innerHTML = html;
@@ -1340,8 +1667,8 @@
       if (!inner) return;
       const picked = !!penaltyTaker;
       const spotName = picked ? shortenName(penaltyTaker.name) : 'PEN SPOT';
-      const spotFill = picked ? '#c1121f' : '#1d5e24';
-      const spotStroke = picked ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)';
+      const spotFill = picked ? currentKit.primary : '#1d5e24';
+      const spotStroke = picked ? currentKit.accent : 'rgba(255,255,255,0.35)';
       const cosmetics = [
         { cx: 48,  cy: 128, label: 'MID' },
         { cx: 232, cy: 128, label: 'STR' },
@@ -1429,25 +1756,6 @@
       });
     }
 
-    function showScorePop(x, y, pts, isMiss) {
-      const layer = document.getElementById('score-pops-layer');
-      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      txt.setAttribute('x', x);
-      txt.setAttribute('y', y - 22);
-      txt.setAttribute('text-anchor','middle');
-      txt.setAttribute('font-family','VT323,monospace');
-      txt.setAttribute('font-size','14');
-      txt.setAttribute('fill', isMiss ? '#e63946' : '#60a5fa');
-      txt.setAttribute('paint-order','stroke');
-      txt.setAttribute('stroke','#0a2e0e');
-      txt.setAttribute('stroke-width','2');
-      txt.textContent = isMiss ? '✗ MISS' : `+${pts} pts`;
-      txt.style.opacity = '0';
-      txt.style.transition = 'opacity 0.3s ease';
-      layer.appendChild(txt);
-      requestAnimationFrame(() => requestAnimationFrame(() => { txt.style.opacity = '1'; }));
-    }
-
     // Flash the opponent nearest to (x, y) — used on loss events so the player sees
     // who tackled/intercepted them. Briefly enlarges + brightens the inner circle.
     function flashNearestOpp(x, y) {
@@ -1463,9 +1771,9 @@
       if (!g) return;
       const inner = g.querySelectorAll('circle')[1];
       if (!inner) return;
-      const origR    = inner.getAttribute('r')    || '8';
+      const origR    = inner.getAttribute('r')    || '22';
       const origFill = inner.getAttribute('fill') || '#c1121f';
-      inner.setAttribute('r', '13');
+      inner.setAttribute('r', '27');
       inner.setAttribute('fill', '#ff4d4d');
       setTimeout(() => {
         inner.setAttribute('r', origR);
@@ -1475,10 +1783,15 @@
 
     // Narration banner — top-centered overlay, displays one event line for `holdMs`
     // ms with a 220ms fade in/out. Returns a Promise that resolves after fadeOut.
-    async function showNarration(text, isWin, holdMs = 900) {
+    async function showNarration(text, isWin, holdMs = 900, pts = 0) {
       const el = document.getElementById('narration-banner');
       if (!el) return;
-      el.textContent = text;
+      let display = text;
+      if (pts && pts !== 0) {
+        const sign = pts > 0 ? '+' : '';
+        display = `${text} (${sign}${pts} pts)`;
+      }
+      el.textContent = display;
       el.classList.toggle('lose', !isWin);
       // Force reflow so transition triggers reliably even on rapid re-show
       void el.offsetWidth;
@@ -1517,35 +1830,70 @@
         friendlyPlayer = remaining[Math.floor(rng() * remaining.length)];
       }
       opponents = [
-        { cx: 140, cy: 32  },  // GK area (centre, near goal)
-        { cx: 90,  cy: 55  },  // top-left defender
-        { cx: 195, cy: 50  },  // top-right defender
-        { cx: 55,  cy: 100 },  // mid-left
-        { cx: 230, cy: 105 },  // mid-right
-        { cx: 120, cy: 145 },  // central midfield
-        { cx: 175, cy: 165 },  // central-right midfield
-        { cx: 100, cy: 220 },  // halfway line, deeper
+        { cx: 140, cy: 32,  role: 'GK',  homeX: 140, homeY: 32,  patrol: 'none',     phase: 0   },  // keeper
+        { cx: 90,  cy: 55,  role: 'DEF', homeX: 90,  homeY: 55,  patrol: 'hori-bf',  phase: 0.0 },  // top-left
+        { cx: 195, cy: 50,  role: 'DEF', homeX: 195, homeY: 50,  patrol: 'hori-bf',  phase: 1.6 },  // top-right
+        { cx: 70,  cy: 115, role: 'DEF', homeX: 70,  homeY: 115, patrol: 'loop-ccw', phase: 0.8 },  // mid-left
+        { cx: 215, cy: 120, role: 'DEF', homeX: 215, homeY: 120, patrol: 'loop-cw',  phase: 2.3 },  // mid-right
       ];
       renderPitch();
       opponentDriftInterval = setInterval(() => {
-        // Find the opp closest to the ball — that one chases hard, the rest drift slowly.
+        // Defender behaviour:
+        //   - Each defender patrols a small zone (back-and-forth or a loop) anchored on homeX/homeY.
+        //   - The defender nearest the ball breaks patrol and chases hard.
+        //   - Others lightly bias toward the ball when it enters their zone (~80px), else pure patrol.
+        // Keeper holds his line near the goal — patrol skipped, only glove sync runs.
+        const t = performance.now();
         let nearestIdx = -1, nearestDist = Infinity;
         opponents.forEach((op, i) => {
+          if (op.role === 'GK') return;
           const dx = footballX - op.cx, dy = footballY - op.cy;
           const dist = Math.sqrt(dx*dx + dy*dy);
           if (dist < nearestDist) { nearestDist = dist; nearestIdx = i; }
         });
         opponents.forEach((op, i) => {
-          const dx = footballX - op.cx, dy = footballY - op.cy;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          const speed = (i === nearestIdx) ? 0.7 : 0.18;
-          if (dist > 14) { op.cx += dx/dist * speed; op.cy += dy/dist * speed; }
+          if (op.role !== 'GK') {
+            // Compute patrol target around home anchor
+            let px = op.homeX, py = op.homeY;
+            if (op.patrol === 'hori-bf') {
+              px = op.homeX + Math.sin(t * 0.0009 + op.phase) * 30;
+              py = op.homeY + Math.sin(t * 0.0006 + op.phase) * 4;
+            } else if (op.patrol === 'loop-cw') {
+              px = op.homeX + Math.cos(t * 0.0008 + op.phase) * 22;
+              py = op.homeY + Math.sin(t * 0.0008 + op.phase) * 18;
+            } else if (op.patrol === 'loop-ccw') {
+              px = op.homeX + Math.cos(-t * 0.0008 + op.phase) * 22;
+              py = op.homeY + Math.sin(-t * 0.0008 + op.phase) * 18;
+            }
+            // Ball-aware blend: nearest defender chases; others lightly drift toward ball if in zone
+            const dxBall = footballX - op.cx, dyBall = footballY - op.cy;
+            const distBall = Math.sqrt(dxBall*dxBall + dyBall*dyBall);
+            let tx = px, ty = py, speed = 0.5;
+            if (i === nearestIdx && distBall < 110) {
+              tx = footballX; ty = footballY; speed = 0.75;
+            } else if (distBall < 80) {
+              tx = (px + footballX) * 0.5; ty = (py + footballY) * 0.5; speed = 0.55;
+            }
+            const dx = tx - op.cx, dy = ty - op.cy;
+            const moveDist = Math.sqrt(dx*dx + dy*dy);
+            if (moveDist > 0.5) {
+              const step = Math.min(speed, moveDist);
+              op.cx += (dx / moveDist) * step;
+              op.cy += (dy / moveDist) * step;
+            }
+          }
           const g = document.getElementById('opp-' + i);
           if (g) {
             const circles = g.querySelectorAll('circle');
             const text = g.querySelector('text');
             if (circles[0]) { circles[0].setAttribute('cx', op.cx.toFixed(1)); circles[0].setAttribute('cy', op.cy.toFixed(1)); }
             if (circles[1]) { circles[1].setAttribute('cx', op.cx.toFixed(1)); circles[1].setAttribute('cy', op.cy.toFixed(1)); }
+            if (op.role === 'GK' && circles[2] && circles[3]) {
+              circles[2].setAttribute('cx', (op.cx - 19).toFixed(1));
+              circles[2].setAttribute('cy', (op.cy + 6).toFixed(1));
+              circles[3].setAttribute('cx', (op.cx + 19).toFixed(1));
+              circles[3].setAttribute('cy', (op.cy + 6).toFixed(1));
+            }
             if (text) { text.setAttribute('x', op.cx.toFixed(1)); text.setAttribute('y', (op.cy + 3).toFixed(1)); }
           }
         });
@@ -1555,14 +1903,22 @@
       const { events, totalPoints, goals } = runSequence();
       let pointsRunning = 0;
       let goalsRunning = 0;
-      const goalsCountEl = document.getElementById('goals-count');
+      oppGoals = 0;
       const scoreEl = document.getElementById('score-display');
-      if (goalsCountEl) goalsCountEl.textContent = '0';
+      updateScoreboard(0);
       if (scoreEl) scoreEl.innerText = '0 pts';
 
       const GOAL_POS = { cx: 140, cy: 25 };
 
+      if (devMode) {
+        devEventTotal = events.length;
+        devEventIdx = -1;
+        devShowStepControls(true);
+        devUpdateStepStatus();
+      }
+
       for (const ev of events) {
+        if (devMode) { devEventIdx++; devUpdateStepStatus(); }
         const pos = POS_COORDS[ev.slotId];
 
         // Action 1: ball moves to the player's position (receive)
@@ -1571,8 +1927,8 @@
           await delay(160);
         }
 
-        // Narration overlay
-        await showNarration(ev.popupText, ev.win, 800);
+        // Combined banner: outcome text + points in a single popup
+        await showNarration(ev.popupText, ev.win, 800, ev.points);
 
         // On a loss, flash the nearest opponent — gives the player a visual cue
         // for who tackled / intercepted / blocked them.
@@ -1584,12 +1940,9 @@
         pointsRunning += ev.points;
         if (ev.isGoal) {
           goalsRunning += 1;
-          if (goalsCountEl) goalsCountEl.textContent = String(goalsRunning);
+          updateScoreboard(goalsRunning);
         }
         if (scoreEl) scoreEl.innerText = `${pointsRunning} pts`;
-        if (ev.points !== 0) {
-          showScorePop(pos.cx, pos.cy + (ev.actionIdx === 1 ? 14 : -4), ev.points, ev.points < 0);
-        }
         SFX.assign();
 
         // Action 2: ball moves to the action's destination
@@ -1616,9 +1969,10 @@
           }
         }
 
-        await delay(180);
+        if (devMode) { await devGate(); } else { await delay(180); }
       }
 
+      if (devMode) devShowStepControls(false);
       clearInterval(opponentDriftInterval);
       opponentDriftInterval = null;
       await delay(300);
@@ -1717,10 +2071,19 @@
       friendlyPlayer = null;
       penaltyTaker = null;
       penaltyPickerOffers = [];
-      opponents = [{ cx: 95, cy: 55 }, { cx: 163, cy: 85 }, { cx: 205, cy: 40 }];
+      opponents = [
+        { cx: 140, cy: 32,  role: 'GK',  homeX: 140, homeY: 32,  patrol: 'none',     phase: 0   },
+        { cx: 90,  cy: 55,  role: 'DEF', homeX: 90,  homeY: 55,  patrol: 'hori-bf',  phase: 0.0 },
+        { cx: 195, cy: 50,  role: 'DEF', homeX: 195, homeY: 50,  patrol: 'hori-bf',  phase: 1.6 },
+        { cx: 70,  cy: 115, role: 'DEF', homeX: 70,  homeY: 115, patrol: 'loop-ccw', phase: 0.8 },
+        { cx: 215, cy: 120, role: 'DEF', homeX: 215, homeY: 120, patrol: 'loop-cw',  phase: 2.3 },
+      ];
       if (opponentDriftInterval) { clearInterval(opponentDriftInterval); opponentDriftInterval = null; }
       document.getElementById('timer-display').innerText = '3:00';
       document.getElementById('timer-display').classList.remove('warn');
+      syncKitUI();
+      syncScoreboardIdentity();
+      updateScoreboard(0);
       renderPitch();
     }
 
@@ -1732,6 +2095,7 @@
         rng = mulberry32(parseInt(challengeSeed, 16));
         isChallengeMode = false;
       }
+      rollKit();
       if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
       timerSeconds = TIMER_SECONDS;
       timerStarted = false;
@@ -1754,11 +2118,18 @@
       opposition = generateOpposition(rng);
       actionRolls = {};
       SLOT_IDS.forEach(id => { actionRolls[id] = [rng(), rng()]; });
-      const goalsCountEl0 = document.getElementById('goals-count');
-      if (goalsCountEl0) goalsCountEl0.textContent = '0';
+      oppGoals = 0;
+      rollOpp(rng);
+      updateScoreboard(0);
       document.getElementById('timer-display').innerText = '3:00';
       document.getElementById('timer-display').classList.remove('warn');
-      opponents = [{ cx: 95, cy: 55 }, { cx: 163, cy: 85 }, { cx: 205, cy: 40 }];
+      opponents = [
+        { cx: 140, cy: 32,  role: 'GK',  homeX: 140, homeY: 32,  patrol: 'none',     phase: 0   },
+        { cx: 90,  cy: 55,  role: 'DEF', homeX: 90,  homeY: 55,  patrol: 'hori-bf',  phase: 0.0 },
+        { cx: 195, cy: 50,  role: 'DEF', homeX: 195, homeY: 50,  patrol: 'hori-bf',  phase: 1.6 },
+        { cx: 70,  cy: 115, role: 'DEF', homeX: 70,  homeY: 115, patrol: 'loop-ccw', phase: 0.8 },
+        { cx: 215, cy: 120, role: 'DEF', homeX: 215, homeY: 120, patrol: 'loop-cw',  phase: 2.3 },
+      ];
       if (opponentDriftInterval) { clearInterval(opponentDriftInterval); opponentDriftInterval = null; }
       const fbEl = document.getElementById('football-group');
       if (fbEl) { fbEl.setAttribute('transform','translate(140,380)'); fbEl.style.opacity = '0'; }
