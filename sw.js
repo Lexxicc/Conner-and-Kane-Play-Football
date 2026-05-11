@@ -1,4 +1,4 @@
-const CACHE = 'v2';
+const CACHE = 'fb-v1';
 const CDN = ['cdn.tailwindcss.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', e => {

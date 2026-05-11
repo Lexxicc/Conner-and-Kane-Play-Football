@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="author" content="lexxicc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Proper Football v0.0.21</title>
+  <title>Proper Football v0.0.22</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e63946">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -229,9 +229,10 @@
 
     /* ── NARRATION BANNER ── */
     #narration-banner {
-      position: absolute; left: 50%; top: 8px;
-      transform: translateX(-50%);
-      max-width: 92%;
+      /* Pinned to the lower-left corner of the pitch viewport so it doesn't
+         block the action up top. ~1vw inset from both edges. */
+      position: absolute; left: 1vw; bottom: 1vw;
+      max-width: 60%;
       padding: 8px 14px;
       background: rgba(10,46,14,0.92);
       border: 2px solid var(--color-primary);
@@ -239,7 +240,7 @@
       font-family: 'VT323', monospace;
       font-size: 1rem; line-height: 1.15;
       color: var(--color-glow);
-      text-align: center;
+      text-align: left;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       pointer-events: none;
@@ -433,7 +434,7 @@
       <!-- ZONE 5 — FOOTER -->
       <div class="menu-footer">
         <div class="footer-line left"></div>
-        <span class="footer-text">Tacticon Studios 2026 · v0.0.21</span>
+        <span class="footer-text">Tacticon Studios 2026 · v0.0.22</span>
         <div class="footer-line right"></div>
       </div>
 
@@ -634,7 +635,7 @@
     </div>
 
     <!-- Footer -->
-    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.21</p>
+    <p style="flex-shrink:0;font-size:10px;text-align:center;opacity:0.4;padding:6px 8px 4px;letter-spacing:0.3em;text-transform:uppercase;font-family:'VT323',monospace;">&copy; Tacticon Studios 2026 &mdash; v0.0.22</p>
 
   </div><!-- /game-shell -->
   </div><!-- /game-shell-wrapper -->
@@ -642,7 +643,7 @@
   <!-- ═══ DEV MODE OVERLAYS ═══ -->
   <div id="dev-banner" style="display:none">🔧 DEV MODE</div>
   <div id="dev-step-controls">
-    <button class="dev-step-btn" id="dev-prev-btn" onclick="devStep('back')" title="Previous (←)">‹</button>
+    <button class="dev-step-btn" id="dev-replay-btn" onclick="devReplay()" title="Replay from start">↺</button>
     <span id="dev-step-status">— / —</span>
     <button class="dev-step-btn" id="dev-next-btn" onclick="devStep('forward')" title="Next (→)">›</button>
   </div>
@@ -882,6 +883,21 @@
       activePosId = null;
       closePicker();
       renderPitch();
+      // Dev mode chains all the way through: confirm team -> auto-pick penalty
+      // taker (best shooter from the offers) -> confirm penalty setup -> playOut.
+      // Skips the "who's taking the penalty" screen entirely.
+      confirmTeam();
+      if (devMode && gamePhase === 'penaltySetup') devAutoPenalty();
+    }
+
+    function devAutoPenalty() {
+      if (!devMode) return;
+      if (!penaltyPickerOffers || penaltyPickerOffers.length === 0) return;
+      // Pick by highest shooting score (avg of shooting + rightFoot + leftFoot)
+      const score = p => (p.shooting + p.rightFoot + p.leftFoot) / 3;
+      penaltyTaker = penaltyPickerOffers.reduce((a, b) => score(a) >= score(b) ? a : b);
+      renderPenaltyPitch();
+      confirmPenaltySetup();
     }
     function devGate() {
       return new Promise(resolve => { devStepResolve = resolve; });
@@ -896,8 +912,14 @@
       const sc = document.getElementById('dev-step-controls');
       if (!sc) return;
       sc.classList.toggle('visible', show && devMode);
-      const prev = document.getElementById('dev-prev-btn');
-      if (prev) prev.disabled = true;  // back-step not implemented (state rewind too costly)
+      // Replay button always enabled in dev mode - re-runs playOut() from kick-off
+    }
+    let devReplayRequested = false;
+    function devReplay() {
+      if (!devMode) return;
+      devReplayRequested = true;
+      // If we're awaiting a step gate, resolve it so the loop checks the flag
+      if (devStepResolve) { const r = devStepResolve; devStepResolve = null; r(); }
     }
     function devUpdateStepStatus() {
       const el = document.getElementById('dev-step-status');
@@ -923,7 +945,7 @@
     }
 
     const PATCH_NOTES = [
-      { v:'v0.0.21', date:'2026-05', notes:['Opponents reduced 8 -> 5 (1 GK + 4 DEFs). Keeper holds his line near goal (excluded from drift), gets 2 white glove circles flanking the slot + GK label.','Defenders patrol around home anchors via sin/cos paths: top-left + top-right do horizontal back-and-forth, mid-left loops counter-clockwise, mid-right loops clockwise. Nearest defender chases ball when in range; others lightly bias toward ball if in zone; else pure patrol.','Scoreboard widget replaces goals counter: 3-char ticker + flag + 0:0 + flag + ticker. New TEAM_KEY localStorage (default TAC + AU flag). 10-nation OPP_POOL randomised per match (ENG/GER/FRA/BRA/ARG/ESP/ITA/POR/NED/BEL).','Outcome messages merged: showNarration appends (+N pts) / (-N pts) inline; the floating score-pop sprite removed. Single banner per resolved action.','Earlier in same dev cycle: kit system (home/away primary+accent), dev mode for fast-test, crowd audio rebuilt (brown noise + LFO + clap/cheer bursts), MID R + LONG R repositioned, opp slot size tweaks.'] },
+      { v:'v0.0.22', date:'2026-05', notes:['Opponents reduced 8 -> 5 (1 GK + 4 DEFs). Keeper holds his line near goal (excluded from drift), gets 2 white glove circles flanking the slot + GK label.','Defenders patrol around home anchors via sin/cos paths: top-left + top-right do horizontal back-and-forth, mid-left loops counter-clockwise, mid-right loops clockwise. Nearest defender chases ball when in range; others lightly bias toward ball if in zone; else pure patrol.','Scoreboard widget replaces goals counter: 3-char ticker + flag + 0:0 + flag + ticker. New TEAM_KEY localStorage (default TAC + AU flag). 10-nation OPP_POOL randomised per match (ENG/GER/FRA/BRA/ARG/ESP/ITA/POR/NED/BEL).','Outcome messages merged: showNarration appends (+N pts) / (-N pts) inline; the floating score-pop sprite removed. Single banner per resolved action.','Earlier in same dev cycle: kit system (home/away primary+accent), dev mode for fast-test, crowd audio rebuilt (brown noise + LFO + clap/cheer bursts), MID R + LONG R repositioned, opp slot size tweaks.'] },
       { v:'v0.0.20', date:'2026-05', notes:['Ball moves on Action 2 — toward goal for shots/finishes (or wide of post on miss), toward next slot for passes/crosses. 8 red opponents now spread across the pitch (was 3 clustered at top); nearest opp chases hard while others drift; on a lost duel the nearest opp flashes red as the tackler. Pre-existing opponent SVG render bug fixed (escaped template literals). Front-menu logo reverted to invisible placeholder. Max-goals denominator on end card adjusted 6→4.'] },
       { v:'v0.0.19', date:'2026-05', notes:['Mechanics overhaul: linear DFS resolution engine — 6 slots × 2 actions per play, stat-vs-stat duels with seeded opposition (1 GK + 6 DEFs from real player pool). Narration banner displays per-action commentary; goal counter in header. STR/MID/DEF/GK position-scaled DFS points (DEF +15 > MID +12 > STR +10 > GK +20 per goal). Forwards renamed to Strikers throughout.'] },
       { v:'v0.0.17', date:'2026-05', notes:['SoT pattern flip: logo container is now the flex/stretch component; all 5 inter-container gaps uniform 1.5vw; panel padding restored to 1.5vw all sides; tagline margin-top:auto removed.'] },
@@ -1143,6 +1165,10 @@
       assign()  { _tone(550, 'sine', 0.10, 0.01, 0.02, 0.07); _tone(880, 'sine', 0.06, 0.01, 0.01, 0.06, 0.06); },
       remove()  { _tone(330, 'sine', 0.07, 0.005, 0.01, 0.06); },
       warn()    { _tone(440, 'square', 0.08, 0.005, 0.01, 0.05); },
+      kickoff() { _tone(1400, 'sine', 0.10, 0.002, 0.08, 0.06); },
+      goal()    { [0, 0.12, 0.24, 0.38].forEach((d,i) => _tone([523,659,784,1046][i], 'sine', 0.14, 0.01, 0.12, 0.1, d)); },
+      tackle()  { _tone(120, 'triangle', 0.18, 0.001, 0.04, 0.18); _tone(85, 'sawtooth', 0.10, 0.001, 0.025, 0.12, 0.03); },
+      whistle() { _tone(1400, 'sine', 0.10, 0.002, 0.2, 0.05); _tone(1400, 'sine', 0.10, 0.002, 0.2, 0.05, 0.35); },
     };
 
     // ─── TIMER ──────────────────────────────────────────────────────────────────
@@ -1837,6 +1863,7 @@
         { cx: 215, cy: 120, role: 'DEF', homeX: 215, homeY: 120, patrol: 'loop-cw',  phase: 2.3 },  // mid-right
       ];
       renderPitch();
+      SFX.kickoff();
       opponentDriftInterval = setInterval(() => {
         // Defender behaviour:
         //   - Each defender patrols a small zone (back-and-forth or a loop) anchored on homeX/homeY.
@@ -1933,12 +1960,14 @@
         // On a loss, flash the nearest opponent — gives the player a visual cue
         // for who tackled / intercepted / blocked them.
         if (!ev.win) {
+          SFX.tackle();
           flashNearestOpp(pos.cx, pos.cy);
         }
 
         // Update running totals
         pointsRunning += ev.points;
         if (ev.isGoal) {
+          SFX.goal();
           goalsRunning += 1;
           updateScoreboard(goalsRunning);
         }
@@ -1970,11 +1999,22 @@
         }
 
         if (devMode) { await devGate(); } else { await delay(180); }
+        // Dev replay: clicking ↺ during playOut bails out + re-enters playOut from kick-off
+        if (devReplayRequested) {
+          devReplayRequested = false;
+          clearInterval(opponentDriftInterval);
+          opponentDriftInterval = null;
+          if (scoreEl) scoreEl.innerText = '0 pts';
+          updateScoreboard(0);
+          setTimeout(() => playOut(), 0);
+          return;
+        }
       }
 
       if (devMode) devShowStepControls(false);
       clearInterval(opponentDriftInterval);
       opponentDriftInterval = null;
+      SFX.whistle();
       await delay(300);
       gamePhase = 'done';
       gameActive = false;
