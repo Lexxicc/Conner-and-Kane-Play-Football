@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="author" content="lexxicc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Proper Football v0.0.23</title>
+  <title>Proper Football v0.0.24</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e63946">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -946,6 +946,7 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.24', date:'2026-05', notes:['super;audit: added modern mobile-web-app-capable meta (deprecated apple-only console warning cleared). No gameplay or logic changes.'] },
       { v:'v0.0.23', date:'2026-05', notes:['Gameplay sequencing: 220ms settle beat added between ball animation and pop-up render on shot/finish/pass/cross (skipped in devMode so step gates remain authoritative).','STR (Striker) colour fix: CSS selectors renamed pos-fwd to pos-str (dead since FWD->STR rename) - red gradient restored on collector cards.','Superaudit cleanup: 51 em-dashes purged across CSS/HTML/JS/patch notes (per workspace rule). Dead v1 scoring engine removed (calcScores, slotProbability, shotRolls, crossReceivedRoll, selectedIdx, showEventPop, score-pops-layer) - 81 lines pruned, file 2201 -> 2120. v2 DFS engine remains authoritative.'] },
       { v:'v0.0.22', date:'2026-05', notes:['Opponents reduced 8 -> 5 (1 GK + 4 DEFs). Keeper holds his line near goal (excluded from drift), gets 2 white glove circles flanking the slot + GK label.','Defenders patrol around home anchors via sin/cos paths: top-left + top-right do horizontal back-and-forth, mid-left loops counter-clockwise, mid-right loops clockwise. Nearest defender chases ball when in range; others lightly bias toward ball if in zone; else pure patrol.','Scoreboard widget replaces goals counter: 3-char ticker + flag + 0:0 + flag + ticker. New TEAM_KEY localStorage (default TAC + AU flag). 10-nation OPP_POOL randomised per match (ENG/GER/FRA/BRA/ARG/ESP/ITA/POR/NED/BEL).','Outcome messages merged: showNarration appends (+N pts) / (-N pts) inline; the floating score-pop sprite removed. Single banner per resolved action.','Earlier in same dev cycle: kit system (home/away primary+accent), dev mode for fast-test, crowd audio rebuilt (brown noise + LFO + clap/cheer bursts), MID R + LONG R repositioned, opp slot size tweaks.'] },
       { v:'v0.0.20', date:'2026-05', notes:['Ball moves on Action 2 - toward goal for shots/finishes (or wide of post on miss), toward next slot for passes/crosses. 8 red opponents now spread across the pitch (was 3 clustered at top); nearest opp chases hard while others drift; on a lost duel the nearest opp flashes red as the tackler. Pre-existing opponent SVG render bug fixed (escaped template literals). Front-menu logo reverted to invisible placeholder. Max-goals denominator on end card adjusted 6→4.'] },
