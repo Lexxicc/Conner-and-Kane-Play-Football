@@ -1,0 +1,234 @@
+════════════════════════════════════════════════════════════════
+  PLAYER CARD CREATION PROMPT
+  Paste this into a session along with a headshot image.
+  Holly will generate the prototype HTML, render the PNG, and
+  append the player to the deck (players.json + cards-deck.html).
+════════════════════════════════════════════════════════════════
+
+
+─── MISSION ──────────────────────────────────────────────────────
+
+Create a new player card for the PF/DFF deck using the canonical
+SoT and the data-driven cards-deck.html renderer.
+
+
+─── REQUIRED INPUT FROM USER ─────────────────────────────────────
+
+Name:     <e.g. K. Beaver>
+Pos:      <GK / DEF / MID / STR / MNGR>
+Stats:    <6 ints in label order, comma-separated>
+Headshot: <file dropped into session, or path>
+
+Stat order is fixed:
+  1. L. Foot
+  2. R. Foot
+  3. Control
+  4. Shooting
+  5. Speed
+  6. Tackle
+
+
+─── DEFAULTS (DO NOT ASK USER) ───────────────────────────────────
+
+- Button glyph:    ↻  (kit swap, all cards)
+- Stat labels:     L. Foot / R. Foot / Control / Shooting / Speed / Tackle
+- ID slug:         auto-derived from name, kebab-case
+                   ("K. Beaver" -> "k-beaver")
+- Rating:          sum(all 6 stats) / 6, rounded to nearest integer
+                   (e.g. 63+88+77+84+92+68 = 472, /6 = 78.67, -> 79)
+- Photo path:      Transparent Headshots/<Name> Headshot Transparent.png
+                   (relative to Player Cards/ root)
+
+
+─── CANONICAL PATHS ──────────────────────────────────────────────
+
+Root folder:
+  Tacticon Studios Games/Proper-Football.FB/Player Cards/
+  (moved + renamed 2026-05-17 from Assets/Player Cards PF:DFF/;
+   now lives inside the Proper Football game repo, DFF does not use it)
+
+SoT (master master master template, do not modify):
+  Football Card Generic Template.html
+  Football Card Generic Template.png  (reference render)
+  Doubles as the J. Doe / all-50s placeholder.
+
+Per-player prototype HTML output:
+  Cards HTML/<Name> Card Prototype.html
+
+Per-player rendered PNG output:
+  Cards PNG/<Name> Card Prototype.png
+
+Transparent-BG headshot:
+  Transparent Headshots/<Name> Headshot Transparent.png
+
+Deck data (data-driven renderer):
+  players.json          (canonical schema, fetched at runtime)
+  cards-deck.html       (renderer, inline JSON fallback for file://)
+  cards-deck-render <DATE>.png  (full-deck snapshot, regenerated per append)
+
+
+─── WORKFLOW ─────────────────────────────────────────────────────
+
+STEP 1: HEADSHOT PREP (transparent background)
+  If the supplied headshot has any non-transparent background,
+  run the flood-fill script below in Python (PIL + deque).
+  Threshold 40 catches near-black studio backgrounds without
+  eating dark navy kits. Save as:
+    Transparent Headshots/<Name> Headshot Transparent.png
+
+  ┌─ Flood-fill script ─────────────────────────────────────┐
+  │ from PIL import Image                                   │
+  │ from collections import deque                           │
+  │ img = Image.open("input.png").convert("RGBA")           │
+  │ px = img.load()                                         │
+  │ w, h = img.size                                         │
+  │ def is_bg(p): return p[0]<=40 and p[1]<=40 and p[2]<=40 │
+  │ queue = deque()                                         │
+  │ visited = [[False]*h for _ in range(w)]                 │
+  │ for x in range(w):                                      │
+  │     for y in [0, h-1]:                                  │
+  │         if not visited[x][y] and is_bg(px[x,y]):        │
+  │             queue.append((x,y)); visited[x][y] = True   │
+  │ for y in range(h):                                      │
+  │     for x in [0, w-1]:                                  │
+  │         if not visited[x][y] and is_bg(px[x,y]):        │
+  │             queue.append((x,y)); visited[x][y] = True   │
+  │ while queue:                                            │
+  │     x, y = queue.popleft()                              │
+  │     r,g,b,a = px[x,y]; px[x,y] = (r,g,b,0)              │
+  │     for dx,dy in [(-1,0),(1,0),(0,-1),(0,1)]:           │
+  │         nx,ny = x+dx, y+dy                              │
+  │         if 0<=nx<w and 0<=ny<h and not visited[nx][ny]  │
+  │            and is_bg(px[nx,ny]):                        │
+  │             visited[nx][ny]=True; queue.append((nx,ny)) │
+  │ img.save("<Name> Headshot Transparent.png")             │
+  └─────────────────────────────────────────────────────────┘
+
+  Ghost pixels MUST be near-black RGB(0-5, 0-5, 0-5, alpha=0).
+  Do NOT use white ghosts on a dark-background card.
+
+STEP 2: COMPUTE RATING
+  rating = round( sum(stats) / 6 )
+
+STEP 3: DERIVE ID SLUG
+  slug = name.lower().replace(". ", "-").replace(" ", "-")
+  Examples:
+    "K. Beaver"  -> "k-beaver"
+    "C. Johnson" -> "c-johnson"
+
+STEP 4: GENERATE PROTOTYPE HTML
+  Copy the canonical CSS block from any existing card prototype
+  (all share MD5 hash e4fac19a94684a3514ede4dd13bfd450). Pixel-
+  identical CSS is non-negotiable; the only fields that vary
+  between cards are:
+    - pos badge text
+    - player name
+    - rating value
+    - <img src="...">
+    - the 6 stat name/value pairs
+    - the card-id-tag at bottom
+
+  Save to:
+    Cards HTML/<Name> Card Prototype.html
+
+  Img src path inside the prototype HTML uses ../ to escape
+  Cards HTML/:
+    src="../Transparent Headshots/<Name> Headshot Transparent.png"
+
+STEP 5: RENDER PNG
+  Use node playwright (PW_DIR at
+  /Users/connermac/.npm/_npx/5e2e484947874241/node_modules) with
+  a locator-based screenshot scoped to .card (not fullPage), so
+  the output is the 280x409 card only.
+
+  Save to:
+    Cards PNG/<Name> Card Prototype.png
+
+STEP 6: APPEND TO players.json
+  Insert a new entry into the "players" array with this shape:
+    {
+      "id":     "<slug>",
+      "pos":    "<POS>",
+      "name":   "<Name>",
+      "rating": "<computed>",
+      "photo":  "Transparent Headshots/<Name> Headshot Transparent.png",
+      "button": "↻",
+      "stats": [
+        { "name": "L. Foot",  "val": "<n1>" },
+        { "name": "R. Foot",  "val": "<n2>" },
+        { "name": "Control",  "val": "<n3>" },
+        { "name": "Shooting", "val": "<n4>" },
+        { "name": "Speed",    "val": "<n5>" },
+        { "name": "Tackle",   "val": "<n6>" }
+      ],
+      "notes": "<optional one-line description>"
+    }
+
+STEP 7: APPEND TO cards-deck.html INLINE FALLBACK
+  cards-deck.html holds a duplicate of players.json inside a
+  <script type="application/json" id="players-data"> block. This
+  is the file:// fallback when fetch() fails. Mirror the new
+  player entry into that inline block too (without the _schema
+  field, without the notes field).
+
+STEP 8: REGENERATE FULL-DECK RENDER
+  After the new entry is in both players.json AND the inline block,
+  re-render cards-deck.html to a dated full-deck PNG snapshot.
+  Use node playwright with fullPage:true on cards-deck.html, then:
+    1. Delete any existing cards-deck-render *.png in the root.
+    2. Save the fresh render as:
+         cards-deck-render <YYYY-MM-DD>.png
+       Use today's AWST date. Only one dated snapshot lives at a
+       time, replaced on each append.
+
+STEP 9: DELIVERY
+  Report back to user:
+    - Path to prototype HTML
+    - Path to rendered PNG
+    - Computed rating
+    - One-line confirmation that players.json + cards-deck.html inline
+      data both contain the new entry
+    - Path to the new dated deck-render PNG
+
+
+─── INVARIANTS ───────────────────────────────────────────────────
+
+- Card spec is 50:73 aspect, 280 x 409 px at 1x.
+- Arctic palette canonical (7 tones, see :root in the SoT).
+- NEVER modify the SoT (Football Card Generic Template.html / .png).
+- NEVER use mix-blend-mode: screen on the portrait. It bleeds
+  the stripe background through dark kit/hair pixels. The
+  correct approach is a transparent-BG source PNG plus
+  object-fit: cover.
+- NEVER use em-dashes or en-dashes anywhere (clearest AI tell).
+- NEVER auto-open the rendered HTML/PNG. User triggers viewing
+  explicitly with "open it" / "let me see".
+- NEVER send to dc/tg/em/wa/sl without explicit permission.
+
+
+─── MNGR CARDS (MANAGER SCHEMA) ──────────────────────────────────
+
+Managers use pos=MNGR, button ↻, rating = round(sum/6), and a
+DIFFERENT fixed six-stat schema (not the outfield order):
+
+  1. Strategy
+  2. Discipline
+  3. Motivation
+  4. Substitutions
+  5. Press handling
+  6. Flexibility
+
+Stat effects are SHELVED pending design sign-off; values are
+cosmetic until then. Card structure is otherwise identical to a
+standard card (same CSS, same zones). C. Morley is the canonical
+MNGR example. Outfield players keep the standard six (STEP:
+"Stat order is fixed").
+
+The old grandfathered novelty cards (Eryne/Snorlax NRM 💤,
+Colin/Morley joke-stats 📋) were retired 2026-05-17: Eryne
+unified to E. Lazic (standard MID), Colin to C. Morley (MNGR
+schema above). Do NOT reintroduce novelty stat sets or non-↻
+buttons for new cards.
+
+
+─── END OF PROMPT ────────────────────────────────────────────────

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C. Johnson - GK 81 - Player Card Prototype</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark:  #00111a;
+      --shadow:   #000a10;
+      --panel:    #00243a;
+      --primary:  #00b4d8;
+      --accent:   #48cae4;
+      --ice:      #7ec8e3;
+      --glow:     #90e0ef;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #080e12;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .spec-title {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--panel);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .spec-title span { color: var(--primary); }
+
+    .spec-wrap {
+      position: relative;
+      padding: 48px 100px 48px 80px;
+    }
+
+    /* CARD - 50:73 -> 280 x 409px */
+    .card {
+      width: 280px;
+      height: 409px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-dark);
+      border: 1.5px solid var(--primary);
+      box-shadow:
+        0 0 0 1px var(--shadow),
+        0 0 18px 2px rgba(0,180,216,0.25),
+        0 0 60px rgba(0,180,216,0.08);
+    }
+
+    /* ZONE 1: Header - 11.4% */
+    .card-header {
+      flex: 0 0 11.4%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 8px;
+      background: linear-gradient(90deg, rgba(0,180,216,0.18) 0%, transparent 70%);
+      border-bottom: 1px solid rgba(0,180,216,0.2);
+    }
+    .pos-badge {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--primary);
+      color: var(--shadow);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .player-name {
+      flex: 1;
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--glow);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .rating {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--primary);
+      color: var(--shadow);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    /* ZONE 2: Portrait - 56% */
+    .card-portrait {
+      flex: 0 0 56%;
+      position: relative;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          var(--shadow) 0px,
+          var(--shadow) 9px,
+          var(--panel) 9px,
+          var(--panel) 18px
+        );
+    }
+    .portrait-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      display: block;
+    }
+    .portrait-bottom-fade {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      background: linear-gradient(to top, var(--bg-dark), transparent);
+    }
+    .kit-swap {
+      position: absolute;
+      top: 7px; right: 7px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,180,216,0.2);
+      background: rgba(0,17,26,0.7);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(0,180,216,0.5);
+      font-size: 11px;
+      cursor: not-allowed;
+      user-select: none;
+    }
+
+    /* ZONE 3: Stats - remaining */
+    .card-stats {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 3px;
+      padding: 5px 6px 6px;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 7px;
+      background: var(--panel);
+      border-radius: 3px;
+      border: 1px solid var(--primary);
+    }
+    .stat-name {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+    }
+    .stat-val {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ice);
+    }
+    .stat-val.sm {
+      font-size: 10px;
+      text-align: right;
+    }
+
+    /* Annotations */
+    .ann {
+      position: absolute;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(0,180,216,0.55);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .h-arrow {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .h-arrow .line {
+      flex: 1;
+      height: 1px;
+      background: rgba(0,180,216,0.35);
+    }
+
+    .palette-strip {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+    .palette-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(0,180,216,0.4);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .swatches { display: flex; gap: 3px; }
+    .swatch {
+      width: 32px; height: 18px;
+      border-radius: 3px;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .swatch-label {
+      position: absolute;
+      bottom: -16px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 7px;
+      color: rgba(0,180,216,0.4);
+      white-space: nowrap;
+    }
+
+    .spec-notes {
+      margin-top: 48px;
+      max-width: 560px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(0,180,216,0.35);
+      line-height: 1.8;
+      text-align: left;
+      border-top: 1px solid rgba(0,180,216,0.12);
+      padding-top: 16px;
+    }
+    .spec-notes span { color: rgba(0,180,216,0.65); }
+  </style>
+</head>
+<body>
+
+  <p class="spec-title">Tacticon Studios - <span>C. Johnson Player Card</span> - Prototype v0.0.01</p>
+
+  <div class="spec-wrap">
+
+    <div class="ann" style="top:28px; left:80px; width:280px;">
+      <div class="h-arrow">
+        <span>&#9668;</span><div class="line"></div>
+        <span style="padding:0 6px;">50 units wide</span>
+        <div class="line"></div><span>&#9658;</span>
+      </div>
+    </div>
+
+    <div class="card">
+
+      <!-- ZONE 1 - HEADER -->
+      <div class="card-header">
+        <span class="pos-badge">GK</span>
+        <span class="player-name">C. Johnson</span>
+        <span class="rating">81</span>
+      </div>
+
+      <!-- ZONE 2 - PORTRAIT -->
+      <div class="card-portrait">
+        <img class="portrait-img" src="../Transparent Headshots/C. Johnson Headshot Transparent.png" alt="C. Johnson portrait">
+        <div class="portrait-bottom-fade"></div>
+        <div class="kit-swap">&#8634;</div>
+      </div>
+
+      <!-- ZONE 3 - STATS -->
+      <div class="card-stats">
+        <div class="stat"><span class="stat-name">L. Foot</span><span class="stat-val">87</span></div>
+        <div class="stat"><span class="stat-name">R. Foot</span><span class="stat-val">80</span></div>
+        <div class="stat"><span class="stat-name">Control</span><span class="stat-val">96</span></div>
+        <div class="stat"><span class="stat-name">Shooting</span><span class="stat-val">65</span></div>
+        <div class="stat"><span class="stat-name">Speed</span><span class="stat-val">65</span></div>
+        <div class="stat"><span class="stat-name">Tackle</span><span class="stat-val">93</span></div>
+      </div>
+
+    </div>
+
+    <!-- Right-side zone annotations -->
+    <div style="position:absolute; right:12px; top:48px; height:409px; display:flex; flex-direction:column; align-items:center;">
+      <div style="width:1px; flex:1; background:rgba(0,180,216,0.2);"></div>
+      <span style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,180,216,0.5); writing-mode:vertical-rl; padding:6px 0; letter-spacing:0.1em;">73 units tall</span>
+      <div style="width:1px; flex:1; background:rgba(0,180,216,0.2);"></div>
+    </div>
+
+    <div style="position:absolute; left:368px; top:48px; height:46px; display:flex; flex-direction:column; align-items:flex-start; gap:0;">
+      <div style="display:flex; align-items:center; height:100%;">
+        <div style="width:1px; height:100%; background:rgba(0,180,216,0.3);"></div>
+        <div style="display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:2px 0;">
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+        </div>
+        <span style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,180,216,0.55); padding-left:5px; white-space:nowrap;">0.8u - Header: POS | Name | Rating</span>
+      </div>
+    </div>
+
+    <div style="position:absolute; left:368px; top:94px; height:229px; display:flex; flex-direction:column; align-items:flex-start;">
+      <div style="display:flex; align-items:center; height:100%;">
+        <div style="width:1px; height:100%; background:rgba(0,180,216,0.3);"></div>
+        <div style="display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:2px 0;">
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+        </div>
+        <span style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,180,216,0.55); padding-left:5px; white-space:nowrap;">5.6u - Portrait: photo + kit-swap &#8634;</span>
+      </div>
+    </div>
+
+    <div style="position:absolute; left:368px; top:323px; height:133px; display:flex; flex-direction:column; align-items:flex-start;">
+      <div style="display:flex; align-items:center; height:100%;">
+        <div style="width:1px; height:100%; background:rgba(0,180,216,0.3);"></div>
+        <div style="display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:2px 0;">
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+        </div>
+        <span style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,180,216,0.55); padding-left:5px; white-space:nowrap;">3.2u - Stats: 3 rows x 2 cols</span>
+      </div>
+    </div>
+
+    <div class="ann" style="bottom:18px; left:80px; width:280px;">
+      <div class="h-arrow">
+        <span>&#9668;</span><div class="line"></div>
+        <span style="padding:0 6px;">50:73 aspect (280x409px @ 1x)</span>
+        <div class="line"></div><span>&#9658;</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="palette-strip">
+    <p class="palette-label">Arctic Palette - 7 tones</p>
+    <div class="swatches" style="margin-bottom:20px;">
+      <div class="swatch" style="background:#000a10;"><span class="swatch-label">shadow</span></div>
+      <div class="swatch" style="background:#00111a;"><span class="swatch-label">bg-dark</span></div>
+      <div class="swatch" style="background:#00243a;"><span class="swatch-label">panel</span></div>
+      <div class="swatch" style="background:#00b4d8;"><span class="swatch-label">primary</span></div>
+      <div class="swatch" style="background:#48cae4;"><span class="swatch-label">accent</span></div>
+      <div class="swatch" style="background:#7ec8e3;"><span class="swatch-label">ice</span></div>
+      <div class="swatch" style="background:#90e0ef;"><span class="swatch-label">glow</span></div>
+    </div>
+  </div>
+
+  <div class="spec-notes">
+    <span>PROTOTYPE BUILD on DFF/FB card template SoT</span><br>
+    subject        : <span>C. Johnson  (Goalkeeper)</span><br>
+    portrait       : <span>../Transparent Headshots/C. Johnson Headshot Transparent.png</span><br>
+    position badge : <span>GK</span><br>
+    overall rating : <span>81</span><br>
+    kit-swap btn   : <span>&#8634;</span>  top-right of portrait (stubbed)<br>
+    <br>
+    stats:<br>
+    <span>L. Foot   87</span><br>
+    <span>R. Foot   80</span><br>
+    <span>Control   96</span><br>
+    <span>Shooting  65</span><br>
+    <span>Speed     65</span><br>
+    <span>Tackle    93</span><br>
+    <br>
+    aspect ratio   : <span>50:73</span>  (280 x 409px @ 1x)<br>
+    palette        : <span>Arctic 7-tone</span>  (matches Football Card Generic Template)
+  </div>
+
+</body>
+</html>

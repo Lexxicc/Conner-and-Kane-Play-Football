@@ -1,0 +1,99 @@
+{
+  "_schema": {
+    "id": "kebab-case slug, used for DOM keys and file names",
+    "pos": "badge text top-left (GK / DEF / MID / STR / MNGR / custom)",
+    "name": "display name in header centre (UPPERCASE rendered via CSS)",
+    "rating": "string - allows '79', '#143', etc.",
+    "photo": "path to transparent-BG PNG, relative to cards-deck.html",
+    "button": "single-char content for top-right portrait button (↻ default)",
+    "stats": "array of 6 {name, val, sm?} objects - sm:true for long text values",
+    "notes": "optional - free-text description shown in dev mode"
+  },
+  "players": [
+    {
+      "id": "c-johnson",
+      "pos": "GK",
+      "name": "C. Johnson",
+      "rating": "81",
+      "photo": "Transparent Headshots/C. Johnson Headshot Transparent.png",
+      "button": "↻",
+      "stats": [
+        { "name": "L. Foot",  "val": "87" },
+        { "name": "R. Foot",  "val": "80" },
+        { "name": "Control",  "val": "96" },
+        { "name": "Shooting", "val": "65" },
+        { "name": "Speed",    "val": "65" },
+        { "name": "Tackle",   "val": "93" }
+      ],
+      "notes": "Goalkeeper - canonical SoT example player"
+    },
+    {
+      "id": "k-beaver",
+      "pos": "MID",
+      "name": "K. Beaver",
+      "rating": "79",
+      "photo": "Transparent Headshots/K. Beaver Headshot Transparent.png",
+      "button": "↻",
+      "stats": [
+        { "name": "L. Foot",  "val": "63" },
+        { "name": "R. Foot",  "val": "88" },
+        { "name": "Control",  "val": "77" },
+        { "name": "Shooting", "val": "84" },
+        { "name": "Speed",    "val": "92" },
+        { "name": "Tackle",   "val": "68" }
+      ],
+      "notes": "Right midfielder / forward - fast, strong right foot"
+    },
+    {
+      "id": "e-lazic",
+      "pos": "MID",
+      "name": "E. Lazic",
+      "rating": "78",
+      "photo": "Transparent Headshots/E. Lazic Headshot Transparent.png",
+      "button": "↻",
+      "stats": [
+        { "name": "L. Foot",  "val": "68" },
+        { "name": "R. Foot",  "val": "87" },
+        { "name": "Control",  "val": "90" },
+        { "name": "Shooting", "val": "79" },
+        { "name": "Speed",    "val": "74" },
+        { "name": "Tackle",   "val": "71" }
+      ],
+      "notes": "Central midfielder - creative playmaker, strong right foot (was Eryne / Snorlax novelty)"
+    },
+    {
+      "id": "c-morley",
+      "pos": "MNGR",
+      "name": "C. Morley",
+      "rating": "80",
+      "photo": "Transparent Headshots/C. Morley Headshot Transparent.png",
+      "button": "↻",
+      "stats": [
+        { "name": "Strategy",       "val": "88" },
+        { "name": "Discipline",     "val": "82" },
+        { "name": "Motivation",     "val": "79" },
+        { "name": "Substitutions",  "val": "71" },
+        { "name": "Press handling", "val": "84" },
+        { "name": "Flexibility",    "val": "75" }
+      ],
+      "notes": "Manager - MNGR schema (effects shelved), experienced tactician (was Colin Manager / C. Morley novelty)"
+    },
+    {
+      "id": "m-marley",
+      "pos": "STR",
+      "name": "M. Marley",
+      "rating": "80",
+      "photo": "Transparent Headshots/M. Marley Headshot Transparent.png",
+      "button": "↻",
+      "stats": [
+        { "name": "L. Foot",  "val": "77" },
+        { "name": "R. Foot",  "val": "85" },
+        { "name": "Control",  "val": "82" },
+        { "name": "Shooting", "val": "91" },
+        { "name": "Speed",    "val": "79" },
+        { "name": "Tackle",   "val": "63" }
+      ],
+      "notes": "Striker - clinical finisher, strong right foot"
+    }
+  ]
+}

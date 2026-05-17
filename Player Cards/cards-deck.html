@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tacticon Studios - Player Card Deck</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    /*
+    ══════════════════════════════════════════════════════
+      ARCTIC PALETTE - 7 TONES (canonical)
+      bg-dark  #00111a   darkest background
+      shadow   #000a10   deep shadow / inset
+      panel    #00243a   panel fill
+      primary  #00b4d8   borders, accents, glow rings
+      accent   #48cae4   secondary accent
+      ice      #7ec8e3   pale steel-cyan, mid highlight
+      glow     #90e0ef   bright text, highlighted elements
+    ══════════════════════════════════════════════════════
+    */
+    :root {
+      --bg-dark:  #00111a;
+      --shadow:   #000a10;
+      --panel:    #00243a;
+      --primary:  #00b4d8;
+      --accent:   #48cae4;
+      --ice:      #7ec8e3;
+      --glow:     #90e0ef;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #080e12;
+      min-height: 100vh;
+      padding: 60px 40px;
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--glow);
+    }
+
+    .deck-title {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--panel);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .deck-title span { color: var(--primary); }
+    .deck-title em {
+      font-style: normal;
+      color: rgba(0,180,216,0.4);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+    }
+
+    .deck-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, max-content));
+      gap: 48px;
+      justify-content: center;
+      align-items: start;
+    }
+
+    /* ══════════════════════════════════════
+       CARD - 50:73 -> 280 x 409px
+       ══════════════════════════════════════ */
+    .card {
+      width: 280px;
+      height: 409px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-dark);
+      border: 1.5px solid var(--primary);
+      box-shadow:
+        0 0 0 1px var(--shadow),
+        0 0 18px 2px rgba(0,180,216,0.25),
+        0 0 60px rgba(0,180,216,0.08);
+    }
+
+    /* ZONE 1: Header - 11.4% */
+    .card-header {
+      flex: 0 0 11.4%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 8px;
+      background: linear-gradient(90deg, rgba(0,180,216,0.18) 0%, transparent 70%);
+      border-bottom: 1px solid rgba(0,180,216,0.2);
+    }
+    .pos-badge {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--primary);
+      color: var(--shadow);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .player-name {
+      flex: 1;
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--glow);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .rating {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--primary);
+      color: var(--shadow);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    /* ZONE 2: Portrait - 56% */
+    .card-portrait {
+      flex: 0 0 56%;
+      position: relative;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          var(--shadow) 0px,
+          var(--shadow) 9px,
+          var(--panel) 9px,
+          var(--panel) 18px
+        );
+    }
+    .portrait-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      display: block;
+    }
+    .portrait-bottom-fade {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      background: linear-gradient(to top, var(--bg-dark), transparent);
+    }
+    .action-btn {
+      position: absolute;
+      top: 7px; right: 7px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,180,216,0.2);
+      background: rgba(0,17,26,0.7);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(0,180,216,0.5);
+      font-size: 11px;
+      cursor: not-allowed;
+      user-select: none;
+    }
+
+    /* ZONE 3: Stats - flex remaining */
+    .card-stats {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 3px;
+      padding: 5px 6px 6px;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 7px;
+      background: var(--panel);
+      border-radius: 3px;
+      border: 1px solid var(--primary);
+    }
+    .stat-name {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+    }
+    .stat-val {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ice);
+    }
+    .stat-val.sm {
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .card-id-tag {
+      margin-top: 12px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: rgba(0,180,216,0.4);
+      text-align: center;
+      letter-spacing: 0.15em;
+    }
+
+    .error {
+      color: #ff6b6b;
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="deck-title">
+    Tacticon Studios - <span>Player Card Deck</span> - data-driven<br>
+    <em>edit players.json or the inline data block below</em>
+  </p>
+
+  <div class="deck-grid" id="deck"></div>
+
+  <!-- ══ PLAYER DATA - inline (mirror of players.json) ══ -->
+  <script type="application/json" id="players-data">
+  {
+    "players": [
+      {
+        "id": "c-johnson",
+        "pos": "GK",
+        "name": "C. Johnson",
+        "rating": "81",
+        "photo": "Transparent Headshots/C. Johnson Headshot Transparent.png",
+        "button": "↻",
+        "stats": [
+          { "name": "L. Foot",  "val": "87" },
+          { "name": "R. Foot",  "val": "80" },
+          { "name": "Control",  "val": "96" },
+          { "name": "Shooting", "val": "65" },
+          { "name": "Speed",    "val": "65" },
+          { "name": "Tackle",   "val": "93" }
+        ]
+      },
+      {
+        "id": "k-beaver",
+        "pos": "MID",
+        "name": "K. Beaver",
+        "rating": "79",
+        "photo": "Transparent Headshots/K. Beaver Headshot Transparent.png",
+        "button": "↻",
+        "stats": [
+          { "name": "L. Foot",  "val": "63" },
+          { "name": "R. Foot",  "val": "88" },
+          { "name": "Control",  "val": "77" },
+          { "name": "Shooting", "val": "84" },
+          { "name": "Speed",    "val": "92" },
+          { "name": "Tackle",   "val": "68" }
+        ]
+      },
+      {
+        "id": "e-lazic",
+        "pos": "MID",
+        "name": "E. Lazic",
+        "rating": "78",
+        "photo": "Transparent Headshots/E. Lazic Headshot Transparent.png",
+        "button": "↻",
+        "stats": [
+          { "name": "L. Foot",  "val": "68" },
+          { "name": "R. Foot",  "val": "87" },
+          { "name": "Control",  "val": "90" },
+          { "name": "Shooting", "val": "79" },
+          { "name": "Speed",    "val": "74" },
+          { "name": "Tackle",   "val": "71" }
+        ]
+      },
+      {
+        "id": "c-morley",
+        "pos": "MNGR",
+        "name": "C. Morley",
+        "rating": "80",
+        "photo": "Transparent Headshots/C. Morley Headshot Transparent.png",
+        "button": "↻",
+        "stats": [
+          { "name": "Strategy",       "val": "88" },
+          { "name": "Discipline",     "val": "82" },
+          { "name": "Motivation",     "val": "79" },
+          { "name": "Substitutions",  "val": "71" },
+          { "name": "Press handling", "val": "84" },
+          { "name": "Flexibility",    "val": "75" }
+        ]
+      },
+      {
+        "id": "m-marley",
+        "pos": "STR",
+        "name": "M. Marley",
+        "rating": "80",
+        "photo": "Transparent Headshots/M. Marley Headshot Transparent.png",
+        "button": "↻",
+        "stats": [
+          { "name": "L. Foot",  "val": "77" },
+          { "name": "R. Foot",  "val": "85" },
+          { "name": "Control",  "val": "82" },
+          { "name": "Shooting", "val": "91" },
+          { "name": "Speed",    "val": "79" },
+          { "name": "Tackle",   "val": "63" }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <script>
+    // ── escape any user-supplied strings ──
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ── render a single player into a card element ──
+    function renderCard(p) {
+      const stats = (p.stats || []).slice(0, 6).map(s => `
+        <div class="stat">
+          <span class="stat-name">${esc(s.name)}</span>
+          <span class="stat-val${s.sm ? ' sm' : ''}">${esc(s.val)}</span>
+        </div>
+      `).join('');
+
+      const portraitImg = p.photo
+        ? `<img class="portrait-img" src="${esc(p.photo)}" alt="${esc(p.name)} portrait">`
+        : '';
+
+      return `
+        <div class="card-wrap">
+          <div class="card">
+            <div class="card-header">
+              <span class="pos-badge">${esc(p.pos)}</span>
+              <span class="player-name">${esc(p.name)}</span>
+              <span class="rating">${esc(p.rating)}</span>
+            </div>
+            <div class="card-portrait">
+              ${portraitImg}
+              <div class="portrait-bottom-fade"></div>
+              <div class="action-btn">${esc(p.button || '↻')}</div>
+            </div>
+            <div class="card-stats">
+              ${stats}
+            </div>
+          </div>
+          <div class="card-id-tag">${esc(p.id)}</div>
+        </div>
+      `;
+    }
+
+    // ── load + render: try players.json, fall back to inline ──
+    async function loadDeck() {
+      let data;
+      try {
+        const res = await fetch('players.json');
+        if (!res.ok) throw new Error('fetch failed');
+        data = await res.json();
+      } catch (e) {
+        const inline = document.getElementById('players-data').textContent;
+        data = JSON.parse(inline);
+      }
+
+      const deck = document.getElementById('deck');
+      if (!data || !Array.isArray(data.players) || data.players.length === 0) {
+        deck.innerHTML = '<p class="error">no players in data file</p>';
+        return;
+      }
+      deck.innerHTML = data.players.map(renderCard).join('');
+    }
+
+    loadDeck();
+  </script>
+
+</body>
+</html>

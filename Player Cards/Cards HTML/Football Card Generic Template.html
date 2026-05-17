@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>J. Doe - TEST 50 - Generic Player Card Template</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    /*
+    ══════════════════════════════════════════════════════
+      ARCTIC PALETTE — 7 TONES (canonical)
+      bg-dark  #00111a   darkest background
+      shadow   #000a10   deep shadow / inset
+      panel    #00243a   panel fill
+      primary  #00b4d8   borders, accents, glow rings
+      accent   #48cae4   secondary accent
+      ice      #7ec8e3   pale steel-cyan, mid highlight
+      glow     #90e0ef   bright text, highlighted elements
+    ══════════════════════════════════════════════════════
+    */
+    :root {
+      --bg-dark:  #00111a;
+      --shadow:   #000a10;
+      --panel:    #00243a;
+      --primary:  #00b4d8;
+      --accent:   #48cae4;
+      --ice:      #7ec8e3;
+      --glow:     #90e0ef;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #080e12;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    /* ── spec page title ── */
+    .spec-title {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--panel);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .spec-title span { color: var(--primary); }
+
+    /* ── outer annotation wrapper ── */
+    .spec-wrap {
+      position: relative;
+      /* card is 280px wide; annotation space either side */
+      padding: 48px 100px 48px 80px;
+    }
+
+    /* ══════════════════════════════════════
+       CARD — 50:73 → 280 × 409px
+       ══════════════════════════════════════ */
+    .card {
+      width: 280px;
+      height: 409px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-dark);
+      border: 1.5px solid var(--primary);
+      box-shadow:
+        0 0 0 1px var(--shadow),
+        0 0 18px 2px rgba(0,180,216,0.25),
+        0 0 60px rgba(0,180,216,0.08);
+    }
+
+    /* ── ZONE 1: Header — 11.4% (~47px) ── */
+    .card-header {
+      flex: 0 0 11.4%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 8px;
+      background: linear-gradient(90deg, rgba(0,180,216,0.18) 0%, transparent 70%);
+      border-bottom: 1px solid rgba(0,180,216,0.2);
+    }
+    .pos-badge {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--primary);
+      color: var(--shadow);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .player-name {
+      flex: 1;
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--glow);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .rating {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: var(--primary);
+      color: var(--shadow);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    /* ── ZONE 2: Portrait — 56% (~229px), absorbed old clubs strip ── */
+    .card-portrait {
+      flex: 0 0 56%;
+      position: relative;
+      overflow: hidden;
+      /* dark striped pitch - Arctic palette (shadow + panel for more contrast) */
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          var(--shadow) 0px,
+          var(--shadow) 9px,
+          var(--panel) 9px,
+          var(--panel) 18px
+        );
+    }
+    .portrait-svg {
+      width: 100%;
+      height: 100%;
+    }
+    .portrait-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+      display: block;
+    }
+    .portrait-bottom-fade {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      background: linear-gradient(to top, var(--bg-dark), transparent);
+    }
+    .kit-swap {
+      position: absolute;
+      top: 7px; right: 7px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,180,216,0.2);
+      background: rgba(0,17,26,0.7);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(0,180,216,0.25);
+      font-size: 11px;
+      cursor: not-allowed;
+    }
+
+    /* ── ZONE 3: Stats — remaining ~32.6% (clubs strip removed 2026-05-13) ── */
+    .card-stats {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 3px;
+      padding: 5px 6px 6px;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 7px;
+      background: var(--panel);
+      border-radius: 3px;
+      border: 1px solid var(--primary);
+    }
+    .stat-name {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+    }
+    .stat-val {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ice);
+    }
+
+    /* ══════════════════════════════════════
+       SPEC ANNOTATIONS
+       Drawn around the card using absolute
+       positioning relative to .spec-wrap
+       ══════════════════════════════════════ */
+    .ann {
+      position: absolute;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(0,180,216,0.55);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* horizontal arrow line helper */
+    .h-arrow {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .h-arrow .line {
+      flex: 1;
+      height: 1px;
+      background: rgba(0,180,216,0.35);
+    }
+
+    /* vertical bracket helper */
+    .v-bracket {
+      position: absolute;
+      right: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .v-bracket .vline {
+      width: 1px;
+      background: rgba(0,180,216,0.35);
+    }
+    .v-bracket .vlabel {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      color: rgba(0,180,216,0.6);
+      writing-mode: horizontal-tb;
+      padding: 2px 4px;
+      white-space: nowrap;
+    }
+    .tick {
+      width: 6px;
+      height: 1px;
+      background: rgba(0,180,216,0.35);
+    }
+
+    /* ── palette swatch strip ── */
+    .palette-strip {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+    .palette-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(0,180,216,0.4);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .swatches {
+      display: flex;
+      gap: 3px;
+    }
+    .swatch {
+      width: 32px;
+      height: 18px;
+      border-radius: 3px;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .swatch-label {
+      position: absolute;
+      bottom: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 7px;
+      color: rgba(0,180,216,0.4);
+      white-space: nowrap;
+    }
+
+    /* ── spec notes block ── */
+    .spec-notes {
+      margin-top: 48px;
+      max-width: 560px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(0,180,216,0.35);
+      line-height: 1.8;
+      text-align: left;
+      border-top: 1px solid rgba(0,180,216,0.12);
+      padding-top: 16px;
+    }
+    .spec-notes span { color: rgba(0,180,216,0.65); }
+  </style>
+</head>
+<body>
+
+  <p class="spec-title">Tacticon Studios — <span>DFF / FB Player Card</span> — Generic Template v0.0.01</p>
+
+  <div class="spec-wrap">
+
+    <!-- ══ TOP ANNOTATION: overall width 50u ══ -->
+    <div class="ann" style="top:28px; left:80px; width:280px;">
+      <div class="h-arrow">
+        <span>◄</span><div class="line"></div>
+        <span style="padding:0 6px;">50 units wide</span>
+        <div class="line"></div><span>►</span>
+      </div>
+    </div>
+
+    <!-- ══ THE CARD ══ -->
+    <div class="card">
+
+      <!-- ZONE 1 — HEADER -->
+      <div class="card-header">
+        <span class="pos-badge">TEST</span>
+        <span class="player-name">J. Doe</span>
+        <span class="rating">50</span>
+      </div>
+
+      <!-- ZONE 2 — PORTRAIT (empty - drop transparent-BG headshot here) -->
+      <div class="card-portrait">
+        <!-- <img class="portrait-img" src="[Player] Headshot Transparent.png" alt="[Player] portrait"> -->
+        <div class="portrait-bottom-fade"></div>
+        <div class="kit-swap">↻</div>
+      </div>
+
+      <!-- ZONE 3 — STATS -->
+      <div class="card-stats">
+        <div class="stat"><span class="stat-name">L. Foot</span><span class="stat-val">50</span></div>
+        <div class="stat"><span class="stat-name">R. Foot</span><span class="stat-val">50</span></div>
+        <div class="stat"><span class="stat-name">Control</span><span class="stat-val">50</span></div>
+        <div class="stat"><span class="stat-name">Shooting</span><span class="stat-val">50</span></div>
+        <div class="stat"><span class="stat-name">Speed</span><span class="stat-val">50</span></div>
+        <div class="stat"><span class="stat-name">Tackle</span><span class="stat-val">50</span></div>
+      </div>
+
+    </div><!-- /card -->
+
+    <!-- ══ RIGHT-SIDE ZONE ANNOTATIONS ══ -->
+
+    <!-- full height = 73u -->
+    <div style="position:absolute; right:12px; top:48px; height:409px; display:flex; flex-direction:column; align-items:center;">
+      <div style="width:1px; flex:1; background:rgba(0,180,216,0.2);"></div>
+      <span style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,180,216,0.5); writing-mode:vertical-rl; padding:6px 0; letter-spacing:0.1em;">73 units tall</span>
+      <div style="width:1px; flex:1; background:rgba(0,180,216,0.2);"></div>
+    </div>
+
+    <!-- Zone 1 bracket: header 11.4% -->
+    <div style="position:absolute; left:368px; top:48px; height:46px; display:flex; flex-direction:column; align-items:flex-start; gap:0;">
+      <div style="display:flex; align-items:center; height:100%;">
+        <div style="width:1px; height:100%; background:rgba(0,180,216,0.3);"></div>
+        <div style="display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:2px 0;">
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+        </div>
+        <span style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,180,216,0.55); padding-left:5px; white-space:nowrap;">0.8u — Header: POS | Name | Rating</span>
+      </div>
+    </div>
+
+    <!-- Zone 2 bracket: portrait 56% (absorbed clubs) -->
+    <div style="position:absolute; left:368px; top:94px; height:229px; display:flex; flex-direction:column; align-items:flex-start;">
+      <div style="display:flex; align-items:center; height:100%;">
+        <div style="width:1px; height:100%; background:rgba(0,180,216,0.3);"></div>
+        <div style="display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:2px 0;">
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+        </div>
+        <span style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,180,216,0.55); padding-left:5px; white-space:nowrap;">5.6u — Portrait: photo + kit-swap ↻ (clubs strip merged in 2026-05-13)</span>
+      </div>
+    </div>
+
+    <!-- Zone 3 bracket: stats remaining -->
+    <div style="position:absolute; left:368px; top:323px; height:133px; display:flex; flex-direction:column; align-items:flex-start;">
+      <div style="display:flex; align-items:center; height:100%;">
+        <div style="width:1px; height:100%; background:rgba(0,180,216,0.3);"></div>
+        <div style="display:flex; flex-direction:column; justify-content:space-between; height:100%; padding:2px 0;">
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+          <div style="width:6px; height:1px; background:rgba(0,180,216,0.3);"></div>
+        </div>
+        <span style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,180,216,0.55); padding-left:5px; white-space:nowrap;">3.2u — Stats: 3 rows × 2 cols (L/R, Ctrl/Shoot, Spd/Tck)</span>
+      </div>
+    </div>
+
+    <!-- ══ BOTTOM ANNOTATION: inner content width ══ -->
+    <div class="ann" style="bottom:18px; left:80px; width:280px;">
+      <div class="h-arrow">
+        <span>◄</span><div class="line"></div>
+        <span style="padding:0 6px;">50:73 aspect (280×409px @ 1x)</span>
+        <div class="line"></div><span>►</span>
+      </div>
+    </div>
+
+  </div><!-- /spec-wrap -->
+
+  <!-- ══ ARCTIC PALETTE STRIP ══ -->
+  <div class="palette-strip">
+    <p class="palette-label">Arctic Palette — 7 tones</p>
+    <div class="swatches" style="margin-bottom:20px;">
+      <div class="swatch" style="background:#000a10;"><span class="swatch-label">shadow</span></div>
+      <div class="swatch" style="background:#00111a;"><span class="swatch-label">bg-dark</span></div>
+      <div class="swatch" style="background:#00243a;"><span class="swatch-label">panel</span></div>
+      <div class="swatch" style="background:#00b4d8;"><span class="swatch-label">primary</span></div>
+      <div class="swatch" style="background:#48cae4;"><span class="swatch-label">accent</span></div>
+      <div class="swatch" style="background:#7ec8e3;"><span class="swatch-label">ice</span></div>
+      <div class="swatch" style="background:#90e0ef;"><span class="swatch-label">glow</span></div>
+    </div>
+  </div>
+
+  <!-- ══ SPEC NOTES ══ -->
+  <div class="spec-notes">
+    <span>CARD SPEC — for reproduction by any AI agent</span><br>
+    aspect ratio  : <span>50:73</span>  (physical: 2.5" × 3.5" / 63.5mm × 88.9mm — standard TCG)<br>
+    reference px  : <span>280 × 409px @ 1x</span>  (scale freely, keep ratio)<br>
+    zones (% h)   : header <span>11.4%</span>  |  portrait <span>56%</span>  |  stats <span>flex remaining</span><br>
+    stats layout  : <span>3 rows × 2 cols</span>  - L.Foot/R.Foot, Control/Shooting, Speed/Tackle<br>
+    stat range    : <span>1-99</span><br>
+    positions     : <span>GK / DEF / MID / STR</span>  (each gets own accent colour)<br>
+    palette       : <span>Arctic 7-tone</span>  - shadow #000a10, bg-dark #00111a, panel #00243a,<br>
+                    primary <span>#00b4d8</span>, accent <span>#48cae4</span>, ice <span>#7ec8e3</span>, glow <span>#90e0ef</span><br>
+    kit-swap btn  : <span>↻</span>  top-right of portrait - toggles home/away kit - stubbed<br>
+    border glow   : <span>box-shadow: 0 0 18px 2px rgba(0,180,216,0.25)</span><br>
+    fonts         : <span>Oswald 700</span> (headers, values)  |  <span>Rajdhani 600</span> (body)<br>
+    source file   : <span>Assets/Card Templates/Base Card Template SOT.html</span><br>
+    history       : clubs strip removed 2026-05-13, portrait absorbed its 8% (now 56%).<br>
+    <br>
+    <span>── HEADSHOT PREPARATION (REQUIRED before adding a player) ──</span><br>
+    The portrait zone uses a stripe pattern background. The player photo MUST have a<br>
+    transparent background so the stripes show around the silhouette. Solid-background<br>
+    photos will render as a black square over the stripes.<br>
+    <br>
+    canonical example : <span>Headshot Lexxicc GK Player (Me).png</span>  (C. Johnson / GK 81)<br>
+    css used          : <span>object-fit: cover; object-position: center 25%;</span>  — no blend mode<br>
+    <br>
+    if source photo has a solid background, run background removal first:<br>
+    <span>python3</span> flood-fill from all 4 edges, threshold R/G/B &lt;= 40 (catches near-black<br>
+    studio backgrounds without touching dark navy kit). Script:<br>
+    <br>
+    <span>from PIL import Image</span><br>
+    <span>from collections import deque</span><br>
+    <span>img = Image.open("Headshot.png").convert("RGBA")</span><br>
+    <span>px = img.load()</span><br>
+    <span>w, h = img.size</span><br>
+    <span>def is_bg(p): return p[0] &lt;= 40 and p[1] &lt;= 40 and p[2] &lt;= 40</span><br>
+    <span>queue = deque()</span><br>
+    <span>visited = [[False]*h for _ in range(w)]</span><br>
+    <span>for x in range(w):      # seed top + bottom edges</span><br>
+    <span>  for y in [0, h-1]:</span><br>
+    <span>    if not visited[x][y] and is_bg(px[x,y]):</span><br>
+    <span>      queue.append((x,y)); visited[x][y] = True</span><br>
+    <span>for y in range(h):      # seed left + right edges</span><br>
+    <span>  for x in [0, w-1]:</span><br>
+    <span>    if not visited[x][y] and is_bg(px[x,y]):</span><br>
+    <span>      queue.append((x,y)); visited[x][y] = True</span><br>
+    <span>while queue:</span><br>
+    <span>  x, y = queue.popleft()</span><br>
+    <span>  r,g,b,a = px[x,y]; px[x,y] = (r,g,b,0)  # make transparent</span><br>
+    <span>  for dx,dy in [(-1,0),(1,0),(0,-1),(0,1)]:</span><br>
+    <span>    nx,ny = x+dx, y+dy</span><br>
+    <span>    if 0&lt;=nx&lt;w and 0&lt;=ny&lt;h and not visited[nx][ny] and is_bg(px[nx,ny]):</span><br>
+    <span>      visited[nx][ny]=True; queue.append((nx,ny))</span><br>
+    <span>img.save("Headshot Transparent.png")</span><br>
+    <br>
+    save output as <span>*Headshot Transparent.png</span> alongside the original. Point the card<br>
+    &lt;img src&gt; at the transparent version. Original is kept for reference.
+  </div>
+
+</body>
+</html>
