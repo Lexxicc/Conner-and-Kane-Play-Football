@@ -293,6 +293,44 @@
     }
     #picker-cards-row::-webkit-scrollbar { display: none; }
 
+    /* ── MANAGER AREA ── */
+    #manager-area {
+      flex-shrink: 0; display: flex; align-items: center; gap: 10px;
+      padding: 6px 12px; min-height: 44px;
+      background: var(--color-panel); border-top: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer; touch-action: manipulation;
+    }
+    #manager-picker {
+      position: fixed; left: 50%; bottom: 16px;
+      transform: translateX(-50%) translateY(16px);
+      width: min(94vw, 460px);
+      background: var(--color-panel); border: 2px solid #d97706;
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 0 0 4px rgba(0,0,0,0.35);
+      overflow: hidden; z-index: 60;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    #manager-picker:not(.closed) {
+      opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0);
+    }
+    #manager-picker-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 10px; border-bottom: 1px solid #78350f;
+    }
+    #manager-picker-label { font-family: 'VT323', monospace; font-size: 1rem; color: var(--color-glow); }
+    #manager-picker-close-btn {
+      font-family: 'VT323', monospace; font-size: 1.1rem; color: #d97706;
+      background: transparent; border: none; cursor: pointer; padding: 2px 6px;
+      touch-action: manipulation;
+    }
+    #manager-cards-row {
+      display: flex; gap: 7px; padding: 8px 10px; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #manager-cards-row::-webkit-scrollbar { display: none; }
+    .collector-card.mngr-selected { box-shadow: 0 0 0 2px #d97706, 0 6px 18px rgba(0,0,0,0.5); }
+
     /* ── PHASE AREA ── */
     #phase-area {
       flex-shrink: 0; display: flex; align-items: center;
@@ -333,7 +371,8 @@
     .pos-gk  .card-pos-stripe { background: linear-gradient(90deg, #92400e, #d97706); }
     .pos-def .card-pos-stripe { background: linear-gradient(90deg, #1e3a8a, #3b82f6); }
     .pos-mid .card-pos-stripe { background: linear-gradient(90deg, #166534, #22c55e); }
-    .pos-str .card-pos-stripe { background: linear-gradient(90deg, #7f1d1d, #ef4444); }
+    .pos-str  .card-pos-stripe { background: linear-gradient(90deg, #7f1d1d, #ef4444); }
+    .pos-mngr .card-pos-stripe { background: linear-gradient(90deg, #78350f, #d97706); }
     .card-top { display: flex; align-items: center; justify-content: space-between; padding: 5px 5px 2px; margin-bottom: 0; }
     .card-pos-badge {
       font-family: 'VT323', monospace; font-size: 0.62rem; padding: 1px 4px;
@@ -342,7 +381,8 @@
     .pos-gk  .card-pos-badge { background: #92400e; }
     .pos-def .card-pos-badge { background: #1e3a8a; }
     .pos-mid .card-pos-badge { background: #166534; }
-    .pos-str .card-pos-badge { background: #7f1d1d; }
+    .pos-str  .card-pos-badge { background: #7f1d1d; }
+    .pos-mngr .card-pos-badge { background: #78350f; }
     .card-rating { font-family: 'VT323', monospace; font-size: 1.3rem; color: #fbbf24; text-shadow: 0 0 6px rgba(251,191,36,0.4); }
     .card-name {
       font-family: 'VT323', monospace; font-size: 0.88rem; color: #fff;
@@ -351,9 +391,10 @@
     }
     .card-stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; padding: 0 4px; }
     .cs-item { display: flex; flex-direction: column; align-items: center; padding: 2px 1px; border-radius: 3px; background: rgba(255,255,255,0.04); }
-    .cs-item.cs-key { box-shadow: inset 0 0 0 1.5px #fbbf24; background: rgba(251,191,36,0.08); }
+    .cs-item.cs-key  { box-shadow: inset 0 0 0 1.5px #fbbf24; background: rgba(251,191,36,0.08); }
     .cs-item.cs-key .cs-abbr { color: #fde68a; opacity: 1; }
-    .cs-item.cs-dim { opacity: 0.3; }
+    .cs-item.cs-dim  { opacity: 0.3; }
+    .cs-item.cs-full { opacity: 1; }
     .cs-abbr { font-family: 'VT323', monospace; font-size: 0.48rem; color: #94a3b8; opacity: 0.9; white-space: nowrap; }
     .cs-val  { font-family: 'VT323', monospace; font-size: 0.78rem; color: #f0fff2; }
 
@@ -618,6 +659,12 @@
       </svg>
     </div>
 
+    <!-- Manager area -->
+    <div id="manager-area" onclick="openManagerPicker()">
+      <span style="font-family:'VT323',monospace;font-size:0.72rem;letter-spacing:0.25em;color:#d97706;opacity:0.8;flex-shrink:0">MANAGER</span>
+      <span style="font-family:'VT323',monospace;font-size:0.85rem;color:var(--color-glow);opacity:0.4">Tap to pick your manager</span>
+    </div>
+
     <!-- Picker panel -->
     <div id="picker-panel" class="closed">
       <div id="picker-header">
@@ -625,6 +672,15 @@
         <button id="picker-close-btn" onclick="closePicker()">✕</button>
       </div>
       <div id="picker-cards-row"></div>
+    </div>
+
+    <!-- Manager picker -->
+    <div id="manager-picker" class="closed">
+      <div id="manager-picker-header">
+        <span id="manager-picker-label">Pick: <strong style="color:#d97706">Manager</strong></span>
+        <button id="manager-picker-close-btn" onclick="closeManagerPicker()">✕</button>
+      </div>
+      <div id="manager-cards-row"></div>
     </div>
 
     <!-- Phase area -->
@@ -883,6 +939,10 @@
       activePosId = null;
       closePicker();
       renderPitch();
+      if (!selectedManager && managerPool.length > 0) {
+        selectedManager = managerPool[0];
+        renderManagerArea();
+      }
       // Dev mode chains all the way through: confirm team -> auto-pick penalty
       // taker (best shooter from the offers) -> confirm penalty setup -> playOut.
       // Skips the "who's taking the penalty" screen entirely.
@@ -946,6 +1006,7 @@
     }
 
     const PATCH_NOTES = [
+      { v:'v0.0.25', date:'2026-05', notes:['MNGR card type introduced: separate manager pool (16 real Premier League-era managers), seeded 3-card pick per game. Manager area sits below the pitch; tap to open amber-themed picker. Stats: Strategy, Discipline, Motivation, Substitutions, Press Handling, Flexibility. Manager pick is required before kick-off. Effects not yet wired - structure only.'] },
       { v:'v0.0.24', date:'2026-05', notes:['super;audit: added modern mobile-web-app-capable meta (deprecated apple-only console warning cleared). No gameplay or logic changes.'] },
       { v:'v0.0.23', date:'2026-05', notes:['Gameplay sequencing: 220ms settle beat added between ball animation and pop-up render on shot/finish/pass/cross (skipped in devMode so step gates remain authoritative).','STR (Striker) colour fix: CSS selectors renamed pos-fwd to pos-str (dead since FWD->STR rename) - red gradient restored on collector cards.','Superaudit cleanup: 51 em-dashes purged across CSS/HTML/JS/patch notes (per workspace rule). Dead v1 scoring engine removed (calcScores, slotProbability, shotRolls, crossReceivedRoll, selectedIdx, showEventPop, score-pops-layer) - 81 lines pruned, file 2201 -> 2120. v2 DFS engine remains authoritative.'] },
       { v:'v0.0.22', date:'2026-05', notes:['Opponents reduced 8 -> 5 (1 GK + 4 DEFs). Keeper holds his line near goal (excluded from drift), gets 2 white glove circles flanking the slot + GK label.','Defenders patrol around home anchors via sin/cos paths: top-left + top-right do horizontal back-and-forth, mid-left loops counter-clockwise, mid-right loops clockwise. Nearest defender chases ball when in range; others lightly bias toward ball if in zone; else pure patrol.','Scoreboard widget replaces goals counter: 3-char ticker + flag + 0:0 + flag + ticker. New TEAM_KEY localStorage (default TAC + AU flag). 10-nation OPP_POOL randomised per match (ENG/GER/FRA/BRA/ARG/ESP/ITA/POR/NED/BEL).','Outcome messages merged: showNarration appends (+N pts) / (-N pts) inline; the floating score-pop sprite removed. Single banner per resolved action.','Earlier in same dev cycle: kit system (home/away primary+accent), dev mode for fast-test, crowd audio rebuilt (brown noise + LFO + clap/cheer bursts), MID R + LONG R repositioned, opp slot size tweaks.'] },
@@ -1211,6 +1272,8 @@
     let friendlyPlayer = null;
     let penaltyTaker = null;
     let penaltyPickerOffers = [];
+    let managerPool = [];
+    let selectedManager = null;
     let opponents = [
         { cx: 140, cy: 32,  role: 'GK',  homeX: 140, homeY: 32,  patrol: 'none',     phase: 0   },
         { cx: 90,  cy: 55,  role: 'DEF', homeX: 90,  homeY: 55,  patrol: 'hori-bf',  phase: 0.0 },
@@ -1343,6 +1406,26 @@
       { name:'Andy Cole',    pos:'STR', rightFoot:80, leftFoot:70, shooting:75, speed:78, control:72, tackle:45 },
     ];
 
+    const ALL_MANAGERS = [
+      { name:'A. Ferguson',   pos:'MNGR', strategy:90, discipline:95, motivation:96, substitutions:82, pressHandling:88, flexibility:80 },
+      { name:'C. Morley',     pos:'MNGR', strategy:88, discipline:92, motivation:94, substitutions:84, pressHandling:86, flexibility:82 },
+      { name:'A. Wenger',     pos:'MNGR', strategy:92, discipline:72, motivation:80, substitutions:78, pressHandling:76, flexibility:92 },
+      { name:'J. Mourinho',   pos:'MNGR', strategy:94, discipline:88, motivation:84, substitutions:86, pressHandling:92, flexibility:68 },
+      { name:'R. Benitez',    pos:'MNGR', strategy:88, discipline:82, motivation:76, substitutions:84, pressHandling:90, flexibility:74 },
+      { name:'S. Eriksson',   pos:'MNGR', strategy:78, discipline:70, motivation:80, substitutions:82, pressHandling:72, flexibility:84 },
+      { name:'K. Keegan',     pos:'MNGR', strategy:62, discipline:55, motivation:92, substitutions:65, pressHandling:58, flexibility:64 },
+      { name:'H. Redknapp',   pos:'MNGR', strategy:72, discipline:62, motivation:84, substitutions:88, pressHandling:74, flexibility:82 },
+      { name:'S. Allardyce',  pos:'MNGR', strategy:76, discipline:86, motivation:72, substitutions:78, pressHandling:84, flexibility:56 },
+      { name:'D. Moyes',      pos:'MNGR', strategy:74, discipline:83, motivation:80, substitutions:72, pressHandling:78, flexibility:68 },
+      { name:'B. Robson',     pos:'MNGR', strategy:78, discipline:72, motivation:86, substitutions:76, pressHandling:70, flexibility:74 },
+      { name:"M. O'Neill",    pos:'MNGR', strategy:72, discipline:80, motivation:88, substitutions:74, pressHandling:76, flexibility:70 },
+      { name:'G. Strachan',   pos:'MNGR', strategy:74, discipline:78, motivation:82, substitutions:76, pressHandling:74, flexibility:72 },
+      { name:'A. Curbishley', pos:'MNGR', strategy:70, discipline:78, motivation:76, substitutions:74, pressHandling:74, flexibility:72 },
+      { name:'M. McCarthy',   pos:'MNGR', strategy:64, discipline:80, motivation:78, substitutions:70, pressHandling:72, flexibility:62 },
+      { name:'T. Pulis',      pos:'MNGR', strategy:68, discipline:86, motivation:74, substitutions:70, pressHandling:82, flexibility:54 },
+      { name:'P. Jewell',     pos:'MNGR', strategy:68, discipline:72, motivation:76, substitutions:72, pressHandling:68, flexibility:70 },
+    ];
+
     // ─── GENERATE PLAYERS ────────────────────────────────────────────────────────
     function generatePlayers(rng) {
       const arr = ALL_PLAYERS.slice();
@@ -1358,6 +1441,15 @@
     // one shared GK for all shot/finish actions. Same seed → identical opposition,
     // so async same-seed competitive play is fair.
     let opposition = null;
+    function generateManagers(rng) {
+      const arr = ALL_MANAGERS.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr.slice(0, 3);
+    }
+
     function generateOpposition(rng) {
       const gks  = ALL_PLAYERS.filter(p => p.pos === 'GK');
       const defs = ALL_PLAYERS.filter(p => p.pos === 'DEF');
@@ -1481,9 +1573,12 @@
           <text x="${fcx}" y="${fcy + 8}" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.7)">KICK-OFF</text>
         </g>`;
       }
+      let defCount = 0;
       opponents.forEach((op, i) => {
         const isGK = op.role === 'GK';
-        const label = isGK ? 'GK' : 'OPP';
+        const topLabel = 'OPP';
+        const botLabel = devMode ? (isGK ? 'GK' : `${++defCount}`) : (isGK ? 'GK' : '');
+        const textY = (devMode || isGK) ? (op.cy - 2).toFixed(1) : (op.cy + 3).toFixed(1);
         const gloves = isGK
           ? `<circle cx="${(op.cx-19).toFixed(1)}" cy="${(op.cy+6).toFixed(1)}" r="4" fill="#fff" stroke="rgba(0,0,0,0.4)" stroke-width="0.7"/>
              <circle cx="${(op.cx+19).toFixed(1)}" cy="${(op.cy+6).toFixed(1)}" r="4" fill="#fff" stroke="rgba(0,0,0,0.4)" stroke-width="0.7"/>`
@@ -1492,7 +1587,8 @@
           <circle cx="${op.cx.toFixed(1)}" cy="${op.cy.toFixed(1)}" r="26" fill="rgba(0,0,0,0.18)"/>
           <circle cx="${op.cx.toFixed(1)}" cy="${op.cy.toFixed(1)}" r="22" fill="#c1121f" stroke="rgba(255,180,180,0.6)" stroke-width="1.5"/>
           ${gloves}
-          <text x="${op.cx.toFixed(1)}" y="${(op.cy+3).toFixed(1)}" text-anchor="middle" font-family="VT323,monospace" font-size="9.5" fill="rgba(255,255,255,0.85)">${label}</text>
+          <text x="${op.cx.toFixed(1)}" y="${textY}" text-anchor="middle" font-family="VT323,monospace" font-size="9.5" fill="rgba(255,255,255,0.85)">${devMode ? topLabel : (isGK ? 'GK' : 'OPP')}</text>
+          ${botLabel ? `<text x="${op.cx.toFixed(1)}" y="${(op.cy + 9).toFixed(1)}" text-anchor="middle" font-family="VT323,monospace" font-size="7" fill="rgba(255,255,255,0.6)">${botLabel}</text>` : ''}
         </g>`;
       });
       layer.innerHTML = html;
@@ -1504,10 +1600,17 @@
       const btn    = document.getElementById('confirm-btn');
       const scorEl = document.getElementById('score-display');
       if (!hint || !btn || !scorEl) return;
-      const allFilled = SLOT_IDS.every(id => !!slots[id]);
+      const positionsFilled = SLOT_IDS.every(id => !!slots[id]);
+      const allFilled = positionsFilled && !!selectedManager;
       if (gamePhase === 'selection') {
         const filled = SLOT_IDS.filter(id => !!slots[id]).length;
-        hint.innerText = allFilled ? 'All positions filled - ready to kick off!' : `${filled} / 6 positions filled`;
+        if (!positionsFilled) {
+          hint.innerText = `${filled} / 6 positions filled`;
+        } else if (!selectedManager) {
+          hint.innerText = 'Now pick your manager';
+        } else {
+          hint.innerText = 'Squad ready - kick off!';
+        }
         btn.classList.toggle('visible', allFilled);
         scorEl.innerText = `? pts`;
       } else if (gamePhase === 'playOut') {
@@ -1613,9 +1716,83 @@
       renderPitch();
     }
 
+    // ─── MANAGER PICKER ──────────────────────────────────────────────────────────
+    const MNGR_STATS = [
+      { key:'strategy',      label:'Strategy'   },
+      { key:'discipline',    label:'Discipline'  },
+      { key:'motivation',    label:'Motivation'  },
+      { key:'substitutions', label:'Subs'        },
+      { key:'pressHandling', label:'Press Hdlg'  },
+      { key:'flexibility',   label:'Flexibility' },
+    ];
+
+    function renderManagerArea() {
+      const area = document.getElementById('manager-area');
+      if (!area) return;
+      if (!selectedManager) {
+        area.innerHTML = `
+          <span style="font-family:'VT323',monospace;font-size:0.72rem;letter-spacing:0.25em;color:#d97706;opacity:0.8;flex-shrink:0">MANAGER</span>
+          <span style="font-family:'VT323',monospace;font-size:0.85rem;color:var(--color-glow);opacity:0.4">Tap to pick your manager</span>`;
+        return;
+      }
+      const m = selectedManager;
+      const overall = Math.round((m.strategy + m.discipline + m.motivation + m.substitutions + m.pressHandling + m.flexibility) / 6);
+      area.innerHTML = `
+        <span style="font-family:'VT323',monospace;font-size:0.72rem;letter-spacing:0.25em;color:#d97706;opacity:0.8;flex-shrink:0">MANAGER</span>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <span style="font-family:'VT323',monospace;font-size:0.72rem;background:#78350f;color:#fde68a;padding:1px 5px;border-radius:3px;letter-spacing:0.05em">MNGR</span>
+          <span style="font-family:'VT323',monospace;font-size:0.95rem;color:#f0fff2;flex:1">${escHtml(m.name)}</span>
+          <span style="font-family:'VT323',monospace;font-size:1.1rem;color:#fbbf24">${overall}</span>
+        </div>`;
+    }
+
+    function openManagerPicker() {
+      if (gamePhase !== 'selection') return;
+      if (!timerStarted) startTimer();
+      const row = document.getElementById('manager-cards-row');
+      row.innerHTML = managerPool.map((m, i) => {
+        const overall = Math.round((m.strategy + m.discipline + m.motivation + m.substitutions + m.pressHandling + m.flexibility) / 6);
+        const isSelected = selectedManager === m;
+        const statsHtml = MNGR_STATS.map(s =>
+          `<div class="cs-item cs-full"><span class="cs-abbr">${escHtml(s.label)}</span><span class="cs-val">${m[s.key]}</span></div>`
+        ).join('');
+        return `<div class="collector-card pos-mngr${isSelected ? ' mngr-selected' : ''}" onclick="pickManager(${i})">
+          <div class="card-pos-stripe"></div>
+          <div class="card-top">
+            <span class="card-pos-badge pos-mngr">MNGR</span>
+            <span class="card-rating">${overall}</span>
+          </div>
+          <div style="display:flex;justify-content:center;align-items:flex-end;height:46px;margin:2px 0 0;overflow:hidden">
+            <svg viewBox="0 0 60 52" xmlns="http://www.w3.org/2000/svg" style="width:54px;height:46px">
+              <ellipse cx="30" cy="15" rx="11" ry="13" fill="rgba(0,0,0,0.32)"/>
+              <path d="M4,52 Q8,32 30,30 Q52,32 56,52 Z" fill="rgba(0,0,0,0.32)"/>
+            </svg>
+          </div>
+          <div class="card-name">${escHtml(m.name)}</div>
+          <div class="card-stats-grid">${statsHtml}</div>
+        </div>`;
+      }).join('');
+      document.getElementById('manager-picker').classList.remove('closed');
+    }
+
+    function closeManagerPicker() {
+      document.getElementById('manager-picker').classList.add('closed');
+    }
+
+    function pickManager(idx) {
+      const m = managerPool[idx];
+      if (!m) return;
+      selectedManager = m;
+      SFX.assign();
+      closeManagerPicker();
+      renderManagerArea();
+      updateScoreDisplay();
+    }
+
     function confirmTeam() {
       if (gamePhase !== 'selection') return;
       if (!SLOT_IDS.every(id => !!slots[id])) return;
+      if (!selectedManager) return;
       if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
       closePicker();
       openPenaltySetup();
@@ -2054,6 +2231,8 @@
       friendlyPlayer = null;
       penaltyTaker = null;
       penaltyPickerOffers = [];
+      selectedManager = null;
+      managerPool = [];
       opponents = [
         { cx: 140, cy: 32,  role: 'GK',  homeX: 140, homeY: 32,  patrol: 'none',     phase: 0   },
         { cx: 90,  cy: 55,  role: 'DEF', homeX: 90,  homeY: 55,  patrol: 'hori-bf',  phase: 0.0 },
@@ -2067,6 +2246,7 @@
       syncKitUI();
       syncScoreboardIdentity();
       updateScoreboard(0);
+      renderManagerArea();
       renderPitch();
     }
 
@@ -2095,6 +2275,8 @@
       pool = generatePlayers(rng).map(p => ({ ...p, _slotId: null }));
       friendlyPlayer = pool[Math.floor(rng() * pool.length)];
       opposition = generateOpposition(rng);
+      selectedManager = null;
+      managerPool = generateManagers(rng);
       actionRolls = {};
       SLOT_IDS.forEach(id => { actionRolls[id] = [rng(), rng()]; });
       oppGoals = 0;
@@ -2113,6 +2295,8 @@
       const fbEl = document.getElementById('football-group');
       if (fbEl) { fbEl.setAttribute('transform','translate(140,380)'); fbEl.style.opacity = '0'; }
       document.getElementById('picker-panel').classList.add('closed');
+      document.getElementById('manager-picker').classList.add('closed');
+      renderManagerArea();
       renderPitch();
       startCrowd();
     }
